@@ -7,12 +7,14 @@ import {
   IconButton,
   Box,
   Container,
+  useMediaQuery,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import Chat from "@mui/icons-material/Chat";
 import Profile from "./profile";
 import ChatPage from "./chat";
 import { useGlobalContext } from "../../context/GlobalContext";
+import { useLocation } from "react-router-dom";
 
 const Footer = () => (
   <Box
@@ -31,6 +33,10 @@ const Footer = () => (
 
 const UserProfile = () => {
   const { token, setUserMethod, logout } = useGlobalContext();
+  const location = useLocation();
+  const isChatPage = location.pathname === "/chat";
+  const isLargeScreen = useMediaQuery("(min-width:960px)");
+
   return (
     <Box
       sx={{
@@ -65,7 +71,17 @@ const UserProfile = () => {
       </AppBar>
 
       {/* Main Content */}
-      <Container>
+      <Container
+        sx={{
+          ...(isLargeScreen && {
+            maxWidth: isChatPage ? "none !important" : "lg",
+            marginTop: isChatPage ? "0px !important" : "",
+            paddingLeft: isChatPage ? "0px !important" : "",
+            marginBottom: isChatPage ? "0px !important" : "",
+            paddingBottom: isChatPage ? "0px !important" : "",
+          })
+        }}
+      >
         <Routes>
           <Route
             path="/chat"
@@ -102,7 +118,7 @@ const UserProfile = () => {
       </Container>
 
       {/* Footer */}
-      <Footer />
+      {!isChatPage && <Footer />}
     </Box>
   );
 };

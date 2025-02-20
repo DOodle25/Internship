@@ -7,6 +7,7 @@ import {
   IconButton,
   Box,
   Container,
+  useMediaQuery,
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -22,6 +23,8 @@ import AssignUserToEmployee from "./assign";
 import ChatPage from "../Profile/chat";
 import { useGlobalContext } from "../../context/GlobalContext";
 import theme from "../../utils/theme";
+
+import { useLocation } from "react-router-dom";
 
 const Footer = () => (
   <Box
@@ -40,6 +43,9 @@ const Footer = () => (
 
 const StudentDashboard = () => {
   const { token, setUserMethod, logout } = useGlobalContext();
+  const location = useLocation();
+  const isChatPage = location.pathname === "/chat";
+  const isLargeScreen = useMediaQuery("(min-width:960px)");
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -125,7 +131,19 @@ const StudentDashboard = () => {
         </AppBar>
 
         {/* Main Content */}
-        <Container sx={{ my: 4 }}>
+        <Container
+          sx={{
+            my: 4,
+            width: "100%",
+            ...(isLargeScreen && {
+            maxWidth: isChatPage ? "none !important" : "lg",
+            marginTop: isChatPage ? "0px !important" : "",
+            paddingLeft: isChatPage ? "0px !important" : "",
+            marginBottom: isChatPage ? "0px !important" : "",
+            paddingBottom: isChatPage ? "0px !important" : "",
+            }),
+          }}
+        >
           <Routes>
             <Route
               path="/chat"
@@ -202,7 +220,7 @@ const StudentDashboard = () => {
         </Container>
 
         {/* Footer */}
-        <Footer />
+        {!isChatPage && <Footer />}
       </Box>
     </ThemeProvider>
   );

@@ -75,6 +75,7 @@ const Profile = () => {
       style={{
         padding: "30px",
         margin: "20px auto",
+        // maxWidth: "500px",
         maxWidth: "500px",
         textAlign: "center",
       }}

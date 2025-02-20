@@ -23,8 +23,10 @@ body {
 
 .container {
   max-width: 1200px;
+  /* max-width: 100%; */
   margin: 0 auto;
   padding: 20px;
+  /* color : #fdcee6; */
 }
 .container2 {
   max-width: 500px;
