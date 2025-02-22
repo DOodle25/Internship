@@ -647,9 +647,9 @@ const ChatPage = () => {
     } else {
       // Fallback to API if socket is disconnected
       try {
-        await axiosInstance.post(`/chat/task/${selectedTaskId}/messages`, messageData, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        // await axiosInstance.post(`/chat/task/${selectedTaskId}/messages`, messageData, {
+        //   headers: { Authorization: `Bearer ${token}` },
+        // });
         fetchMessagesForTask(selectedTaskId); // Fetch latest messages
       } catch (error) {
         console.error("Error sending message via API:", error);
@@ -678,7 +678,7 @@ const ChatPage = () => {
       navigate("/");
     }
   };
-  
+
   const fetchMessagesForTask = async (taskId) => {
     try {
       const response = await axiosInstance.get(`/chat/task/${taskId}/messages`, {
