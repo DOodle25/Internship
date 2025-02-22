@@ -591,45 +591,58 @@ const ChatPage = () => {
     if (!socketRef.current) {
       const newSocket = io("https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net", {
         query: { token },
-        reconnection: true,          // Enable automatic reconnection
-        reconnectionAttempts: 10,    // Max attempts before giving up
-        reconnectionDelay: 2000,     // Time between reconnection attempts
+        reconnection: true,
+        reconnectionAttempts: 10,
+        reconnectionDelay: 2000,
       });
-
+  
       newSocket.on("connect", () => {
-        console.log("Socket connected");
+        console.log("Socket connected:", newSocket.id);
+  
+        // Rejoin the room after reconnection
+        if (selectedTaskId) {
+          newSocket.emit("joinTaskRoom", selectedTaskId, token);
+        }
       });
-
+  
       newSocket.on("disconnect", (reason) => {
         console.warn("Socket disconnected:", reason);
         if (reason === "io server disconnect") {
-          newSocket.connect(); // Manually reconnect if the server disconnects the client
+          newSocket.connect(); // Reconnect if server force-disconnected
         }
       });
-
+  
       newSocket.on("reconnect_attempt", (attemptNumber) => {
-        console.log(`Reconnecting attempt ${attemptNumber}...`);
+        console.log(`Reconnection attempt ${attemptNumber}...`);
       });
-
-      // Attach the receiveMessage event listener once
+  
       newSocket.on("receiveMessage", ({ message, sender }) => {
         setMessages((prevMessages) => [...prevMessages, { ...message, sender }]);
       });
-
+  
       socketRef.current = newSocket;
     }
   };
+  
 
   // Initialize socket on token change (or on mount)
   useEffect(() => {
-    initializeSocket();
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        console.log("Tab is active again, checking socket...");
+        if (!socketRef.current || !socketRef.current.connected) {
+          initializeSocket();
+        }
       }
     };
-  }, [token]);
+  
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+  
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+  
 
   // effects UI
   useEffect(() => {
