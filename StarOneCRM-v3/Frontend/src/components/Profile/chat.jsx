@@ -582,51 +582,45 @@ const ChatPage = () => {
   const [socket, setSocket] = useState(null);
 
   const socketRef = useRef(null);
+
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
+
   const initializeSocket = () => {
     if (!socketRef.current) {
       const newSocket = io("https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net", {
         query: { token },
-        reconnection: true,
-        reconnectionAttempts: Infinity,
-        reconnectionDelay: 2000,
+        reconnection: true,          // Enable automatic reconnection
+        reconnectionAttempts: 10,    // Max attempts before giving up
+        reconnectionDelay: 2000,     // Time between reconnection attempts
       });
-  
+
       newSocket.on("connect", () => {
         console.log("Socket connected");
-        toast.success("Reconnected to server");
       });
-  
+
       newSocket.on("disconnect", (reason) => {
         console.warn("Socket disconnected:", reason);
-        toast.error("Connection lost. Reconnecting...");
+        if (reason === "io server disconnect") {
+          newSocket.connect(); // Manually reconnect if the server disconnects the client
+        }
       });
-  
-      newSocket.on("connect_error", (err) => {
-        console.error("Connection Error:", err);
-        toast.error("Unable to connect to server. Retrying...");
-      });
-  
+
       newSocket.on("reconnect_attempt", (attemptNumber) => {
         console.log(`Reconnecting attempt ${attemptNumber}...`);
-        toast.info(`Reconnecting... Attempt ${attemptNumber}`);
       });
-  
-      newSocket.on("reconnect", () => {
-        console.log("Reconnected to server");
-        toast.success("Reconnected successfully");
-      });
-  
+
+      // Attach the receiveMessage event listener once
       newSocket.on("receiveMessage", ({ message, sender }) => {
         setMessages((prevMessages) => [...prevMessages, { ...message, sender }]);
       });
-  
+
       socketRef.current = newSocket;
     }
   };
-  
+
+  // Initialize socket on token change (or on mount)
   useEffect(() => {
     initializeSocket();
     return () => {
@@ -636,7 +630,6 @@ const ChatPage = () => {
       }
     };
   }, [token]);
-  
 
   // effects UI
   useEffect(() => {
