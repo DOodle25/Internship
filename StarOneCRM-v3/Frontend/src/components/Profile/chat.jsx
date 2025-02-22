@@ -1014,6 +1014,7 @@
 // };
 
 // export default ChatPage;
+
 import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from "../../utils/axios";
 import { useNavigate } from "react-router-dom";
@@ -1059,24 +1060,54 @@ const ChatPage = () => {
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
-
-  const initializeSocket = () => {
-    const newSocket = io(
-      "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net",
-      {
-        query: { token },
-      }
-    );
-    setSocket(newSocket);
-
-    return () => newSocket.close();
-  };
-
+  
   useEffect(() => {
-    const cleanup = initializeSocket();
-    return cleanup;
-  }, [token]);
-
+    const connectSocket = () => {
+      if (!token) return;
+  
+      const newSocket = io(
+        "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net",
+        {
+          query: { token },
+        }
+      );
+  
+      newSocket.on("connect", () => {
+        console.log("Socket connected successfully");
+        if (selectedTaskId) {
+          newSocket.emit("joinTaskRoom", selectedTaskId, token);
+          console.log(`Joined task room: ${selectedTaskId}`);
+        }
+      });
+  
+      newSocket.on("connect_error", (error) => {
+        console.error("Socket connection failed:", error);
+      });
+  
+      setSocket(newSocket);
+  
+      return () => {
+        newSocket.close();
+        console.log("Socket disconnected");
+      };
+    };
+  
+    connectSocket();
+  
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        console.log("Tab is active, reconnecting socket...");
+        connectSocket();
+      }
+    };
+  
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+  
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [token, selectedTaskId]);
+  
   useEffect(() => {
     if (socket) {
       socket.on("receiveMessage", ({ message, sender }) => {
@@ -1087,34 +1118,48 @@ const ChatPage = () => {
       });
     }
   }, [socket]);
-
+  
   useEffect(() => {
-    messageEndRef.current?.scrollIntoView({ behavior: "instant" });
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
+  
   const handleTyping = () => {
     socket.emit("typing", { sender: userEmail, taskId: selectedTaskId });
   };
-
+  
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
-
+  
     const messageData = {
       taskId: selectedTaskId,
       content: newMessage,
       senderId: user._id,
     };
-
+  
     socket.emit("sendMessage", messageData);
     setNewMessage("");
   };
-
+  
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       sendMessage();
     }
   };
-
+  
+  const fetchAssignedTasks = async () => {
+    try {
+      const response = await axiosInstance.get("/chat/assigned-tasks/", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setTaskslist(response.data.tasksAssigned);
+      toast.success("Tasks fetched successfully");
+    } catch (error) {
+      console.error("Error fetching assigned tasks:", error);
+      toast.error("Failed to fetch tasks");
+      navigate("/");
+    }
+  };
+  
   const fetchMessagesForTask = async (taskId) => {
     try {
       const response = await axiosInstance.get(
@@ -1125,71 +1170,52 @@ const ChatPage = () => {
       );
       setMessages(response.data.messages);
       setSelectedTaskId(taskId);
-      // localStorage.setItem("localselectedTaskId", taskId);
+  
       if (socket) {
         socket.emit("joinTaskRoom", taskId, token);
+        console.log(`Joined task room: ${taskId}`);
       }
     } catch (error) {
       console.error("Error fetching messages:", error);
       toast.error("Failed to fetch messages for the task");
     }
   };
-
-  const fetchAssignedTasks = async () => {
-    try {
-      const response = await axiosInstance.get("/chat/assigned-tasks/", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setTaskslist(response.data.tasksAssigned);
-      toast.success("Tasks fetched successfully");
-
-      const localTaskId = localStorage.getItem("localselectedTaskId");
-      if (localTaskId) {
-        try {
-            await fetchMessagesForTask(localTaskId);
-        } catch (error) {
-          localStorage.removeItem("localselectedTaskId");
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching assigned tasks:", error);
-      toast.error("Failed to fetch tasks");
-      navigate("/");
-    }
-  };
-
+  
   useEffect(() => {
     fetchAssignedTasks();
   }, []);
-
+  
+  // Logging every 5 seconds
   useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        window.location.reload();
-        initializeSocket();
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
+    const interval = setInterval(() => {
+      console.log("Testing logs -> Token:", token);
+      console.log("Testing logs -> Socket:", socket);
+      console.log("Testing logs -> Task ID:", selectedTaskId);
+    }, 5000);
+  
+    return () => clearInterval(interval);
+  }, [token, socket, selectedTaskId]);
+  
 
   return (
     <Box
       sx={{
         display: "flex",
         ...(!isLargeScreen && { height: "85vh" }),
+        // height: "70vh",
+        // marginTop: "20px",
         marginTop: "0px",
         marginLeft: "0px",
         width: "100%",
       }}
     >
+      {/* Sidebar Drawer - Persistent for Large Screens */}
       {isLargeScreen ? (
         <Box
           sx={{
+            //   bgcolor: "#201F2F",
+            // bgcolor: "#F4F4F5",
+            // bgcolor: "#fffafd",
             bgcolor: "white",
             transition: "width 0.3s ease-in-out, box-shadow 0.2s ease-in-out",
             width: expanded ? "260px" : "60px",
@@ -1200,6 +1226,7 @@ const ChatPage = () => {
             paddingTop: 2,
             minWidth: expanded ? "260px" : "60px",
             borderRight: "1px solid #e0e0e0",
+            //   borderRadius: "8px 0 0 8px",
             height: "calc(100vh - 80px) !important",
             overflowY: "scroll",
             "&::-webkit-scrollbar": {
@@ -1221,15 +1248,23 @@ const ChatPage = () => {
               minWidth: "40px",
               height: "40px",
               borderRadius: "50%",
+              // backgroundColor: expanded ? "#FDB8DC" : "#201F2F",
+              // color: expanded ? "#201F2F" : "#FDB8DC",
+              boxShadow: "0px 2px 5px rgba(0,0,0,0.2)",
+              //   backgroundColor: "#201F2F",
               backgroundColor: "#FFFFFF",
+              //   color: "#FDB8DC",
               color: "#201F2F",
               "&:hover": {
                 backgroundColor: "#FFFFFF",
                 color: "#201F2F",
+
+                //   transform: "scale(1.1)",
                 transition: "all 0.2s ease-in-out",
               },
             }}
           >
+            {/* {expanded ? "<" : ">"} */}
             {expanded ? <ChevronLeftIcon /> : <ChatIcon />}
           </Button>
           <List sx={{ width: "100%", padding: 0 }}>
@@ -1238,13 +1273,24 @@ const ChatPage = () => {
                 <ListItem
                   key={task._id}
                   sx={{
+                    // borderTop: "1px solid #e0e0e0",
+                    // borderBottom: "1px solid #e0e0e0",
                     cursor: "pointer",
                     backgroundColor:
+                      //   selectedTaskId === task._id ? "#FDB8DC" : "#FFFFFF",
+                    //   selectedTaskId === task._id ? "#fdcee6" : "#FFFFFF",
                       selectedTaskId === task._id ? "#F3F4F6" : "#FFFFFF",
                     borderRadius:
                       selectedTaskId === task._id ? "10px" : "#FFFFFF",
+                    // color: selectedTaskId === task._id ? "#201F2F" : "#FDB8DC",
                     color: selectedTaskId === task._id ? "#201F2F" : "#000000",
+                    // borderRadius: "50px",
                     "&:hover": {
+                      //   backgroundColor: "#FDB8DC",
+                      //   backgroundColor: "#fffafd",
+                      //   color: "#201F2F",
+                      //   backgroundColor: "#FDB8DC",
+                    //   backgroundColor: "#fdcee6",
                       backgroundColor: "#F3F4F6",
                       color: "#201F2F",
                       borderRadius: "10px",
@@ -1331,6 +1377,7 @@ const ChatPage = () => {
         </Drawer>
       )}
 
+      {/* Main Content */}
       <Box
         sx={{
           flexGrow: 1,
@@ -1339,8 +1386,9 @@ const ChatPage = () => {
           height: "100%",
         }}
       >
+        {/* AppBar */}
         {!isLargeScreen ? (
-          <AppBar position="relative" color="primary" sx={{ mt: 2 }}>
+          <AppBar position="relative" color="primary" sx={{mt: 2}}>
             <Toolbar>
               {!isLargeScreen && (
                 <IconButton
@@ -1369,11 +1417,14 @@ const ChatPage = () => {
             overflow: "hidden",
           }}
         >
+          {/* Chat Messages */}
           <Box
             sx={{
               flexGrow: 1,
               overflowY: "auto",
               p: 2,
+              // display: "flex",
+              // flexDirection: "column",
             }}
             style={{
               "&::-webkit-scrollbar": {
@@ -1411,6 +1462,22 @@ const ChatPage = () => {
                             fontSize: "14px",
                             lineHeight: "1.4",
                             boxShadow: 0,
+                            // "&::before": {
+                            //   content: '""',
+                            //   position: "absolute",
+                            //   bottom: 0,
+                            //   width: 0,
+                            //   height: 0,
+                            //   borderStyle: "solid",
+                            //   borderWidth: isSentByUser
+                            //     ? "10px 0 0 10px"
+                            //     : "10px 10px 0 0",
+                            //   borderColor: isSentByUser
+                            //     ? "#FDB8DC transparent transparent transparent"
+                            //     : "#201F2F transparent transparent transparent",
+                            //   left: isSentByUser ? "auto" : "-8px",
+                            //   right: isSentByUser ? "-8px" : "auto",
+                            // },
                           }}
                         >
                           {msg.content}
@@ -1440,6 +1507,7 @@ const ChatPage = () => {
             )}
           </Box>
 
+          {/* Input Area */}
           <Box
             sx={{
               display: "flex",
@@ -1458,7 +1526,7 @@ const ChatPage = () => {
               variant="outlined"
               size="small"
               onKeyDown={handleKeyPress}
-              onKeyUp={handleTyping}
+              onKeyUp={handleTyping} // Detect when typing
             />
             <Button variant="outlined" color="" onClick={sendMessage}>
               <SendIcon />
@@ -1466,6 +1534,8 @@ const ChatPage = () => {
           </Box>
         </Box>
       </Box>
+
+      {/* second */}
     </Box>
   );
 };
