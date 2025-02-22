@@ -1,0 +1,452 @@
+put some backend and frontend logic for both frontend and backend when socket is disconnected .
+put some robust logic becuase when we leave the brower tab in mobile it get disconected but able to send messges from seperate api calls but since socket is disconnected the new messages are not loaded in the device.
+
+---
+
+const http = require("http");
+const socketIo = require("socket.io");
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: "https://polite-field-09918cc00.4.azurestaticapps.net",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+global.io = io;
+// Database connection
+connection();
+
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
+app.use((req, res, next) => {
+  res.locals.path = req.path;
+  next();
+});
+
+// Root endpoint
+app.get("/", (req, res) => {
+  res.send(
+    "Welcome to the API! Use the /api/cruds endpoint to interact with CRUD operations."
+  );
+});
+
+// Routes
+app.use("/api/admin", adminRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/status", statusRoutes);
+app.use("/api/profile", profileRoutes);
+app.use("/api/chat", chatRoutes);
+
+// Socket.IO connection
+io.on("connection", (socket) => {
+  console.log("New client connected");
+
+  socket.on("joinTaskRoom", (taskId, token) => {
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) return res.status(403).json({ message: "Token invalid" });
+    });
+    socket.join(taskId);
+    console.log(`User joined task room: ${taskId}`);
+  });
+ 
+
+
+
+  socket.on("sendMessage", async ({ taskId, content, senderId }) => {
+    try {
+      if (!content || !taskId) {
+        throw new Error("Message content and task ID are required");
+      }
+
+      const sender = await User.findById(senderId);
+      const task = await Task.findById(taskId).populate("customer employee");
+
+      if (!task) {
+        throw new Error("Task not found");
+      }
+
+      if (![task.customer._id.toString(), task.employee._id.toString()].includes(senderId.toString())) {
+        throw new Error("You are not authorized to send messages for this task");
+      }
+
+      const message = await Message.create({
+        sender: senderId,
+        task: taskId,
+        content,
+      });
+
+      task.messages.push(message._id);
+      await task.save();
+
+      io.to(taskId).emit("receiveMessage", { message, sender });
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  });
+
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+  });
+});
+
+// Start server
+server.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
+
+
+---
+
+const AppRoutes = () => {
+  const { token, user } = useGlobalContext();
+
+  if (!token) {
+    return (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    );
+  }
+
+  if (user && !user.isFormFilled) {
+    return (
+      <Routes>
+        <Route path="/fill-form" element={<FillForm />} />
+        <Route path="*" element={<Navigate to="/fill-form" />} />
+      </Routes>
+    );
+  }
+
+  if (user && !user.isFormVerified) {
+    return (
+      <Routes>
+        <Route path="/verifying" element={<NotVerified />} />
+        <Route path="*" element={<Navigate to="/verifying" />} />
+      </Routes>
+    );
+  }
+
+  if (user && !user.isAdmin) {
+    return (
+      <Routes>
+        <Route path="*" element={<UserProfile />} />
+      </Routes>
+    );
+  }
+
+  if (user && user.isAdmin) {
+    return (
+      <Routes>
+        <Route path="*" element={<StudentDashboard />} />
+      </Routes>
+    );
+  }
+};
+
+const App = () => {
+  return (
+    <GlobalProvider>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </ThemeProvider>
+    </GlobalProvider>
+  );
+};
+
+export default App;
+
+
+---
+
+const ChatPage = () => {
+
+  const [socket, setSocket] = useState(null);
+  const handleDrawerToggle = () => {
+    setOpen(!open);
+  };
+  useEffect(() => {
+    const newSocket = io(
+      // 'http://localhost:5000',
+      "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net",
+      {
+        query: { token },
+      }
+    );
+    setSocket(newSocket);
+
+    return () => newSocket.close();
+  }, [token]);
+
+  
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("receiveMessage", ({ message, sender }) => {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { ...message, sender },
+        ]);
+      });
+    }
+  }, [socket]);
+
+  // effects UI
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+  
+  const sendMessage = async () => {
+    if (!newMessage.trim()) return;
+
+    const messageData = {
+      taskId: selectedTaskId,
+      content: newMessage,
+      senderId: user._id,
+    };
+
+    socket.emit("sendMessage", messageData);
+    setNewMessage("");
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  };
+
+  const fetchMessagesForTask = async (taskId) => {
+    try {
+      const response = await axiosInstance.get(
+        `/chat/task/${taskId}/messages`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setMessages(response.data.messages);
+      setSelectedTaskId(taskId);
+      if (socket) {
+        socket.emit("joinTaskRoom", taskId, token);
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      toast.error("Failed to fetch messages for the task");
+    }
+  };
+
+  useEffect(() => {
+    fetchAssignedTasks();
+  }, []);
+
+
+
+  return (
+    <Box>
+      {/* Sidebar Drawer - Persistent for Large Screens */}
+      {isLargeScreen ? (
+        <Box>
+          <Button
+            onClick={() => setExpanded(!expanded)}>
+            {/* {expanded ? "<" : ">"} */}
+            {expanded ? <ChevronLeftIcon /> : <ChatIcon />}
+          </Button>
+          <List>
+            {taskslist.length > 0 ? (
+              taskslist.map((task) => (
+                <ListItem
+                  key={task._id}
+                  onClick={() => {
+                    fetchMessagesForTask(task._id);
+                  }}
+                >
+                  {expanded ? (
+                    <Typography variant="body1">
+                      {task.description}
+                    </Typography>
+                  ) : (
+                    <Box>
+                      <Typography>
+                        {task.description.charAt(0).toUpperCase()}
+                      </Typography>
+                    </Box>
+                  )}
+                </ListItem>
+              ))
+            ) : (
+              <Typography variant="body2">
+                No tasks assigned
+              </Typography>
+            )}
+          </List>
+        </Box>
+      ) : (
+        <Drawer
+          anchor="left"
+          open={open}
+          onClose={handleDrawerToggle}
+        >
+          <List>
+            {taskslist.length > 0 ? (
+              taskslist.map((task) => (
+                <ListItem key={task._id} disablePadding>
+                  <ListItemButton
+                    onClick={() => fetchMessagesForTask(task._id)}
+                  >
+                    <ListItemText primary={task.description} />
+                  </ListItemButton>
+                </ListItem>
+              ))
+            ) : (
+              <Typography variant="body2">
+                No tasks assigned
+              </Typography>
+            )}
+          </List>
+        </Drawer>
+      )}
+
+      {/* Main Content */}
+      <Box>
+        {/* AppBar */}
+        {!isLargeScreen ? (
+          <AppBar position="relative" color="primary" sx={{mt: 2}}>
+            <Toolbar>
+              {!isLargeScreen && (
+                <IconButton
+                  edge="start"
+                  onClick={handleDrawerToggle}
+                >
+                  <MenuIcon />
+                </IconButton>
+              )}
+              <Typography variant="h6">
+                Task Messages
+              </Typography>
+            </Toolbar>
+          </AppBar>
+        ) : (
+          <></>
+        )}
+
+        <Box>
+          {/* Chat Messages */}
+          <Box>
+            {selectedTaskId ? (
+              <>
+                {messages.length > 0 ? (
+                  messages.map((msg, index) => {
+                    const isSentByUser = msg.sender.email === userEmail;
+                    return (
+                      <Box
+                        key={index}>
+                        <Box>
+                          {msg.content}
+                        </Box>
+                      </Box>
+                    );
+                  })
+                ) : (
+                  <Typography>No messages yet</Typography>
+                )}
+                <div ref={messageEndRef} />
+              </>
+            ) : (
+              <Box>
+                <Typography variant="h5" color="textSecondary">
+                  Select a task to view messages
+                </Typography>
+              </Box>
+            )}
+          </Box>
+
+          {/* Input Area */}
+          <Box>
+            <TextField
+              fullWidth
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              placeholder="Type a message..."
+              variant="outlined"
+              size="small"
+              onKeyDown={handleKeyPress}
+              onKeyUp={handleTyping} // Detect when typing
+            />
+            <Button variant="outlined" color="" onClick={sendMessage}>
+              <SendIcon />
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+
+      {/* second */}
+    </Box>
+  );
+};
+
+export default ChatPage;
+
+
+---
+
+
+const Message = require("../models/message.model");
+const User = require("../models/user.model").User;
+const Task = require("../models/task.model");
+
+exports.getAllTasks = async (req, res) => {
+    try {
+        const tasks = await Task.find()
+            .populate("customer", "name email")
+            .populate("employee", "name email")
+            .exec();
+
+        res.status(200).json({ success: true, tasks });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.getMessagesByTask = async (req, res) => {
+    try {
+        const { taskId } = req.params;
+
+        const task = await Task.findById(taskId)
+            .populate("customer employee", "name email role")
+            .populate({
+                path: "messages",
+                populate: { path: "sender", select: "name email" }, // Populate sender details in messages
+            });
+        // console.log(task);
+        if (!task) {
+            return res.status(404).json({ error: "Task not found" });
+        }
+        // console.log(task.customer.toString(), task.employee?.toString(), req.user.id.toString());
+        // Ensure the user is part of the task
+        // console.log(task)
+        if (![task.customer.id.toString(), task.employee.id.toString()].includes(req.user.id.toString())) {
+            return res.status(403).json({ error: "You are not authorized to view messages for this task" });
+        }
+
+        res.status(200).json({ success: true, messages: task.messages });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};

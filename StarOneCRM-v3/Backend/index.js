@@ -67,43 +67,18 @@ app.use("/api/chat", chatRoutes);
 
 // Socket.IO connection
 io.on("connection", (socket) => {
-  console.log("New client connected");
+  console.log(`Client connected: ${socket.id}`);
 
   socket.on("joinTaskRoom", (taskId, token) => {
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    if (!token) return;
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) return res.status(403).json({ message: "Token invalid" });
+      if (err) return;
     });
+
     socket.join(taskId);
     console.log(`User joined task room: ${taskId}`);
   });
-  // socket.on("sendMessage", async ({ taskId, content, senderId }) => {
-  //   try {
-  //     if (!content || !taskId) {
-  //       throw new Error("Message content and task ID are required");
-  //     }
-
-  //     const sender = await User.findById(senderId);
-  //     const task = await Task.findById(taskId).populate("customer employee");
-
-  //     if (!task) {
-  //       throw new Error("Task not found");
-  //     }
-
-  //     if (![task.customer._id.toString(), task.employee._id.toString()].includes(senderId.toString())) {
-  //       throw new Error("You are not authorized to send messages for this task");
-  //     }
-
-  //     await task.save();
-
-  //     io.to(taskId).emit("receiveMessage", { message, sender });
-  //   } catch (error) {
-  //     console.error("Error sending message:", error);
-  //   }
-  // });
-
-
 
   socket.on("sendMessage", async ({ taskId, content, senderId }) => {
     try {
@@ -137,9 +112,13 @@ io.on("connection", (socket) => {
     }
   });
 
+  // Handle reconnection scenario
+  socket.on("reconnectAttempt", (attemptNumber) => {
+    console.log(`Reconnection attempt ${attemptNumber} for socket ${socket.id}`);
+  });
 
   socket.on("disconnect", () => {
-    console.log("Client disconnected");
+    console.log(`Client disconnected: ${socket.id}`);
   });
 });
 
