@@ -1060,7 +1060,7 @@ const ChatPage = () => {
     setOpen(!open);
   };
 
-  useEffect(() => {
+  const initializeSocket = () => {
     const newSocket = io(
       "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net",
       {
@@ -1070,6 +1070,11 @@ const ChatPage = () => {
     setSocket(newSocket);
 
     return () => newSocket.close();
+  };
+
+  useEffect(() => {
+    const cleanup = initializeSocket();
+    return cleanup;
   }, [token]);
 
   useEffect(() => {
@@ -1161,6 +1166,7 @@ const ChatPage = () => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         window.location.reload();
+        initializeSocket();
       }
     };
 
