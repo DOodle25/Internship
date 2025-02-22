@@ -1058,6 +1058,12 @@ const ChatPage = () => {
   const [expanded, setExpanded] = useState(true);
   const [socket, setSocket] = useState(null);
   const socketRef = useRef(null);
+  const selectedTaskIdRef = useRef(selectedTaskId);
+
+  useEffect(() => {
+    selectedTaskIdRef.current = selectedTaskId;
+  }, [selectedTaskId]);
+  
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
@@ -1100,14 +1106,14 @@ const ChatPage = () => {
       if (document.visibilityState === "visible") {
         console.log("Tab is active, reconnecting socket...");
         console.log("socketRef:", socketRef.current);
-        // if (!socketRef.current) {
-        //   connectSocket();
-        // }
-        // console.log("Selected task ID:", selectedTaskId);
-        // if (selectedTaskId) {
-        //   socketRef.emit("joinTaskRoom", selectedTaskId, token);
-        //   console.log(`Joined task room: ${selectedTaskId}`);
-        // }
+        if (!socketRef.current) {
+          connectSocket();
+        }
+        console.log("Selected task ID:",  selectedTaskIdRef.current);
+        if ( selectedTaskIdRef.current) {
+          socketRef.emit("joinTaskRoom",  selectedTaskIdRef.current, token);
+          console.log(`Joined task room: ${ selectedTaskIdRef.current}`);
+        }
       }
     };
 
@@ -1189,6 +1195,7 @@ const ChatPage = () => {
         }
       );
       setMessages(response.data.messages);
+      console.log(taskId);
       setSelectedTaskId(taskId);
 
       if (socketRef.current) {
@@ -1201,6 +1208,9 @@ const ChatPage = () => {
     }
   };
 
+  useEffect(() => {
+    console.log(selectedTaskId);
+  }, [selectedTaskId]);
   useEffect(() => {
     fetchAssignedTasks();
   }, []);
