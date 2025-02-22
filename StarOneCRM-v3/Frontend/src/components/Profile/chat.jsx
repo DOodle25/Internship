@@ -1100,13 +1100,10 @@ const ChatPage = () => {
       if (document.visibilityState === "visible" && !socketRef.current) {
         console.log("Tab is active, reconnecting socket...");
         connectSocket();
-        socketRef.on("connect", () => {
-          console.log("Socket connected successfully");
           if (selectedTaskId) {
             socketRef.emit("joinTaskRoom", selectedTaskId, token);
             console.log(`Joined task room: ${selectedTaskId}`);
           }
-        });
       }
     };
 
