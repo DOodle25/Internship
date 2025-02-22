@@ -1084,7 +1084,7 @@ const ChatPage = () => {
   }, [socket]);
 
   useEffect(() => {
-    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messageEndRef.current?.scrollIntoView({ behavior: "instant" });
   }, [messages]);
 
   const handleTyping = () => {
@@ -1117,6 +1117,15 @@ const ChatPage = () => {
       });
       setTaskslist(response.data.tasksAssigned);
       toast.success("Tasks fetched successfully");
+
+      const localTaskId = localStorage.getItem("localselectedTaskId");
+      if (localTaskId) {
+        try {
+          await fetchMessagesForTask(localTaskId);
+        } catch (error) {
+          localStorage.removeItem("localselectedTaskId");
+        }
+      }
     } catch (error) {
       console.error("Error fetching assigned tasks:", error);
       toast.error("Failed to fetch tasks");
@@ -1134,6 +1143,7 @@ const ChatPage = () => {
       );
       setMessages(response.data.messages);
       setSelectedTaskId(taskId);
+      localStorage.setItem("localselectedTaskId", taskId);
       if (socket) {
         socket.emit("joinTaskRoom", taskId, token);
       }
