@@ -1057,21 +1057,22 @@ const ChatPage = () => {
   const isLargeScreen = useMediaQuery("(min-width:960px)");
   const [expanded, setExpanded] = useState(true);
   const [socket, setSocket] = useState(null);
+  const socketRef = useRef(null);  
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
-  
+
   useEffect(() => {
     const connectSocket = () => {
-      if (!token) return;
-  
+      if (!token || socketRef.current) return; // Prevent multiple instances
+
       const newSocket = io(
         "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net",
         {
           query: { token },
         }
       );
-  
+
       newSocket.on("connect", () => {
         console.log("Socket connected successfully");
         if (selectedTaskId) {
@@ -1079,73 +1080,78 @@ const ChatPage = () => {
           console.log(`Joined task room: ${selectedTaskId}`);
         }
       });
-  
+
       newSocket.on("connect_error", (error) => {
         console.error("Socket connection failed:", error);
       });
-  
-      setSocket(newSocket);
-  
+
+      socketRef.current = newSocket;
+
       return () => {
         newSocket.close();
+        socketRef.current = null;
         console.log("Socket disconnected");
       };
     };
-  
+
     connectSocket();
-  
+
     const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
+      if (document.visibilityState === "visible" && !socketRef.current) {
         console.log("Tab is active, reconnecting socket...");
         connectSocket();
       }
     };
-  
+
     document.addEventListener("visibilitychange", handleVisibilityChange);
-  
+
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (socketRef.current) {
+        socketRef.current.close();
+        socketRef.current = null;
+      }
     };
-  }, [token, selectedTaskId]);
-  
+  }, [token]);
+
   useEffect(() => {
-    if (socket) {
-      socket.on("receiveMessage", ({ message, sender }) => {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { ...message, sender },
-        ]);
-      });
+    if (socketRef.current) {
+      const handleMessage = ({ message, sender }) => {
+        setMessages((prevMessages) => [...prevMessages, { ...message, sender }]);
+      };
+
+      socketRef.current.off("receiveMessage"); // Prevent duplicate listeners
+      socketRef.current.on("receiveMessage", handleMessage);
     }
-  }, [socket]);
-  
+  }, [socketRef.current]);
+
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-  
+
   const handleTyping = () => {
-    socket.emit("typing", { sender: userEmail, taskId: selectedTaskId });
+    socketRef.current?.emit("typing", { sender: user.email, taskId: selectedTaskId });
   };
-  
+
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
-  
+
     const messageData = {
       taskId: selectedTaskId,
       content: newMessage,
       senderId: user._id,
     };
-  
-    socket.emit("sendMessage", messageData);
+
+    socketRef.current?.emit("sendMessage", messageData);
     setNewMessage("");
   };
-  
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       sendMessage();
     }
   };
-  
+
   const fetchAssignedTasks = async () => {
     try {
       const response = await axiosInstance.get("/chat/assigned-tasks/", {
@@ -1159,7 +1165,7 @@ const ChatPage = () => {
       navigate("/");
     }
   };
-  
+
   const fetchMessagesForTask = async (taskId) => {
     try {
       const response = await axiosInstance.get(
@@ -1170,9 +1176,9 @@ const ChatPage = () => {
       );
       setMessages(response.data.messages);
       setSelectedTaskId(taskId);
-  
-      if (socket) {
-        socket.emit("joinTaskRoom", taskId, token);
+
+      if (socketRef.current) {
+        socketRef.current.emit("joinTaskRoom", taskId, token);
         console.log(`Joined task room: ${taskId}`);
       }
     } catch (error) {
@@ -1180,22 +1186,21 @@ const ChatPage = () => {
       toast.error("Failed to fetch messages for the task");
     }
   };
-  
+
   useEffect(() => {
     fetchAssignedTasks();
   }, []);
-  
+
   // Logging every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       console.log("Testing logs -> Token:", token);
-      console.log("Testing logs -> Socket:", socket);
+      console.log("Testing logs -> Socket:", socketRef.current);
       console.log("Testing logs -> Task ID:", selectedTaskId);
     }, 5000);
-  
+
     return () => clearInterval(interval);
-  }, [token, socket, selectedTaskId]);
-  
+  }, [token, selectedTaskId]);
 
   return (
     <Box
