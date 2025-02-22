@@ -66,43 +66,92 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/chat", chatRoutes);
 
 // Socket.IO connection
+// io.on("connection", (socket) => {
+//   console.log(`Client connected: ${socket.id}`);
+
+//   socket.on("joinTaskRoom", (taskId, token) => {
+//     if (!token) return;
+
+//     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+//       if (err) return;
+//     });
+
+//     socket.join(taskId);
+//     console.log(`User joined task room: ${taskId}`);
+//   });
+
+//   socket.on("sendMessage", async ({ taskId, content, senderId }) => {
+//     try {
+//       if (!content || !taskId) {
+//         throw new Error("Message content and task ID are required");
+//       }
+
+//       const sender = await User.findById(senderId);
+//       const task = await Task.findById(taskId).populate("customer employee");
+
+//       if (!task) {
+//         throw new Error("Task not found");
+//       }
+
+//       if (![task.customer._id.toString(), task.employee._id.toString()].includes(senderId.toString())) {
+//         throw new Error("You are not authorized to send messages for this task");
+//       }
+
+//       const message = await Message.create({
+//         sender: senderId,
+//         task: taskId,
+//         content,
+//       });
+
+//       task.messages.push(message._id);
+//       await task.save();
+
+//       io.to(taskId).emit("receiveMessage", { message, sender });
+//     } catch (error) {
+//       console.error("Error sending message:", error);
+//     }
+//   });
+
+//   // Handle reconnection scenario
+//   socket.on("reconnectAttempt", (attemptNumber) => {
+//     console.log(`Reconnection attempt ${attemptNumber} for socket ${socket.id}`);
+//   });
+
+//   socket.on("disconnect", () => {
+//     console.log(`Client disconnected: ${socket.id}`);
+//   });
+// });
+
+
 io.on("connection", (socket) => {
   console.log(`Client connected: ${socket.id}`);
 
-  socket.on("joinTaskRoom", (taskId, token) => {
-    if (!token) return;
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) return;
-    });
-
-    socket.join(taskId);
-    console.log(`User joined task room: ${taskId}`);
+  socket.on("userConnected", async (userId) => {
+    if (!userId) return;
+    
+    try {
+      await User.findByIdAndUpdate(userId, { socketId: socket.id, online: true });
+      console.log(`User ${userId} is now online with socket ${socket.id}`);
+      io.emit("userReconnected", userId); // Notify others
+    } catch (error) {
+      console.error("Error updating user socket:", error);
+    }
   });
 
   socket.on("sendMessage", async ({ taskId, content, senderId }) => {
     try {
-      if (!content || !taskId) {
-        throw new Error("Message content and task ID are required");
-      }
+      if (!content || !taskId) throw new Error("Message content and task ID are required");
 
       const sender = await User.findById(senderId);
       const task = await Task.findById(taskId).populate("customer employee");
 
-      if (!task) {
-        throw new Error("Task not found");
-      }
+      if (!task) throw new Error("Task not found");
 
       if (![task.customer._id.toString(), task.employee._id.toString()].includes(senderId.toString())) {
         throw new Error("You are not authorized to send messages for this task");
       }
 
-      const message = await Message.create({
-        sender: senderId,
-        task: taskId,
-        content,
-      });
-
+      const message = await Message.create({ sender: senderId, task: taskId, content });
       task.messages.push(message._id);
       await task.save();
 
@@ -112,15 +161,31 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Handle reconnection scenario
-  socket.on("reconnectAttempt", (attemptNumber) => {
-    console.log(`Reconnection attempt ${attemptNumber} for socket ${socket.id}`);
+  socket.on("reconnect", async () => {
+    console.log(`Client reconnected: ${socket.id}`);
+
+    const user = await User.findOneAndUpdate({ socketId: socket.id }, { online: true });
+
+    if (user) {
+      console.log(`User ${user._id} is now back online.`);
+      io.emit("userReconnected", user._id); // Notify all clients
+    }
   });
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", async () => {
     console.log(`Client disconnected: ${socket.id}`);
+
+    const user = await User.findOneAndUpdate({ socketId: socket.id }, { online: false, socketId: null });
+    
+    if (user) {
+      console.log(`User ${user._id} is now offline.`);
+      io.emit("userDisconnected", user._id); // Notify all clients
+    }
   });
 });
+
+
+
 
 // Start server
 server.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
