@@ -1110,6 +1110,26 @@ const ChatPage = () => {
     }
   };
 
+  const fetchMessagesForTask = async (taskId) => {
+    try {
+      const response = await axiosInstance.get(
+        `/chat/task/${taskId}/messages`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setMessages(response.data.messages);
+      setSelectedTaskId(taskId);
+      // localStorage.setItem("localselectedTaskId", taskId);
+      if (socket) {
+        socket.emit("joinTaskRoom", taskId, token);
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      toast.error("Failed to fetch messages for the task");
+    }
+  };
+
   const fetchAssignedTasks = async () => {
     try {
       const response = await axiosInstance.get("/chat/assigned-tasks/", {
@@ -1121,7 +1141,7 @@ const ChatPage = () => {
       const localTaskId = localStorage.getItem("localselectedTaskId");
       if (localTaskId) {
         try {
-          await fetchMessagesForTask(localTaskId);
+            await fetchMessagesForTask(localTaskId);
         } catch (error) {
           localStorage.removeItem("localselectedTaskId");
         }
@@ -1130,26 +1150,6 @@ const ChatPage = () => {
       console.error("Error fetching assigned tasks:", error);
       toast.error("Failed to fetch tasks");
       navigate("/");
-    }
-  };
-
-  const fetchMessagesForTask = async (taskId) => {
-    try {
-      const response = await axiosInstance.get(
-        `/chat/task/${taskId}/messages`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setMessages(response.data.messages);
-      setSelectedTaskId(taskId);
-      localStorage.setItem("localselectedTaskId", taskId);
-      if (socket) {
-        socket.emit("joinTaskRoom", taskId, token);
-      }
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-      toast.error("Failed to fetch messages for the task");
     }
   };
 
