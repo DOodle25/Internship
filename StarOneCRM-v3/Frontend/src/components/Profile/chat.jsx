@@ -1111,14 +1111,16 @@ const ChatPage = () => {
         }
         console.log("Selected task ID:",  selectedTaskIdRef.current);
         console.log("socketRef:", socketRef.current);
+        if (socketRef.current.disconnect) {
+          setSelectedTaskId( selectedTaskIdRef.current);
+        }
         // if (selectedTaskIdRef.current) {
-          const x = socketRef.current.emit("joinTaskRoom",  selectedTaskIdRef.current, token);
-          console.log(x)
-          console.log(`Joined task room: ${ selectedTaskIdRef.current}`);
+        // socketRef.current.emit("joinTaskRoom",  selectedTaskIdRef.current, token);
+        // console.log(`Joined task room: ${ selectedTaskIdRef.current}`);
         // }
       }
     };
-
+    
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
