@@ -1057,7 +1057,7 @@ const ChatPage = () => {
   const isLargeScreen = useMediaQuery("(min-width:960px)");
   const [expanded, setExpanded] = useState(true);
   const [socket, setSocket] = useState(null);
-  const socketRef = useRef(null);  
+  const socketRef = useRef(null);
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
@@ -1097,13 +1097,17 @@ const ChatPage = () => {
     connectSocket();
 
     const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible" && !socketRef.current) {
+      if (document.visibilityState === "visible") {
         console.log("Tab is active, reconnecting socket...");
-        connectSocket();
-          if (selectedTaskId) {
-            socketRef.emit("joinTaskRoom", selectedTaskId, token);
-            console.log(`Joined task room: ${selectedTaskId}`);
-          }
+        console.log("socketRef:", socketRef.current);
+        if (!socketRef.current) {
+          connectSocket();
+        }
+        console.log("Selected task ID:", selectedTaskId);
+        if (selectedTaskId) {
+          socketRef.emit("joinTaskRoom", selectedTaskId, token);
+          console.log(`Joined task room: ${selectedTaskId}`);
+        }
       }
     };
 
@@ -1121,7 +1125,10 @@ const ChatPage = () => {
   useEffect(() => {
     if (socketRef.current) {
       const handleMessage = ({ message, sender }) => {
-        setMessages((prevMessages) => [...prevMessages, { ...message, sender }]);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { ...message, sender },
+        ]);
       };
 
       socketRef.current.off("receiveMessage"); // Prevent duplicate listeners
@@ -1134,7 +1141,10 @@ const ChatPage = () => {
   }, [messages]);
 
   const handleTyping = () => {
-    socketRef.current?.emit("typing", { sender: user.email, taskId: selectedTaskId });
+    socketRef.current?.emit("typing", {
+      sender: user.email,
+      taskId: selectedTaskId,
+    });
   };
 
   const sendMessage = async () => {
@@ -1287,7 +1297,7 @@ const ChatPage = () => {
                     cursor: "pointer",
                     backgroundColor:
                       //   selectedTaskId === task._id ? "#FDB8DC" : "#FFFFFF",
-                    //   selectedTaskId === task._id ? "#fdcee6" : "#FFFFFF",
+                      //   selectedTaskId === task._id ? "#fdcee6" : "#FFFFFF",
                       selectedTaskId === task._id ? "#F3F4F6" : "#FFFFFF",
                     borderRadius:
                       selectedTaskId === task._id ? "10px" : "#FFFFFF",
@@ -1299,7 +1309,7 @@ const ChatPage = () => {
                       //   backgroundColor: "#fffafd",
                       //   color: "#201F2F",
                       //   backgroundColor: "#FDB8DC",
-                    //   backgroundColor: "#fdcee6",
+                      //   backgroundColor: "#fdcee6",
                       backgroundColor: "#F3F4F6",
                       color: "#201F2F",
                       borderRadius: "10px",
@@ -1397,7 +1407,7 @@ const ChatPage = () => {
       >
         {/* AppBar */}
         {!isLargeScreen ? (
-          <AppBar position="relative" color="primary" sx={{mt: 2}}>
+          <AppBar position="relative" color="primary" sx={{ mt: 2 }}>
             <Toolbar>
               {!isLargeScreen && (
                 <IconButton
