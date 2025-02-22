@@ -1112,7 +1112,7 @@ const ChatPage = () => {
         console.log("Selected task ID:",  selectedTaskIdRef.current);
         console.log("socketRef:", socketRef.current);
         if (socketRef.current.disconnect) {
-          setSelectedTaskId( selectedTaskIdRef.current);
+          fetchMessagesForTask( selectedTaskIdRef.current);
         }
         // if (selectedTaskIdRef.current) {
         // socketRef.current.emit("joinTaskRoom",  selectedTaskIdRef.current, token);
