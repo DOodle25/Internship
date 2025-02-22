@@ -1063,7 +1063,7 @@ const ChatPage = () => {
   useEffect(() => {
     selectedTaskIdRef.current = selectedTaskId;
   }, [selectedTaskId]);
-  
+
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
@@ -1110,10 +1110,12 @@ const ChatPage = () => {
           connectSocket();
         }
         console.log("Selected task ID:",  selectedTaskIdRef.current);
-        if ( selectedTaskIdRef.current) {
-          socketRef.emit("joinTaskRoom",  selectedTaskIdRef.current, token);
+        console.log("socketRef:", socketRef.current);
+        // if (selectedTaskIdRef.current) {
+          const x = socketRef.current.emit("joinTaskRoom",  selectedTaskIdRef.current, token);
+          console.log(x)
           console.log(`Joined task room: ${ selectedTaskIdRef.current}`);
-        }
+        // }
       }
     };
 
