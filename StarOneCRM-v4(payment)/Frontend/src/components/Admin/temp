@@ -1,0 +1,611 @@
+
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../../utils/axios";
+import { useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  IconButton,
+  TextField,
+  Menu,
+  MenuItem,
+  Avatar,
+  Badge,
+  Tooltip,
+} from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import DeleteIcon from "@mui/icons-material/Delete";
+import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const CRMUserManagement = ({ token, setUserMethod, logout }) => {
+  const [users, setUsers] = useState([]);
+  const [search, setSearch] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axiosInstance.get("/admin/", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUsers(response.data.data);
+      toast.success("Users fetched successfully");
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      toast.error("Failed to fetch users");
+      setUserMethod(null);
+      logout();
+      navigate("/");
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await Promise.all(
+        selectedUsers.map(async (id) => {
+          await axiosInstance.delete(`/admin/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+        })
+      );
+      setUsers((prevUsers) => prevUsers.filter((user) => !selectedUsers.includes(user._id)));
+      setSelectedUsers([]);
+      toast.success("Users deleted successfully");
+    } catch (error) {
+      console.error("Error deleting users:", error);
+      toast.error("Error deleting users");
+    }
+  };
+
+  const handleVerify = async () => {
+    try {
+      await Promise.all(
+        selectedUsers.map(async (id) => {
+          await axiosInstance.patch(`/admin/verify/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+        })
+      );
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          selectedUsers.includes(user._id) ? { ...user, isFormVerified: true } : user
+        )
+      );
+      setSelectedUsers([]);
+      toast.success("Users verified successfully");
+    } catch (error) {
+      console.error("Error verifying users:", error);
+      toast.error("Error verifying users");
+    }
+  };
+
+  const handleMenuOpen = (event, user) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedUser(user);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedUser(null);
+  };
+
+  const columns = [
+    { field: "name", headerName: "Name", width: 200 },
+    { field: "email", headerName: "Email", width: 250 },
+    { field: "role", headerName: "Role", width: 150 },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 150,
+      renderCell: (params) => (
+        <Tooltip title={params.value ? "Verified" : "Not Verified"}>
+          <Badge color={params.value ? "success" : "error"}>
+            <VerifiedUserIcon />
+          </Badge>
+        </Tooltip>
+      ),
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 100,
+      renderCell: (params) => (
+        <IconButton onClick={(e) => handleMenuOpen(e, params.row)}>
+          <MoreVertIcon />
+        </IconButton>
+      ),
+    },
+  ];
+
+  return (
+    <Card style={{ padding: "20px", margin: "20px" }}>
+      <ToastContainer />
+      <CardContent>
+        <Typography variant="h5" gutterBottom>
+          User Management
+        </Typography>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
+          <TextField
+            variant="outlined"
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ width: "40%" }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<PersonAddIcon />}
+            onClick={() => navigate("/add")}
+          >
+            Add User
+          </Button>
+        </div>
+        <div style={{ height: 400, width: "100%" }}>
+          <DataGrid
+            rows={users.map((user) => ({ ...user, id: user._id }))}
+            columns={columns}
+            checkboxSelection
+            onSelectionModelChange={(ids) => setSelectedUsers(ids)}
+          />
+        </div>
+        <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={<VerifiedUserIcon />}
+            onClick={handleVerify}
+            disabled={selectedUsers.length === 0}
+          >
+            Verify
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={handleDelete}
+            disabled={selectedUsers.length === 0}
+          >
+            Delete
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default CRMUserManagement;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useEffect, useState } from "react";
+import axiosInstance from '../../utils/axios';
+import DataTable from "react-data-table-component";
+import { useNavigate } from "react-router-dom";
+import { IconButton, Menu, MenuItem, TextField, Button, Tooltip, Avatar, Chip, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import DeleteIcon from "@mui/icons-material/Delete";
+import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const UserList = ({ token, setUserMethod, logout }) => {
+  const [users, setUsers] = useState([]);
+  const [search, setSearch] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [filterVerified, setFilterVerified] = useState(0);
+  const [filterAdmin, setFilterAdmin] = useState(0);
+  const [filterRole, setFilterRole] = useState(0);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogType, setDialogType] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const navigate = useNavigate();
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axiosInstance.get("/admin/", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUsers(response.data.data);
+      toast.success("Users fetched successfully");
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      toast.error("Failed to fetch users");
+      setUserMethod(null);
+      logout();
+      navigate("/");
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await Promise.all(
+        selectedUsers.map(async (id) => {
+          await axiosInstance.delete(`/admin/${id}`, {}, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+        })
+      );
+      setUsers((prevUsers) =>
+        prevUsers.filter((user) => !selectedUsers.includes(user._id))
+      );
+      setSelectedUsers([]);
+      setSnackbarMessage("Selected users deleted successfully");
+      setSnackbarOpen(true);
+      setOpenDialog(false);
+    } catch (error) {
+      console.error("Error deleting users:", error);
+      setSnackbarMessage("Error deleting users");
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleVerify = async () => {
+    try {
+      await Promise.all(
+        selectedUsers.map(async (id) => {
+          await axiosInstance.patch(`/admin/verify/${id}`, {}, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+        })
+      );
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          selectedUsers.includes(user._id)
+            ? { ...user, isFormVerified: true }
+            : user
+        )
+      );
+      setSelectedUsers([]);
+      setSnackbarMessage("Selected users verified successfully");
+      setSnackbarOpen(true);
+      setOpenDialog(false);
+    } catch (error) {
+      console.error("Error verifying users:", error);
+      setSnackbarMessage("Error verifying users");
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleSelectUser = (userId) => {
+    setSelectedUsers((prevSelected) =>
+      prevSelected.includes(userId)
+        ? prevSelected.filter((id) => id !== userId)
+        : [...prevSelected, userId]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedUsers.length === users.length) {
+      setSelectedUsers([]); // Deselect all
+    } else {
+      setSelectedUsers(users.map((user) => user._id)); // Select all
+    }
+  };
+
+  const handleMenuOpen = (event, user) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedUser(user);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedUser(null);
+  };
+
+  const handleDialogOpen = (type) => {
+    setDialogType(type);
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const filteredUsers = users.filter((user) => {
+    if (filterVerified === 1 && !user.isFormVerified) return false;
+    if (filterVerified === 2 && user.isFormVerified) return false;
+
+    if (filterAdmin === 1 && !user.isAdmin) return false;
+    if (filterAdmin === 2 && user.isAdmin) return false;
+
+    if (filterRole === 1 && user.role === "employee") return false;
+    if (filterRole === 2 && user.role === "customer") return false;
+
+    return (
+      user.name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase()) ||
+      user.role.toLowerCase().includes(search.toLowerCase())
+    );
+  });
+
+  const columns = [
+    {
+      name: (
+        <input
+          type="checkbox"
+          checked={selectedUsers.length === users.length}
+          onChange={handleSelectAll}
+        />
+      ),
+      cell: (row) => (
+        <input
+          type="checkbox"
+          checked={selectedUsers.includes(row._id)}
+          onChange={() => handleSelectUser(row._id)}
+        />
+      ),
+      width: "5%",
+    },
+    {
+      name: "Name",
+      selector: (row) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Avatar src={row.avatar} alt={row.name} style={{ marginRight: "10px" }} />
+          <span>{row.name}</span>
+        </div>
+      ),
+      sortable: true,
+    },
+    {
+      name: "Age",
+      selector: (row) => row.age,
+      sortable: true,
+    },
+    {
+      name: "Email",
+      selector: (row) => (
+        <Tooltip title={row.email}>
+          <span style={{ color: "#1976d2", textDecoration: "underline" }}>{row.email}</span>
+        </Tooltip>
+      ),
+      sortable: true,
+    },
+    {
+      name: "Roles",
+      selector: (row) => (
+        <Chip
+          label={row.role}
+          color={row.role === "admin" ? "primary" : "default"}
+          size="small"
+        />
+      ),
+      sortable: true,
+    },
+    {
+      name: "Status",
+      selector: (row) => (
+        <div>
+          <Chip
+            icon={<VerifiedUserIcon />}
+            label={row.isFormVerified ? "Verified" : "Not Verified"}
+            color={row.isFormVerified ? "success" : "default"}
+            size="small"
+            style={{ marginRight: "5px" }}
+          />
+          <Chip
+            label={row.isAdmin ? "Admin" : "Not Admin"}
+            color={row.isAdmin ? "secondary" : "default"}
+            size="small"
+          />
+        </div>
+      ),
+    },
+    {
+      name: "Actions",
+      cell: (row) => (
+        <IconButton
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          onClick={(e) => handleMenuOpen(e, row)}
+        >
+          <MoreVertIcon />
+        </IconButton>
+      ),
+    },
+  ];
+
+  const customStyles = {
+    rows: {
+      style: {
+        "&:nth-of-type(odd)": {
+          backgroundColor: "#f9f9f9",
+        },
+        "&:nth-of-type(even)": {
+          backgroundColor: "#ffffff",
+        },
+      },
+    },
+  };
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <ToastContainer />
+      <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
+        <TextField
+          variant="outlined"
+          placeholder="Search..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ flex: 1, marginRight: "10px" }}
+        />
+        <Tooltip title="Add User">
+          <IconButton
+            color="primary"
+            onClick={() => navigate("/add")}
+            aria-label="Add User"
+          >
+            <PersonAddIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Filter">
+          <IconButton
+            color="primary"
+            onClick={() => navigate("/filter")}
+            aria-label="Filter"
+          >
+            <FilterListIcon />
+          </IconButton>
+        </Tooltip>
+      </div>
+      <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
+        <Button
+          variant={filterVerified !== 0 ? "contained" : "outlined"}
+          color="success"
+          onClick={() => setFilterVerified((prev) => (prev + 1) % 3)}
+          style={{ marginRight: "10px" }}
+        >
+          Verified
+        </Button>
+        <Button
+          variant={filterAdmin !== 0 ? "contained" : "outlined"}
+          color="warning"
+          onClick={() => setFilterAdmin((prev) => (prev + 1) % 3)}
+          style={{ marginRight: "10px" }}
+        >
+          Admin
+        </Button>
+        <Button
+          variant={filterRole !== 0 ? "contained" : "outlined"}
+          color="warning"
+          onClick={() => setFilterRole((prev) => (prev + 1) % 3)}
+          style={{ marginRight: "10px" }}
+        >
+          Role
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<DeleteIcon />}
+          onClick={() => handleDialogOpen("delete")}
+          disabled={selectedUsers.length === 0}
+          style={{ marginRight: "10px" }}
+        >
+          Delete Selected
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<VerifiedUserIcon />}
+          onClick={() => handleDialogOpen("verify")}
+          disabled={selectedUsers.length === 0}
+        >
+          Verify Selected
+        </Button>
+      </div>
+      <DataTable
+        columns={columns}
+        data={filteredUsers}
+        pagination
+        striped
+        responsive
+        customStyles={customStyles}
+      />
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem
+          onClick={() => {
+            navigate(`/update/${selectedUser._id}`);
+            handleMenuClose();
+          }}
+        >
+          View
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleDialogOpen("delete");
+            handleMenuClose();
+          }}
+        >
+          Delete
+        </MenuItem>
+      </Menu>
+      <Dialog open={openDialog} onClose={handleDialogClose}>
+        <DialogTitle>
+          {dialogType === "delete" ? "Delete Users" : "Verify Users"}
+        </DialogTitle>
+        <DialogContent>
+          {dialogType === "delete"
+            ? "Are you sure you want to delete the selected users?"
+            : "Are you sure you want to verify the selected users?"}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={dialogType === "delete" ? handleDelete : handleVerify}
+            color="secondary"
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+      />
+    </div>
+  );
+};
+
+export default UserList;
+
