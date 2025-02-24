@@ -19,8 +19,8 @@ exports.createCheckoutSession = async (req, res) => {
           quantity: 1,
         },
       ],
-      success_url: "http://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net/api/payment/checkout-session-status?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "https://polite-field-09918cc00.4.azurestaticapps.net/cancel",
+      success_url: "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net/api/payment/checkout-session-status?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://polite-field-09918cc00.4.azurestaticapps.net/#/cancel",
     });
 
     // Create a new payment record
@@ -54,7 +54,7 @@ exports.getCheckoutSessionStatus = async (req, res) => {
       await payment.save();
     }
 
-    res.redirect(`https://polite-field-09918cc00.4.azurestaticapps.net/success?session_id=${sessionId}`);
+    res.redirect(`https://polite-field-09918cc00.4.azurestaticapps.net/#/success?session_id=${sessionId}`);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
