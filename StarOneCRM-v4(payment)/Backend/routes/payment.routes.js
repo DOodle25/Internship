@@ -24,8 +24,10 @@ router.post("/create-checkout-session", verifyJWT, async (req, res) => {
           quantity: 1,
         },
       ],
-      success_url: "http://localhost:5000/api/payment/checkout-session-status?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "http://localhost:5173/cancel",
+      // success_url: "http://localhost:5000/api/payment/checkout-session-status?session_id={CHECKOUT_SESSION_ID}",
+      // cancel_url: "http://localhost:5173/cancel",
+      success_url: "http://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net/api/payment/checkout-session-status?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://polite-field-09918cc00.4.azurestaticapps.net/cancel",
     });
 
     // Create a new payment record
@@ -60,7 +62,7 @@ router.get("/checkout-session-status", async (req, res) => {
     }
 
     // Forward to success URL
-    res.redirect(`http://localhost:5173/success?session_id=${sessionId}`);
+    res.redirect(`https://polite-field-09918cc00.4.azurestaticapps.net/success?session_id=${sessionId}`);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

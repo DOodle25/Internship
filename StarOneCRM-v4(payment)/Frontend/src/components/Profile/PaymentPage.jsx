@@ -295,7 +295,7 @@ const handlePayment = async () => {
     setLoading(true);
     try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:5000/api/payment/create-checkout-session", {
+        const response = await fetch("http://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net/api/payment/create-checkout-session", {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",

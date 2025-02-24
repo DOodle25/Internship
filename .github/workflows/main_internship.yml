@@ -20,24 +20,24 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          cd StarOneCRM-v3/Backend
+          cd StarOneCRM-v4(payment)/Backend
           npm install
           npm run build --if-present
           # npm run test --if-present
 
       - name: Zip artifact for deployment
         run: |
-          cd StarOneCRM-v3/Backend
+          cd StarOneCRM-v4(payment)/Backend
           zip -r ../release.zip ./
 
       - name: Verify artifact upload
-        run: ls -al StarOneCRM-v3/release.zip
+        run: ls -al StarOneCRM-v4(payment)/release.zip
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: StarOneCRM-v3/release.zip
+          path: StarOneCRM-v4(payment)/release.zip
 
   deploy:
     runs-on: ubuntu-latest

@@ -44,7 +44,8 @@ const Footer = () => (
 const StudentDashboard = () => {
   const { token, setUserMethod, logout } = useGlobalContext();
   const location = useLocation();
-  const isChatPage = location.pathname === "/chat";
+  const isChatPage = location.pathname === "/chat"; 
+  const isAdminePanel = location.pathname === "/" || location.pathname === "/assign"; 
   const isLargeScreen = useMediaQuery("(min-width:960px)");
   return (
     <ThemeProvider theme={theme}>
@@ -133,14 +134,14 @@ const StudentDashboard = () => {
         {/* Main Content */}
         <Container
           sx={{
-            my: 4,
+            // my: 4,
             width: "100%",
             ...(isLargeScreen && {
-            maxWidth: isChatPage ? "none !important" : "lg",
-            marginTop: isChatPage ? "0px !important" : "",
+            maxWidth: isChatPage || isAdminePanel ? "none !important" : "lg",
+            marginTop: isChatPage || isAdminePanel ? "0px !important" : "",
             paddingLeft: isChatPage ? "0px !important" : "",
-            marginBottom: isChatPage ? "0px !important" : "",
-            paddingBottom: isChatPage ? "0px !important" : "",
+            marginBottom: isChatPage || isAdminePanel ? "0px !important" : "",
+            paddingBottom: isChatPage || isAdminePanel ? "0px !important" : "",
             }),
           }}
         >
