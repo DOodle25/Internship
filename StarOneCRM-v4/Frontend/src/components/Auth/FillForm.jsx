@@ -4,7 +4,7 @@ import axiosInstance from "../../utils/axios";
 import { useGlobalContext } from "../../context/GlobalContext";
 
 function FillForm() {
-  const { token, setUserMethod, logout, user } = useGlobalContext();
+  const { logout, user, handleFillFormSubmit } = useGlobalContext();
   const loginMethod = user.loginMethod;
   const [formData, setFormData] = useState({
     Taskassigned: "",
@@ -16,31 +16,6 @@ function FillForm() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (loginMethod !== "traditional") {
-      if (formData.password !== formData.confirmPassword) {
-        return;
-      }
-    }
-
-    try {
-      const response = await axiosInstance.post("/status/fill-form", formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response) {
-        storedUser = user
-        storedUser.isFormFilled = true;
-        setUserMethod(storedUser);
-      }
-      setUserMethod(response.data.user);
-    } catch (error) {
-      console.error(error.response?.data?.message || error.message);
-    }
   };
 
   return (
@@ -57,7 +32,7 @@ function FillForm() {
         Complete Your Profile
       </Typography>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => handleFillFormSubmit(e, formData, setFormData)}>
         <Box mb={2}>
           <TextField
             fullWidth

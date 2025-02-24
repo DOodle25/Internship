@@ -363,89 +363,91 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { toast, ToastContainer } from "react-toastify";
+// import { toast, ToastContainer } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
+import { useGlobalContext } from "../../context/GlobalContext";
 
-const UserList = ({ token, setUserMethod, logout }) => {
-  const [users, setUsers] = useState([]);
+const UserList = ({  }) => {
+  const {handleVerify, handleDelete, fetchUsers, users, setUsers, selectedUsers, setSelectedUsers,} = useGlobalContext();
+  // const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [filterVerified, setFilterVerified] = useState(0);
   const [filterAdmin, setFilterAdmin] = useState(0);
   const [filterRole, setFilterRole] = useState(0);
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  // const [selectedUsers, setSelectedUsers] = useState([]);
   const navigate = useNavigate();
 
-  const fetchUsers = async () => {
-    try {
-      const response = await axiosInstance.get("/admin/", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUsers(response.data.data);
-      toast.success("Users fetched successfully");
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      toast.error("Failed to fetch users");
-      setUserMethod(null);
-      logout();
-      navigate("/");
-    }
-  };
+  // const fetchUsers = async () => {
+  //   try {
+  //     const response = await axiosInstance.get("/admin/", {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+  //     setUsers(response.data.data);
+  //     // toast.success("Users fetched successfully");
+  //   } catch (error) {
+  //     console.error("Error fetching users:", error);
+  //     // toast.error("Failed to fetch users");
+  //     setUserMethod(null);
+  //     logout();
+  //     navigate("/");
+  //   }
+  // };
 
-  const handleDelete = async () => {
-    try {
-      await Promise.all(
-        selectedUsers.map(async (id) => {
-          await axiosInstance.delete(
-            `/admin/${id}`,
-            {},
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-        })
-      );
-      setUsers((prevUsers) =>
-        prevUsers.filter((user) => !selectedUsers.includes(user._id))
-      );
-      setSelectedUsers([]);
-      toast.success("Selected users deleted successfully");
-    } catch (error) {
-      console.error("Error deleting users:", error);
-      toast.error("Error deleting users");
-    }
-  };
+  // const handleDelete = async () => {
+  //   try {
+  //     await Promise.all(
+  //       selectedUsers.map(async (id) => {
+  //         await axiosInstance.delete(
+  //           `/admin/${id}`,
+  //           {},
+  //           {
+  //             headers: { Authorization: `Bearer ${token}` },
+  //           }
+  //         );
+  //       })
+  //     );
+  //     setUsers((prevUsers) =>
+  //       prevUsers.filter((user) => !selectedUsers.includes(user._id))
+  //     );
+  //     setSelectedUsers([]);
+  //     // toast.success("Selected users deleted successfully");
+  //   } catch (error) {
+  //     console.error("Error deleting users:", error);
+  //     // toast.error("Error deleting users");
+  //   }
+  // };
 
-  const handleVerify = async () => {
-    try {
-      await Promise.all(
-        selectedUsers.map(async (id) => {
-          await axiosInstance.patch(
-            `/admin/verify/${id}`,
-            {},
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-        })
-      );
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          selectedUsers.includes(user._id)
-            ? { ...user, isFormVerified: true }
-            : user
-        )
-      );
-      setSelectedUsers([]);
-      toast.success("Selected users verified successfully");
-    } catch (error) {
-      console.error("Error verifying users:", error);
-      toast.error("Error verifying users");
-    }
-  };
+  // const handleVerify = async () => {
+  //   try {
+  //     await Promise.all(
+  //       selectedUsers.map(async (id) => {
+  //         await axiosInstance.patch(
+  //           `/admin/verify/${id}`,
+  //           {},
+  //           {
+  //             headers: { Authorization: `Bearer ${token}` },
+  //           }
+  //         );
+  //       })
+  //     );
+  //     setUsers((prevUsers) =>
+  //       prevUsers.map((user) =>
+  //         selectedUsers.includes(user._id)
+  //           ? { ...user, isFormVerified: true }
+  //           : user
+  //       )
+  //     );
+  //     setSelectedUsers([]);
+  //     // toast.success("Selected users verified successfully");
+  //   } catch (error) {
+  //     console.error("Error verifying users:", error);
+  //     // toast.error("Error verifying users");
+  //   }
+  // };
 
   const handleMenuOpen = (event, user) => {
     setAnchorEl(event.currentTarget);
@@ -750,7 +752,6 @@ const UserList = ({ token, setUserMethod, logout }) => {
   return (
     <>
       <div style={{ padding: "20px", marginTop: "20px" }}>
-        <ToastContainer />
         <div
           style={{
             display: "flex",

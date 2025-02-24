@@ -25,63 +25,12 @@ const providers = [
   // { id: "linkedin", name: "LinkedIn", icon: LinkedIn, color: "#0077B5" },
 ];
 
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net"
-    : "http://localhost:5000";
+
 
 const GoogleLogin = () => {
-  const { token, setTokenMethod } = useGlobalContext();
-  const [loadingProvider, setLoadingProvider] = useState(null);
+  const { handleOAuthLogin, fetchUserDetails, loginloadingProvider } = useGlobalContext();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down(335));
-
-  const handleOAuthLogin = (providerId) => {
-    setLoadingProvider(providerId);
-    const authUrl = `${BASE_URL}/api/auth/${providerId}?prompt=select_account`;
-    const newWindow = window.open(authUrl, "_blank", "width=500,height=600");
-
-    const handleMessage = (event) => {
-      if (event.origin !== BASE_URL) return;
-      const { token } = event.data;
-      if (token) {
-        setTokenMethod(token);
-        fetchUserDetails();
-        newWindow?.close();
-        window.location.reload();
-      }
-    };
-
-    window.addEventListener("message", handleMessage);
-
-    const checkWindow = setInterval(() => {
-      if (newWindow.closed) {
-        clearInterval(checkWindow);
-        window.removeEventListener("message", handleMessage);
-        setLoadingProvider(null);
-      }
-    }, 1000);
-  };
-
-  const fetchUserDetails = async () => {
-    try {
-      if (!token) return;
-
-      const response = await axiosInstance.get("/status/check-status", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.data.success) {
-        setTokenMethod(response.data.token);
-        setUser(response.data.user);
-      }
-    } catch (error) {
-      console.error(
-        "Error fetching user:",
-        error.response?.data || error.message
-      );
-    }
-  };
 
   useEffect(() => {
     fetchUserDetails();
@@ -114,9 +63,9 @@ const GoogleLogin = () => {
             }}
             onClick={() => handleOAuthLogin(provider.id)}
             style={{ margin: "2px" }}
-            disabled={loadingProvider === provider.id}
+            disabled={loginloadingProvider === provider.id}
             startIcon={
-              loadingProvider === provider.id ? (
+              loginloadingProvider === provider.id ? (
                 <CircularProgress size={24} />
               ) : (
                 <SvgIcon component={provider.icon} />

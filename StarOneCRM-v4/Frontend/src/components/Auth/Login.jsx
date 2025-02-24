@@ -14,7 +14,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
 import GoogleLogin from "./GoogleLogin";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 import { useGlobalContext } from "../../context/GlobalContext";
 
 function Login() {

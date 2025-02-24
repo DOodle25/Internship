@@ -15,8 +15,7 @@ import Profile from "./profile";
 import ChatPage from "./chat";
 import { useGlobalContext } from "../../context/GlobalContext";
 import { useLocation } from "react-router-dom";
-import PaymentPage from "./PaymentPage"; // Import the payment component
-
+import PaymentPage from "./PaymentPage";
 const Footer = () => (
   <Box
     component="footer"

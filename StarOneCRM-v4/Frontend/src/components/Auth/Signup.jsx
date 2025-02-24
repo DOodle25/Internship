@@ -80,9 +80,7 @@ function Signup() {
     try {
       const result = await handleSignup(formData, true);
       if (result.success) {
-        setTimeout(() => {
-          navigate("/login");
-        }, 7000);
+        navigate("/login");
       } else {
       }
     } catch (error) {

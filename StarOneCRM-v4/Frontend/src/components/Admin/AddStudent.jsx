@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axiosInstance from "../../utils/axios";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import { toast, ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 import { TextField, Button, Paper, Box, InputAdornment } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
@@ -9,8 +9,11 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import SchoolIcon from "@mui/icons-material/School";
 import SaveIcon from "@mui/icons-material/Save";
 import LockIcon from "@mui/icons-material/Lock";
+import { useGlobalContext } from "../../context/GlobalContext";
 
 const AddStudent = () => {
+  const { handleAddStudentSubmit } = useGlobalContext();
+
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -24,43 +27,48 @@ const AddStudent = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (event) => {
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   try {
+  //     const response = await axiosInstance.post(`/admin/`, {
+  //       ...formData,
+  //       age: Number(formData.age),
+  //     });
+
+  //     const { message, data } = response.data;
+
+  //     if (data) {
+  //       // toast.success(`${message}, you will be redirected shortly`);
+  //       setTimeout(() => {
+  //         window.location.href = "/";
+  //       }, 5000);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error adding user:", error);
+
+  //     if (error.response && error.response.data) {
+  //       const { error: backendError, message } = error.response.data;
+
+  //       if (backendError && backendError.includes("duplicate key error")) {
+  //         const emailMatch = backendError.match(/email: "(.*?)"/);
+  //         const duplicateEmail = emailMatch ? emailMatch[1] : "this email";
+  //         // toast.error(
+  //         //   `The email ${duplicateEmail} is already associated with another user.`
+  //         // );
+  //       } else {
+  //         // toast.error(
+  //         //   message || backendError || "An unexpected error occurred."
+  //         // );
+  //       }
+  //     } else {
+  //       // toast.error("Failed to add user. Please try again later.");
+  //     }
+  //   }
+  // };
+
+  const onSubmit = (event) => {
     event.preventDefault();
-    try {
-      const response = await axiosInstance.post(`/admin/`, {
-        ...formData,
-        age: Number(formData.age),
-      });
-
-      const { message, data } = response.data;
-
-      if (data) {
-        toast.success(`${message}, you will be redirected shortly`);
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 5000);
-      }
-    } catch (error) {
-      console.error("Error adding user:", error);
-
-      if (error.response && error.response.data) {
-        const { error: backendError, message } = error.response.data;
-
-        if (backendError && backendError.includes("duplicate key error")) {
-          const emailMatch = backendError.match(/email: "(.*?)"/);
-          const duplicateEmail = emailMatch ? emailMatch[1] : "this email";
-          toast.error(
-            `The email ${duplicateEmail} is already associated with another user.`
-          );
-        } else {
-          toast.error(
-            message || backendError || "An unexpected error occurred."
-          );
-        }
-      } else {
-        toast.error("Failed to add user. Please try again later.");
-      }
-    }
+    handleAddStudentSubmit(formData, () => (window.location.href = "/"));
   };
 
   return (
@@ -73,8 +81,7 @@ const AddStudent = () => {
         textAlign: "center",
       }}
     >
-      <ToastContainer />
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={onSubmit}>
         <Box mb={2}>
           <TextField
             fullWidth

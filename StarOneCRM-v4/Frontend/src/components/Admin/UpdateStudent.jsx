@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../utils/axios";
 import { useParams } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import { toast, ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 import {
   TextField,
   Button,
@@ -18,8 +18,11 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import SchoolIcon from "@mui/icons-material/School";
 import SaveIcon from "@mui/icons-material/Save";
 import CheckIcon from "@mui/icons-material/Check";
+import { useGlobalContext } from "../../context/GlobalContext";
 
-const UpdateStudent = ({ token }) => {
+const UpdateStudent = () => {
+  const { handleUpdateUserSubmit, token, fetchUserWithId } = useGlobalContext();
+
   const { id } = useParams();
   const [user, setUser] = useState({
     name: "",
@@ -33,18 +36,9 @@ const UpdateStudent = ({ token }) => {
   });
 
   useEffect(() => {
-    axiosInstance
-      .get(`/admin/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((response) => {
-        setUser(response.data.data);
-        toast.success("User data loaded successfully");
-      })
-      .catch((error) => {
-        console.error("Error fetching user:", error);
-        toast.error("Failed to load user data");
-      });
+    fetchUserWithId(id).then((data) => {
+      setUser(data);
+    });
   }, [id]);
 
   const handleChange = (e) => {
@@ -52,45 +46,45 @@ const UpdateStudent = ({ token }) => {
     setUser({ ...user, [name]: type === "checkbox" ? checked : value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axiosInstance.patch(
-        `/admin/${id}`,
-        { ...user, age: Number(user.age) },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const { message, data } = response.data;
-      if (data) {
-        toast.success(`${message}, you will be redirected shortly`);
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 5000);
-      }
-    } catch (error) {
-      console.error("Error updating user:", error);
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axiosInstance.patch(
+  //       `/admin/${id}`,
+  //       { ...user, age: Number(user.age) },
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+  //     const { message, data } = response.data;
+  //     if (data) {
+  //       // toast.success(`${message}, you will be redirected shortly`);
+  //       setTimeout(() => {
+  //         window.location.href = "/";
+  //       }, 5000);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating user:", error);
 
-      if (error.response && error.response.data) {
-        const { error: backendError, message } = error.response.data;
+  //     if (error.response && error.response.data) {
+  //       const { error: backendError, message } = error.response.data;
 
-        if (backendError && backendError.includes("duplicate key error")) {
-          const emailMatch = backendError.match(/email: "(.*?)"/);
-          const duplicateEmail = emailMatch ? emailMatch[1] : "this email";
-          toast.error(
-            `The email ${duplicateEmail} is already associated with another user.`
-          );
-        } else {
-          toast.error(
-            message || backendError || "An unexpected error occurred."
-          );
-        }
-      } else {
-        toast.error("Failed to update user. Please try again later.");
-      }
-    }
-  };
+  //       if (backendError && backendError.includes("duplicate key error")) {
+  //         const emailMatch = backendError.match(/email: "(.*?)"/);
+  //         const duplicateEmail = emailMatch ? emailMatch[1] : "this email";
+  //         // toast.error(
+  //         //   `The email ${duplicateEmail} is already associated with another user.`
+  //         // );
+  //       } else {
+  //         // toast.error(
+  //         //   message || backendError || "An unexpected error occurred."
+  //         // );
+  //       }
+  //     } else {
+  //       // toast.error("Failed to update user. Please try again later.");
+  //     }
+  //   }
+  // };
 
   const handleVerify = async () => {
     try {
@@ -106,11 +100,11 @@ const UpdateStudent = ({ token }) => {
           ...prevUser,
           isFormVerified: true,
         }));
-        toast.success("User verified successfully");
+        // toast.success("User verified successfully");
       }
     } catch (error) {
       console.error("Error verifying user:", error);
-      toast.error("Error verifying user");
+      // toast.error("Error verifying user");
     }
   };
 
@@ -124,9 +118,7 @@ const UpdateStudent = ({ token }) => {
         textAlign: "center",
       }}
     >
-      <ToastContainer />
-
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => handleUpdateUserSubmit(e, user, id)}>
         <Box mb={2}>
           <TextField
             fullWidth
