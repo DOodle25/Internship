@@ -1,3 +1,35 @@
+# Live :
+https://polite-field-09918cc00.4.azurestaticapps.net/#/login
+
+test id : admin - cocply135@gmail.com - admin123
+test id : customer - 210305105302@paruluniversity.ac.in - admin123
+
+UI images : 
+
+
+![Screenshot 2025-02-25 111236](https://github.com/user-attachments/assets/abc519c4-d850-46c6-90fc-a217d65177c2)
+![Screenshot 2025-02-25 111208](https://github.com/user-attachments/assets/6bd547b3-b3bc-40b0-85fb-73de5391ea22)
+![Screenshot 2025-02-25 111200](https://github.com/user-attachments/assets/8b19cb8b-8fb9-4e34-8fcf-7a1240a5faa5)
+![Screenshot 2025-02-25 111151](https://github.com/user-attachments/assets/1d7cd63e-7ed2-4415-81a9-244b319b62cd)
+![Screenshot 2025-02-25 111138](https://github.com/user-attachments/assets/e72e3681-ec64-4353-9c27-1d6fe628ea6b)
+![Screenshot 2025-02-25 111120](https://github.com/user-attachments/assets/082c77d7-6938-4497-b88e-82336c2e7505)
+![Screenshot 2025-02-25 111106](https://github.com/user-attachments/assets/1ad8aac1-b5d1-4ece-85a5-3a91c1841bcc)
+![Screenshot 2025-02-25 111055](https://github.com/user-attachments/assets/dcb6f695-8a6b-4162-a113-59aef825804d)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Internship Log  
 
 <details>
