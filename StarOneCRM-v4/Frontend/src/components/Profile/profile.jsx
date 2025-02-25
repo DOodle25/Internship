@@ -76,12 +76,13 @@ const Profile = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        // minHeight: "100vh",
+        flexDirection: "column",
+        minHeight: "100vh",
+        p: 2,
       }}
     >
       <Card
         sx={{
-          my: 5,
           width: "100%",
           p: 3,
           backgroundColor: "",
@@ -98,12 +99,12 @@ const Profile = () => {
               {profile.name[0]}
             </Avatar>
             <div>
-            <Typography variant="h4" fontWeight="bold" color="#201F2F">
-              {profile.name}
-            </Typography>
-            <Typography variant="h6" fontWeight="" color="#201F2F">
-              {profile.email}
-            </Typography>
+              <Typography variant="h4" fontWeight="bold" color="#201F2F" textAlign={{ xs: "center", sm: "left" }}>
+                {profile.name}
+              </Typography>
+              <Typography variant="h6" color="#201F2F" textAlign={{ xs: "center", sm: "left" }}>
+                {profile.email}
+              </Typography>
             </div>
           </Box>
 
@@ -169,7 +170,7 @@ const Profile = () => {
             <Typography>No tasks assigned</Typography>
           )}
 
-          <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
+          <Box sx={{ mt: 3, display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
             {isEditing ? (
               <>
                 <Button onClick={handleSave} variant="contained">
@@ -181,13 +182,13 @@ const Profile = () => {
               </>
             ) : (
               <div>
-                <Button onClick={() => setIsEditing(true)} variant="outlined" sx={{m:1}}>
+                <Button onClick={() => setIsEditing(true)} variant="outlined" sx={{ m: 1 }}>
                   Edit Profile
                 </Button>
-                <Button onClick={handleDelete} variant="outlined" sx={{m:1}}>
+                <Button onClick={handleDelete} variant="outlined" sx={{ m: 1 }}>
                   Delete Profile
                 </Button>
-                <Button onClick={logout} variant="outlined" sx={{m:1}}>
+                <Button onClick={logout} variant="outlined" sx={{ m: 1 }}>
                   Logout
                 </Button>
               </div>

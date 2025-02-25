@@ -341,7 +341,7 @@ const AssignUserToEmployee = () => {
             variant="contained"
             color="primary"
             onClick={handleAssign}
-            style={{ margin: "10px" }}
+            style={{ margin: "10px", marginLeft: "0" }}
           >
             Assign Task
           </Button>
@@ -350,6 +350,7 @@ const AssignUserToEmployee = () => {
             color="primary"
             startIcon={<Add />}
             onClick={() => setOpenDialog(true)}
+            style={{ margin: "10px", marginLeft: "0" }}
           >
             Create Task
           </Button>
@@ -378,7 +379,19 @@ const AssignUserToEmployee = () => {
           initialState={{
             pagination: { paginationModel: { pageSize: 10 } },
           }}
-          pageSizeOptions={[5, 10, 25]}
+          pageSizeOptions={[5, 10, 25]}sx={{
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "#f5f5f5",
+              fontSize: "16px",
+              fontWeight: "",
+            },
+            "& .MuiDataGrid-row:nth-of-type(even)": {
+              backgroundColor: "#f9f9f9",
+            },
+            "& .MuiDataGrid-cell": {
+              fontSize: "14px",
+            },
+          }}
         />
       </div>
 

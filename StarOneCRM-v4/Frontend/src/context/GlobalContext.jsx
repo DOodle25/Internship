@@ -668,39 +668,39 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  const handleUpdateUserSubmit = async (e, user, id) => {
-    e.preventDefault();
-    try {
-      const response = await axiosInstance.patch(
-        `/admin/${id}`,
-        { ...user, age: Number(user.age) },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const { message, data } = response.data;
-      if (data) {
-        window.location.href = "/";
-      }
-      showSnackbar(message);
-    } catch (error) {
-      showSnackbar("Error updating user", "error");
-    }
-  };
+  // const handleUpdateUserSubmit = async (e, user, id) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axiosInstance.patch(
+  //       `/admin/${id}`,
+  //       { ...user, age: Number(user.age) },
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+  //     const { message, data } = response.data;
+  //     if (data) {
+  //       window.location.href = "/";
+  //     }
+  //     showSnackbar(message);
+  //   } catch (error) {
+  //     showSnackbar("Error updating user", "error");
+  //   }
+  // };
 
-  const fetchUserWithId = async (id) => {
-    axiosInstance
-      .get(`/admin/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((response) => {
-        setUser(response.data.data);
-      })
-      .catch((error) => {
-        showSnackbar("Error fetching user", "error");
-      });
-    return user;
-  };
+  // const fetchUserWithId = async (id) => {
+  //   axiosInstance
+  //     .get(`/admin/${id}`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     })
+  //     .then((response) => {
+  //       setUpdateUser(response.data.data);
+  //     })
+  //     .catch((error) => {
+  //       showSnackbar("Error fetching user", "error");
+  //     });
+  //   return user;
+  // };
 
   const fetchTasks = async () => {
     try {
@@ -821,8 +821,8 @@ export const GlobalProvider = ({ children }) => {
         setUsers,
         selectedUsers,
         setSelectedUsers,
-        handleUpdateUserSubmit,
-        fetchUserWithId,
+        // handleUpdateUserSubmit,
+        // fetchUserWithId,
         fetchTasks,
         handleCreateTask,
         handleUpdateTask,

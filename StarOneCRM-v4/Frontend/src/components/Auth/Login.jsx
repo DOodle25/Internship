@@ -19,8 +19,8 @@ import { useGlobalContext } from "../../context/GlobalContext";
 
 function Login() {
   const { handleLogin } = useGlobalContext();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("cocply135@gmail.com");
+  const [password, setPassword] = useState("admin123");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
