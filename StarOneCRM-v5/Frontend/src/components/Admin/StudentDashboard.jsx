@@ -23,7 +23,8 @@ import AssignUserToEmployee from "./assign";
 import ChatPage from "../Profile/chat";
 import { useGlobalContext } from "../../context/GlobalContext";
 import theme from "../../utils/theme";
-
+import Payment from "@mui/icons-material/Payment";
+import PaymentAdminPage from "./PaymentAdminPage";
 import { useLocation } from "react-router-dom";
 
 const Footer = () => (
@@ -113,6 +114,14 @@ const StudentDashboard = () => {
             >
               <AssignmentIndIcon />
             </IconButton>
+            <IconButton
+              color="inherit"
+              component={Link}
+              to="/payment-admin"
+              title="Payment-admin"
+            >
+              <Payment />
+            </IconButton>
             {/* <IconButton
               color="inherit"
               component={Link}
@@ -200,6 +209,8 @@ const StudentDashboard = () => {
                 />
               }
             />
+            <Route path="/payment-admin" element={<PaymentAdminPage />} />
+
             <Route
               path="/assign"
               element={

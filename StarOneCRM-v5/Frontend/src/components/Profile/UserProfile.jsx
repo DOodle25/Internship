@@ -11,11 +11,13 @@ import {
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import Chat from "@mui/icons-material/Chat";
+import Payment from "@mui/icons-material/Payment";
 import Profile from "./profile";
 import ChatPage from "./chat";
 import { useGlobalContext } from "../../context/GlobalContext";
 import { useLocation } from "react-router-dom";
 import PaymentPage from "./PaymentPage";
+import PaymentAdminPage from "../Admin/PaymentAdminPage";
 const Footer = () => (
   <Box
     component="footer"
@@ -32,11 +34,10 @@ const Footer = () => (
 );
 
 const UserProfile = () => {
-  const { token, setUserMethod, logout } = useGlobalContext();
+  const { token, setUserMethod,user, logout } = useGlobalContext();
   const location = useLocation();
   const isChatPage = location.pathname === "/chat";
   const isLargeScreen = useMediaQuery("(min-width:960px)");
-
   return (
     <Box
       sx={{
@@ -59,6 +60,22 @@ const UserProfile = () => {
           >
             <Chat />
           </IconButton>
+          {user.role == "customer" ?<IconButton
+            color="inherit"
+            component={Link}
+            to="/payment"
+            title="Payment"
+          >
+            <Payment />
+          </IconButton>
+          : <IconButton
+          color="inherit"
+          component={Link}
+          to="/payment-admin"
+          title="Payment-admin"
+        >
+          <Payment />
+        </IconButton>}
           <IconButton
             color="inherit"
             component={Link}
@@ -66,14 +83,6 @@ const UserProfile = () => {
             title="Profile"
           >
             <PersonIcon />
-          </IconButton>
-          <IconButton
-            color="inherit"
-            component={Link}
-            to="/payment"
-            title="payment"
-          >
-            P
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -112,6 +121,7 @@ const UserProfile = () => {
             }
           />
           <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/payment-admin" element={<PaymentAdminPage />} />
           <Route
             path="*"
             element={

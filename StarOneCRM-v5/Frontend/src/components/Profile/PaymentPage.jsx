@@ -687,7 +687,7 @@ const PaymentPage = () => {
   };
 
   return (
-    <Container maxWidth="md" style={{ marginTop: "2rem" }}>
+    <Container maxWidth="md" style={{ marginTop: "2rem", paddingBottom: "2rem" }}>
       <Grid container spacing={3} justifyContent="center">
         <Grid item xs={12} sm={10} md={8}>
           <Box textAlign="center" p={3} boxShadow={3} borderRadius={2} bgcolor="white"

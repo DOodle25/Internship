@@ -8,5 +8,6 @@ router.post("/create-checkout-session", verifyJWT, paymentController.createCheck
 router.get("/checkout-session-status", paymentController.getCheckoutSessionStatus);
 router.post("/webhook", express.raw({ type: "application/json" }), paymentController.webhook);
 router.get("/payments", verifyJWT, paymentController.getPaymentsByUserId);
+router.get("/payment-admin", verifyJWT, paymentController.getPaymentsForAssignedUsers);
 
 module.exports = router;
