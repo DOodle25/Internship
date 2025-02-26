@@ -70,16 +70,16 @@ const StudentDashboard = () => {
               </span>
               <span
                 style={{
-                  color: "#FDB8DC",
+                  color: "#FFFFFF",
                   fontStyle: "italic",
-                  textShadow: "0.2px 0.3px 0px #FFFFFF",
+                  textShadow: "1.2px 1.3px 0px #3367D1",
                 }}
               >
                 One
               </span>{" "}
               <span
                 style={{
-                  background: "#FDB8DC",
+                  background: "#FFFFFF",
                   color: "#201F2F",
                   borderRadius: "50px",
                   paddingRight: "19px",

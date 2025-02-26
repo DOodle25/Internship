@@ -2054,11 +2054,14 @@ const ChatPage = () => {
                 wordBreak: "break-word",
                 padding: "10px 14px",
                 borderRadius: "16px",
-                bgcolor: isSentByUser ? "#201F2F" : "#F3F4F6",
+                // bgcolor: isSentByUser ? "#201F2F" : "#F3F4F6",
+                // color: isSentByUser ? "white" : "black",
+                bgcolor: isSentByUser ? "#031738" : "#FFFFFF",
+                boxShadow: "2px 2px 20px 0px #DFDFDF",
                 color: isSentByUser ? "white" : "black",
                 fontSize: "14px",
                 lineHeight: "1.4",
-                boxShadow: 0,
+                // boxShadow: 0,
               }}
             >
               {msg.content}
@@ -2249,22 +2252,52 @@ const ChatPage = () => {
       >
         {/* AppBar */}
         {!isLargeScreen ? (
-          <AppBar position="relative" color="primary" sx={{ mt: 2 }}>
-            <Toolbar>
-              {!isLargeScreen && (
-                <IconButton
-                  color="inherit"
-                  edge="start"
-                  onClick={handleDrawerToggle}
-                >
-                  <MenuIcon />
-                </IconButton>
-              )}
-              <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                Task Messages
-              </Typography>
-            </Toolbar>
-          </AppBar>
+          // <AppBar position="relative" color="primary" sx={{ mt: 2 }}>
+          //   <Toolbar>
+          //     {!isLargeScreen && (
+          //       <IconButton
+          //         color="inherit"
+          //         edge="start"
+          //         onClick={handleDrawerToggle}
+          //       >
+          //         <MenuIcon />
+          //       </IconButton>
+          //     )}
+          //     <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          //       Task Messages
+          //     </Typography>
+          //   </Toolbar>
+          // </AppBar>
+          <Box
+            sx={{
+              position: "fixed",
+              top: "10%",
+              right: "1.5rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
+              zIndex: 1300,
+            }}
+          >
+            <IconButton
+              onClick={handleDrawerToggle}
+              sx={{
+                width: 50,
+                height: 50,
+                backgroundColor: "rgba(0,0,0,0.7)",
+                color: "white",
+                borderRadius: "12px",
+                boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  backgroundColor: "rgba(0,0,0,0.9)",
+                  transform: "scale(1.1)",
+                },
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
         ) : (
           <></>
         )}
