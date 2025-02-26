@@ -2089,7 +2089,7 @@ const ChatPage = () => {
     <Box
       sx={{
         display: "flex",
-        ...(!isLargeScreen && { height: "85vh" }),
+        ...(!isLargeScreen && { height: "92vh" }),
         marginTop: "0px",
         marginLeft: "0px",
         width: "100%",
