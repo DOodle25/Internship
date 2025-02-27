@@ -1,6 +1,84 @@
 const Message = require("../models/message.model");
 const User = require("../models/user.model").User;
 const Task = require("../models/task.model");
+
+
+const mongoose = require("mongoose");
+const { getGfs } = require("../db");
+
+exports.getAssignedTasks = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id)
+            .populate({
+                path: "tasksAssigned",
+                populate: {
+                    path: "customer employee",
+                    select: "name email role profileImage"
+                }
+            })
+            .exec();
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        let gfs;
+        try {
+            gfs = getGfs(); // Get GridFS instance safely
+        } catch (error) {
+            return res.status(500).json({ error: "GridFS not initialized" });
+        }
+
+        // Process tasks to include profile images
+        const tasksWithProfileImages = await Promise.all(
+            user.tasksAssigned.map(async (task) => {
+                const updatedTask = { ...task.toObject() };
+                // console.log(task.customer.profileImage);
+                if (task.customer && task.customer.profileImage) {
+                    updatedTask.customer.profileImage = await fetchProfileImage(task.customer.profileImage, gfs);
+                }
+                // console.log(task.employee.profileImage);
+                if (task.employee && task.employee.profileImage) {
+                    updatedTask.employee.profileImage = await fetchProfileImage(task.employee.profileImage, gfs);
+                }
+
+                return updatedTask;
+            })
+        );
+        // if (tasksWithProfileImages.employee.profileImage) {
+        //     console.log(tasksWithProfileImages.employee.profileImage);
+        // }
+        // if (tasksWithProfileImages.customer.profileImage) {
+        //     console.log(tasksWithProfileImages.customer.profileImage);
+        // }
+        
+        res.status(200).json({ success: true, tasksAssigned: tasksWithProfileImages });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Helper function to fetch profile image
+const fetchProfileImage = async (imageId, gfs) => {
+    try {
+        let chunks = [];
+        const readStream = gfs.openDownloadStream(new mongoose.Types.ObjectId(imageId));
+
+        return new Promise((resolve, reject) => {
+            readStream.on("data", (chunk) => chunks.push(chunk));
+            readStream.on("end", () => {
+                resolve(`data:image/png;base64,${Buffer.concat(chunks).toString("base64")}`);
+            });
+            readStream.on("error", (err) => reject(err));
+        });
+    } catch (error) {
+        console.error(`Error fetching profile image:`, error);
+        return null;
+    }
+};
+
+
+
 exports.getAssignedPeople = async (req, res) => {
     try {
         // Fetch the logged-in user
@@ -228,27 +306,27 @@ exports.getMessagesByTask = async (req, res) => {
 
 
 
-exports.getAssignedTasks = async (req, res) => {
-    try {
-        const user = await User.findById(req.user.id)
-            .populate({
-                path: "tasksAssigned",
-                populate: {
-                    path: "customer employee",
-                    select: "name email role"
-                }
-            })
-            .exec();
+// exports.getAssignedTasks = async (req, res) => {
+//     try {
+//         const user = await User.findById(req.user.id)
+//             .populate({
+//                 path: "tasksAssigned",
+//                 populate: {
+//                     path: "customer employee",
+//                     select: "name email role"
+//                 }
+//             })
+//             .exec();
 
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
+//         if (!user) {
+//             return res.status(404).json({ error: "User not found" });
+//         }
 
-        res.status(200).json({ success: true, tasksAssigned: user.tasksAssigned });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
+//         res.status(200).json({ success: true, tasksAssigned: user.tasksAssigned });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// };
 
 
 
