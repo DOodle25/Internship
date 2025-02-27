@@ -14,7 +14,7 @@ import NotVerified from "./components/Auth/NotVerified";
 import UserProfile from "./components/Profile/UserProfile";
 import theme from "./utils/theme";
 import { ThemeProvider } from "@mui/material/styles";
-
+import ForgotPassword from "./components/Auth/ForgotPassword";
 const AppRoutes = () => {
   const { token, user } = useGlobalContext();
 
@@ -23,6 +23,7 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     );

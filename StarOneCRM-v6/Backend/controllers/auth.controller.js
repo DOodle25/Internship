@@ -256,3 +256,67 @@ exports.facebookCallback = (req, res, next) => {
 exports.facebookFailure = (req, res) => {
   res.status(401).json({ message: "Facebook authentication failed" });
 };
+
+
+
+
+
+
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    const otp = generateOtp();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    await OTP.findOneAndUpdate(
+      { email },
+      { otp, expiresAt },
+      { upsert: true, new: true }
+    );
+
+    const emailContent = `
+      <p>Your OTP for password reset is <strong>${otp}</strong>.</p>
+      <p>This OTP will expire in 10 minutes.</p>
+      <br>
+      <p>Thank you,<br>emailhelper468@gmail.com</p>
+    `;
+    await sendEmail({
+      to: email,
+      subject: "Password Reset OTP",
+      html: emailContent,
+    });
+
+    res.status(200).json({ message: "OTP sent to email" });
+  } catch (error) {
+    console.error("Error sending password reset OTP:", error.message);
+    res.status(500).json({ message: "Failed to send OTP" });
+  }
+};
+
+// Verify OTP and Reset Password
+exports.resetPassword = async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  try {
+    const otpRecord = await OTP.findOne({ email });
+    if (!otpRecord || otpRecord.otp !== otp || otpRecord.expiresAt < new Date()) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    await OTP.deleteOne({ email });
+
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+    await User.findOneAndUpdate({ email }, { password: hashedPassword });
+
+    res.status(200).json({ message: "Password reset successful" });
+  } catch (error) {
+    console.error("Error resetting password:", error.message);
+    res.status(500).json({ message: "Failed to reset password" });
+  }
+};
