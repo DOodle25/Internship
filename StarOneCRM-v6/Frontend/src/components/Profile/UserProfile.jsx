@@ -47,7 +47,7 @@ const UserProfile = () => {
       }}
     >
       {/* Navbar */}
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             CRM

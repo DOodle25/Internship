@@ -184,3 +184,39 @@ button:hover {
 .Toastify__progress-bar--error {
   background: var(--primary-color) !important;
 }
+
+
+
+
+
+
+
+
+
+
+/* For Webkit browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 6px; /* Thin scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #F6F8FA; /* Light track */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #031738; /* Dark thumb */
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(3, 23, 56, 0.8); /* Slightly lighter on hover */
+}
+
+/* For Firefox */
+* {
+  /* scrollbar-width: thin; */
+  scrollbar-width:thin;
+  scrollbar-color: #031738 #F6F8FA;
+}
