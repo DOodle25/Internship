@@ -1040,7 +1040,7 @@ const Profile = () => {
         age: response.data.data.age,
         email: response.data.data.email,
         role: response.data.data.role,
-        profileImage: response.data.data.profileImage,
+        profileImage: response.data.data.profileImage || null,
       });
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -1116,7 +1116,13 @@ const Profile = () => {
           <Grid container spacing={3} alignItems="center">
             {/* Profile Image Section */}
             <Grid item xs={12} sm={4} display="flex" flexDirection="column" alignItems="center">
-              <Avatar sx={{ width: 200, height: 200, bgcolor: "#201F2F", fontSize: 40 }} src={profile.profileImage} />
+              {profile.profileImage?<Avatar sx={{ width: 200, height: 200, bgcolor: "#201F2F", fontSize: 40 }} src={profile.profileImage} />:
+            <Avatar
+              sx={{ width: 200, height: 200, bgcolor: "#201F2F", fontSize: 40 }}
+            >
+              {profile.name[0]}
+            </Avatar>
+              }
               {isEditing && (
                 <Button variant="contained" component="label" sx={{ mt: 2 }}>
                   Upload Photo
