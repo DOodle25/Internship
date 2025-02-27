@@ -2,16 +2,68 @@
 const bcryptjs = require('bcryptjs');
 const sendResponse = require("../utils/sendResponse");
 const { User } = require("../models/user.model");
+const { getGfs } = require("../db");
+
+//   const { GridFsStorage } = require("multer-gridfs-storage");
 
 // Display All Users
+// exports.user_index = async (req, res) => {
+//     try {
+//         const users = await User.find();
+//         sendResponse(res, 200, "Users retrieved successfully", users);
+//     } catch (err) {
+//         sendResponse(res, 500, "Error retrieving users", null, err.message);
+//     }
+// };
+
+const mongoose = require("mongoose");
+
 exports.user_index = async (req, res) => {
     try {
         const users = await User.find();
-        sendResponse(res, 200, "Users retrieved successfully", users);
+        let gfs;
+
+        try {
+            gfs = getGfs(); // Get GridFS instance safely
+        } catch (error) {
+            return sendResponse(res, 500, "GridFS not initialized");
+        }
+
+        // Process users to include profile images
+        let usersWithImages = await Promise.all(
+            users.map(async (user) => {
+                let userData = { ...user.toObject() };
+
+                if (user.profileImage) {
+                    try {
+                        let chunks = [];
+                        const readStream = gfs.openDownloadStream(new mongoose.Types.ObjectId(user.profileImage));
+
+                        await new Promise((resolve, reject) => {
+                            readStream.on("data", (chunk) => chunks.push(chunk));
+                            readStream.on("end", () => {
+                                userData.profileImage = `data:image/png;base64,${Buffer.concat(chunks).toString("base64")}`;
+                                resolve();
+                            });
+                            readStream.on("error", (err) => reject(err));
+                        });
+
+                    } catch (error) {
+                        console.error(`Error fetching profile image for user ${user._id}:`, error);
+                    }
+                }
+
+                return userData;
+            })
+        );
+
+        sendResponse(res, 200, "Users retrieved successfully", usersWithImages);
     } catch (err) {
         sendResponse(res, 500, "Error retrieving users", null, err.message);
     }
 };
+
+
 
 // Create New User
 exports.user_create_post = async (req, res) => {
@@ -118,7 +170,12 @@ exports.user_delete = async (req, res) => {
         if (!deletedUser) {
             sendResponse(res, 404, "User not found");
         } else {
-            sendResponse(res, 200, "User deleted successfully");
+            // If the user is a customer, delete associated tasks and messages
+            if (deletedUser.role === 'customer') {
+                await Task.deleteMany({ userId: deletedUser._id });
+                await Message.deleteMany({ userId: deletedUser._id });
+            }
+            sendResponse(res, 200, "User and associated data deleted successfully");
         }
     } catch (err) {
         sendResponse(res, 500, "Error deleting user", null, err.message);

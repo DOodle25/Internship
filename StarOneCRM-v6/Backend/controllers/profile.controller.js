@@ -201,8 +201,8 @@ exports.deleteProfile = async (req, res) => {
     }
 
     // Finally, delete the user profile
-    // await User.findByIdAndDelete(req.user.id);
-    console.log("Deleting user profile...");
+    await User.findByIdAndDelete(req.user.id);
+    // console.log("Deleting user profile...");
 
     sendResponse(res, 200, "Profile, associated tasks, and messages deleted successfully");
   } catch (err) {

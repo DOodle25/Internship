@@ -612,68 +612,123 @@ const UserList = ({}) => {
   // ];
 
   const columns = [
+    // {
+    //   field: "name",
+    //   headerName: "Name",
+    //   width: 220,
+    //   sortable: true,
+    //   renderCell: (params) => {
+    //     const name = params.row.name;
+    //     const firstLetter = name.charAt(0).toUpperCase();
+    //     const colors = [
+    //       "#FF5733",
+    //       "#FFBD33",
+    //       "#DBFF33",
+    //       "#75FF33",
+    //       "#33FF57",
+    //       "#33FFBD",
+    //       "#33DBFF",
+    //       "#3375FF",
+    //       "#5733FF",
+    //       "#BD33FF",
+    //       "#FF33DB",
+    //       "#FF3375",
+    //       "#FF3333",
+    //       "#FF8C33",
+    //       "#FFD633",
+    //       "#D6FF33",
+    //       "#8CFF33",
+    //       "#33FF8C",
+    //       "#33FFD6",
+    //       "#33D6FF",
+    //       "#338CFF",
+    //       "#5733FF",
+    //       "#8C33FF",
+    //       "#D633FF",
+    //       "#FF33D6",
+    //       "#FF338C",
+    //     ];
+    //     const backgroundColor =
+    //       colors[firstLetter.charCodeAt(0) - 65] || "#999";
+
+    //     return (
+    //       <div style={{ display: "flex", alignItems: "center" }}>
+    //         <div
+    //           style={{
+    //             width: 40,
+    //             height: 40,
+    //             borderRadius: "50%",
+    //             backgroundColor,
+    //             display: "flex",
+    //             alignItems: "center",
+    //             justifyContent: "center",
+    //             color: "white",
+    //             fontWeight: "",
+    //             marginRight: 10,
+    //           }}
+    //         >
+    //           {firstLetter}
+    //         </div>
+    //         <span>{name}</span>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       field: "name",
       headerName: "Name",
       width: 220,
       sortable: true,
       renderCell: (params) => {
-        const name = params.row.name;
+        const { name, profileImage } = params.row;
         const firstLetter = name.charAt(0).toUpperCase();
         const colors = [
-          "#FF5733",
-          "#FFBD33",
-          "#DBFF33",
-          "#75FF33",
-          "#33FF57",
-          "#33FFBD",
-          "#33DBFF",
-          "#3375FF",
-          "#5733FF",
-          "#BD33FF",
-          "#FF33DB",
-          "#FF3375",
-          "#FF3333",
-          "#FF8C33",
-          "#FFD633",
-          "#D6FF33",
-          "#8CFF33",
-          "#33FF8C",
-          "#33FFD6",
-          "#33D6FF",
-          "#338CFF",
-          "#5733FF",
-          "#8C33FF",
-          "#D633FF",
-          "#FF33D6",
-          "#FF338C",
+          "#FF5733", "#FFBD33", "#DBFF33", "#75FF33", "#33FF57", "#33FFBD",
+          "#33DBFF", "#3375FF", "#5733FF", "#BD33FF", "#FF33DB", "#FF3375",
+          "#FF3333", "#FF8C33", "#FFD633", "#D6FF33", "#8CFF33", "#33FF8C",
+          "#33FFD6", "#33D6FF", "#338CFF", "#5733FF", "#8C33FF", "#D633FF",
+          "#FF33D6", "#FF338C",
         ];
-        const backgroundColor =
-          colors[firstLetter.charCodeAt(0) - 65] || "#999";
-
+        const backgroundColor = colors[firstLetter.charCodeAt(0) - 65] || "#999";
+    
         return (
           <div style={{ display: "flex", alignItems: "center" }}>
-            <div
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: "50%",
-                backgroundColor,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-                fontWeight: "",
-                marginRight: 10,
-              }}
-            >
-              {firstLetter}
-            </div>
+            {profileImage ? (
+              <img
+                src={profileImage}
+                alt="Profile"
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  marginRight: 10,
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  backgroundColor,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "white",
+                  fontWeight: "bold",
+                  marginRight: 10,
+                }}
+              >
+                {firstLetter}
+              </div>
+            )}
             <span>{name}</span>
           </div>
         );
       },
     },
+    
     { field: "age", headerName: "Age", width: 90, sortable: true },
     { field: "email", headerName: "Email", width: 250, sortable: true },
     { field: "role", headerName: "Role", width: 140, sortable: true },
