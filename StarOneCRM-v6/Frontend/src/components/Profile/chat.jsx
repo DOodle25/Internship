@@ -3138,6 +3138,41 @@ const ChatPage = () => {
   const selectedTaskIdRef = useRef(selectedTaskId);
   const [avatarUrl, setAvatarUrl] = useState(null);
 
+
+    const colors = [
+    "#8B0000",
+    "#8B4513",
+    "#2F4F4F",
+    "#556B2F",
+    "#8B008B",
+    "#483D8B",
+    "#2E8B57",
+    "#4B0082",
+    "#191970",
+    "#00008B",
+    "#8B0000",
+    "#8B4513",
+    "#2F4F4F",
+    "#556B2F",
+    "#8B008B",
+    "#483D8B",
+    "#2E8B57",
+    "#4B0082",
+    "#191970",
+    "#00008B",
+    "#8B0000",
+    "#8B4513",
+    "#2F4F4F",
+    "#556B2F",
+    "#8B008B",
+    "#483D8B",
+  ];
+  const getColorForLetter = (letter) => {
+    const index = letter.charCodeAt(0) % colors.length;
+    return colors[index];
+  };
+
+
   useEffect(() => {
     selectedTaskIdRef.current = selectedTaskId;
   }, [selectedTaskId]);
@@ -3392,11 +3427,21 @@ const ChatPage = () => {
                   width: 40,
                   height: 40,
                   borderRadius: "50%",
-                  backgroundColor: "#f0f0f0",
+                  // backgroundColor: "#f0f0f0",
+                  color: "white",
                   mr: 1,
+                    backgroundColor: getColorForLetter(
+                      msg.sender.name.charAt(0).toUpperCase()
+                  ),
                 }}
               >
-                <Typography variant="body1">
+                <Typography variant="body1" 
+                  sx  = {{
+                  //   backgroundColor: getColorForLetter(
+                  //     msg.sender.name.charAt(0).toUpperCase()
+                  // ),
+                  }}
+                >
                   {msg.sender.name.charAt(0).toUpperCase()}
                 </Typography>
               </Box>

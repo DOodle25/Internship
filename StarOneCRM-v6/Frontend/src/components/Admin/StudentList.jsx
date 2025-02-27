@@ -682,13 +682,42 @@ const UserList = ({}) => {
       renderCell: (params) => {
         const { name, profileImage } = params.row;
         const firstLetter = name.charAt(0).toUpperCase();
-        const colors = [
-          "#FF5733", "#FFBD33", "#DBFF33", "#75FF33", "#33FF57", "#33FFBD",
-          "#33DBFF", "#3375FF", "#5733FF", "#BD33FF", "#FF33DB", "#FF3375",
-          "#FF3333", "#FF8C33", "#FFD633", "#D6FF33", "#8CFF33", "#33FF8C",
-          "#33FFD6", "#33D6FF", "#338CFF", "#5733FF", "#8C33FF", "#D633FF",
-          "#FF33D6", "#FF338C",
-        ];
+        // const colors = [
+        //   "#FF5733", "#FFBD33", "#DBFF33", "#75FF33", "#33FF57", "#33FFBD",
+        //   "#33DBFF", "#3375FF", "#5733FF", "#BD33FF", "#FF33DB", "#FF3375",
+        //   "#FF3333", "#FF8C33", "#FFD633", "#D6FF33", "#8CFF33", "#33FF8C",
+        //   "#33FFD6", "#33D6FF", "#338CFF", "#5733FF", "#8C33FF", "#D633FF",
+        //   "#FF33D6", "#FF338C",
+        // ];
+          const colors = [
+    "#8B0000",
+    "#8B4513",
+    "#2F4F4F",
+    "#556B2F",
+    "#8B008B",
+    "#483D8B",
+    "#2E8B57",
+    "#4B0082",
+    "#191970",
+    "#00008B",
+    "#8B0000",
+    "#8B4513",
+    "#2F4F4F",
+    "#556B2F",
+    "#8B008B",
+    "#483D8B",
+    "#2E8B57",
+    "#4B0082",
+    "#191970",
+    "#00008B",
+    "#8B0000",
+    "#8B4513",
+    "#2F4F4F",
+    "#556B2F",
+    "#8B008B",
+    "#483D8B",
+  ];
+
         const backgroundColor = colors[firstLetter.charCodeAt(0) - 65] || "#999";
     
         return (
@@ -716,7 +745,7 @@ const UserList = ({}) => {
                   alignItems: "center",
                   justifyContent: "center",
                   color: "white",
-                  fontWeight: "bold",
+                  // fontWeight: "bold",
                   marginRight: 10,
                 }}
               >

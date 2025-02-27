@@ -202,28 +202,6 @@
 
 // export default Profile;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import React, { useState, useEffect } from "react";
 // import {
 //   Avatar,
@@ -427,17 +405,6 @@
 // };
 
 // export default Profile;
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useState, useEffect } from "react";
 // import {
@@ -669,8 +636,6 @@
 
 // export default Profile;
 
-
-
 // import React, { useState, useEffect } from "react";
 // import {
 //   Avatar,
@@ -747,34 +712,6 @@
 // };
 
 // export default Profile;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useState, useEffect } from "react";
 // import {
@@ -1031,6 +968,39 @@ const Profile = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const navigate = useNavigate();
 
+  const colors = [
+    "#8B0000",
+    "#8B4513",
+    "#2F4F4F",
+    "#556B2F",
+    "#8B008B",
+    "#483D8B",
+    "#2E8B57",
+    "#4B0082",
+    "#191970",
+    "#00008B",
+    "#8B0000",
+    "#8B4513",
+    "#2F4F4F",
+    "#556B2F",
+    "#8B008B",
+    "#483D8B",
+    "#2E8B57",
+    "#4B0082",
+    "#191970",
+    "#00008B",
+    "#8B0000",
+    "#8B4513",
+    "#2F4F4F",
+    "#556B2F",
+    "#8B008B",
+    "#483D8B",
+  ];
+  const getColorForLetter = (letter) => {
+    const index = letter.charCodeAt(0) % colors.length;
+    return colors[index];
+  };
+
   const fetchProfile = async () => {
     try {
       const response = await axiosInstance.get("/profile");
@@ -1098,31 +1068,63 @@ const Profile = () => {
   if (!profile) return <Typography>Loading...</Typography>;
 
   return (
-    <Container maxWidth="md"        
-    sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-              // minHeight: "100vh",
-              // p: 2,
-              border:"none",
-              boxShadow:0,
-              mt:2,
-            }}>
-      <Card sx={{ width: "100%", backgroundColor: "#F6F8FA", color: "black", border:"none",
-              boxShadow:0 }}>
+    <Container
+      maxWidth="md"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        // minHeight: "100vh",
+        // p: 2,
+        border: "none",
+        boxShadow: 0,
+        mt: 2,
+      }}
+    >
+      <Card
+        sx={{
+          width: "100%",
+          backgroundColor: "#F6F8FA",
+          color: "black",
+          border: "none",
+          boxShadow: 0,
+        }}
+      >
         <CardContent>
           <Grid container spacing={3} alignItems="center">
             {/* Profile Image Section */}
-            <Grid item xs={12} sm={4} display="flex" flexDirection="column" alignItems="center">
-              {profile.profileImage?<Avatar sx={{ width: 200, height: 200, bgcolor: "#201F2F", fontSize: 40 }} src={profile.profileImage} />:
-            <Avatar
-              sx={{ width: 200, height: 200, bgcolor: "#201F2F", fontSize: 40 }}
+            <Grid
+              item
+              xs={12}
+              sm={4}
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
             >
-              {profile.name[0]}
-            </Avatar>
-              }
+              {profile.profileImage ? (
+                <Avatar
+                  sx={{
+                    width: 200,
+                    height: 200,
+                    bgcolor: "#201F2F",
+                    fontSize: 40,
+                  }}
+                  src={profile.profileImage}
+                />
+              ) : (
+                <Avatar
+                  sx={{
+                    width: 200,
+                    height: 200,
+                    // bgcolor: "#201F2F",
+                    bgcolor: getColorForLetter(profile.name[0]),
+                    fontSize: 100,
+                  }}
+                >
+                  {profile.name[0]}
+                </Avatar>
+              )}
               {isEditing && (
                 <Button variant="contained" component="label" sx={{ mt: 2 }}>
                   Upload Photo
@@ -1130,10 +1132,15 @@ const Profile = () => {
                 </Button>
               )}
             </Grid>
-            
+
             {/* Profile Details Section */}
             <Grid item xs={12} sm={8}>
-              <Typography variant="h4" fontWeight="bold" color="#201F2F" overflow={"break-word"}>
+              <Typography
+                variant="h4"
+                fontWeight="bold"
+                color="#201F2F"
+                overflow={"break-word"}
+              >
                 {profile.name}
               </Typography>
               <Typography variant="h6" color="#201F2F" overflow={"hidden"}>
@@ -1146,16 +1153,48 @@ const Profile = () => {
               {/* Editable Form */}
               <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Name" name="name" value={formData.name} onChange={handleChange} fullWidth disabled={!isEditing} sx={{ bgcolor: "white", borderRadius: 1 }} />
+                  <TextField
+                    label="Name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    fullWidth
+                    disabled={!isEditing}
+                    sx={{ bgcolor: "white", borderRadius: 1 }}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Age" name="age" value={formData.age} onChange={handleChange} fullWidth disabled={!isEditing} sx={{ bgcolor: "white", borderRadius: 1 }} />
+                  <TextField
+                    label="Age"
+                    name="age"
+                    value={formData.age}
+                    onChange={handleChange}
+                    fullWidth
+                    disabled={!isEditing}
+                    sx={{ bgcolor: "white", borderRadius: 1 }}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Role" name="role" value={formData.role} onChange={handleChange} fullWidth disabled={!isEditing} sx={{ bgcolor: "white", borderRadius: 1 }} />
+                  <TextField
+                    label="Role"
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                    fullWidth
+                    disabled={!isEditing}
+                    sx={{ bgcolor: "white", borderRadius: 1 }}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Email" name="email" value={formData.email} onChange={handleChange} fullWidth disabled={!isEditing} sx={{ bgcolor: "white", borderRadius: 1 }} />
+                  <TextField
+                    label="Email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    fullWidth
+                    disabled={!isEditing}
+                    sx={{ bgcolor: "white", borderRadius: 1 }}
+                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -1166,23 +1205,51 @@ const Profile = () => {
             Assigned Tasks
           </Typography>
           {profile.tasksAssigned.length > 0 ? (
-            profile.tasksAssigned.map((task) => <Chip key={task} label={task} sx={{ mr: 1, mb: 1, color: "black", backgroundColor:"#FFFFFF" }} />)
+            profile.tasksAssigned.map((task) => (
+              <Chip
+                key={task}
+                label={task}
+                sx={{
+                  mr: 1,
+                  mb: 1,
+                  color: "black",
+                  backgroundColor: "#FFFFFF",
+                }}
+              />
+            ))
           ) : (
             <Typography>No tasks assigned</Typography>
           )}
 
           {/* Action Buttons */}
-          <Box sx={{ mt: 3, display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
+          <Box
+            sx={{
+              mt: 3,
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              gap: 2,
+            }}
+          >
             {isEditing ? (
               <>
-                <Button onClick={handleSave} variant="contained">Save Changes</Button>
-                <Button onClick={() => setIsEditing(false)} variant="outlined">Cancel</Button>
+                <Button onClick={handleSave} variant="contained">
+                  Save Changes
+                </Button>
+                <Button onClick={() => setIsEditing(false)} variant="outlined">
+                  Cancel
+                </Button>
               </>
             ) : (
               <>
-                <Button onClick={() => setIsEditing(true)} variant="outlined">Edit Profile</Button>
-                <Button onClick={handleDelete} variant="outlined">Delete Profile</Button>
-                <Button onClick={logout} variant="outlined">Logout</Button>
+                <Button onClick={() => setIsEditing(true)} variant="outlined">
+                  Edit Profile
+                </Button>
+                <Button onClick={handleDelete} variant="outlined">
+                  Delete Profile
+                </Button>
+                <Button onClick={logout} variant="outlined">
+                  Logout
+                </Button>
               </>
             )}
           </Box>
