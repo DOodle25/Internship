@@ -26,6 +26,7 @@ import theme from "../../utils/theme";
 import Payment from "@mui/icons-material/Payment";
 import PaymentAdminPage from "./PaymentAdminPage";
 import { useLocation } from "react-router-dom";
+import CustomerSegmentation from "./CustomerSegmentation";
 
 const Footer = () => (
   <Box
@@ -210,7 +211,7 @@ const StudentDashboard = () => {
               }
             />
             <Route path="/payment-admin" element={<PaymentAdminPage />} />
-
+            <Route path="/customer-segmentation" element={<CustomerSegmentation />} />
             <Route
               path="/assign"
               element={

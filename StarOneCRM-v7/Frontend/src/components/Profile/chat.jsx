@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from "../../utils/axios";
 import { useNavigate } from "react-router-dom";
@@ -14,10 +11,9 @@ import {
   ListItemText,
   TextField,
   IconButton,
-  AppBar,
-  Toolbar,
   Drawer,
   useMediaQuery,
+  Avatar,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useGlobalContext } from "../../context/GlobalContext";
@@ -26,6 +22,49 @@ import ChatIcon from "@mui/icons-material/Chat";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import SendIcon from "@mui/icons-material/Send";
 import dayjs from "dayjs";
+import imageCompression from "browser-image-compression";
+
+const base64ToFile = (base64String, fileName = "image.png") => {
+  const arr = base64String.split(",");
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], fileName, { type: mime });
+};
+
+const fileToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+};
+
+const compressImage = async (base64String) => {
+
+  const file = base64ToFile(base64String);
+
+  const options = {
+    maxSizeMB: 0.2,
+    maxWidthOrHeight: 100,
+    useWebWorker: true,
+  };
+
+  try {
+    const compressedFile = await imageCompression(file, options);
+
+    const compressedBase64 = await fileToBase64(compressedFile);
+    return compressedBase64;
+  } catch (error) {
+    console.error("Image compression error:", error);
+    return base64String;
+  }
+};
 
 const drawerWidth = 240;
 
@@ -34,7 +73,6 @@ const ChatPage = () => {
   const [taskslist, setTaskslist] = useState([]);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [payments, setPayments] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -44,6 +82,7 @@ const ChatPage = () => {
   const [expanded, setExpanded] = useState(true);
   const socketRef = useRef(null);
   const selectedTaskIdRef = useRef(selectedTaskId);
+  const [avatarUrl, setAvatarUrl] = useState(null);
 
   const colors = [
     "#8B0000",
@@ -77,6 +116,7 @@ const ChatPage = () => {
     const index = letter.charCodeAt(0) % colors.length;
     return colors[index];
   };
+
   useEffect(() => {
     selectedTaskIdRef.current = selectedTaskId;
   }, [selectedTaskId]);
@@ -97,10 +137,8 @@ const ChatPage = () => {
       );
 
       newSocket.on("connect", () => {
-        console.log("Socket connected successfully");
         if (selectedTaskId) {
           newSocket.emit("joinTaskRoom", selectedTaskId, token);
-          console.log(`Joined task room: ${selectedTaskId}`);
         }
       });
 
@@ -113,7 +151,6 @@ const ChatPage = () => {
       return () => {
         newSocket.close();
         socketRef.current = null;
-        console.log("Socket disconnected");
       };
     };
 
@@ -121,13 +158,9 @@ const ChatPage = () => {
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
-        console.log("Tab is active, reconnecting socket...");
-        console.log("socketRef:", socketRef.current);
         if (!socketRef.current) {
           connectSocket();
         }
-        console.log("Selected task ID:", selectedTaskIdRef.current);
-        console.log("socketRef:", socketRef.current);
         if (socketRef.current.disconnect) {
           fetchMessagesForTask(selectedTaskIdRef.current);
         }
@@ -187,7 +220,32 @@ const ChatPage = () => {
       const response = await axiosInstance.get("/chat/assigned-tasks/", {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       setTaskslist(response.data.tasksAssigned);
+
+      if (!Array.isArray(response.data.tasksAssigned)) {
+        console.error(
+          "tasksAssigned is not an array:",
+          response.data.tasksAssigned
+        );
+        return;
+      }
+
+      const task = response.data.tasksAssigned.find(
+        (task) =>
+          (task.customer._id == user._id && task.employee.profileImage) ||
+          (task.employee._id == user._id && task.customer.profileImage)
+      );
+
+      if (task) {
+        const profileImage =
+          task.customer._id == user._id
+            ? task.employee.profileImage
+            : task.customer.profileImage;
+
+        const compressedFile = await compressImage(profileImage);
+        setAvatarUrl(compressedFile);
+      }
     } catch (error) {
       console.error("Error fetching assigned tasks:", error);
       navigate("/");
@@ -203,54 +261,118 @@ const ChatPage = () => {
         }
       );
       setMessages(response.data.messages);
-      console.log(taskId);
       setSelectedTaskId(taskId);
 
       if (socketRef.current) {
         socketRef.current.emit("joinTaskRoom", taskId, token);
-        console.log(`Joined task room: ${taskId}`);
       }
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
   };
 
-  const fetchPayments = async () => {
-    try {
-      const response = await fetch(
-        `https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net/api/payment/payments`,
-        {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const data = await response.json();
-      const userPayments = data.filter((payment) => payment.userId === user._id);
-      setPayments(userPayments);
-    } catch (error) {
-      console.error("Error fetching payments:", error);
-    }
-  };
-
   useEffect(() => {
     fetchAssignedTasks();
-    fetchPayments();
   }, []);
 
-  const renderMessagesAndPayments = () => {
-    const allItems = [
-      ...messages.map((msg) => ({ ...msg, type: "message" })),
-      ...payments.map((pay) => ({ ...pay, type: "payment" })),
-    ].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  const renderMessagesWithTimestamps = () => {
+    let lastDate = null;
 
-    return allItems.map((item, index) => {
-      if (item.type === "message") {
-        const isSentByUser = item.sender.email === userEmail;
-        return (
-          <Box key={index} sx={{ display: "flex", justifyContent: isSentByUser ? "flex-end" : "flex-start", my: 1 }}>
+    return messages.map((msg, index) => {
+      const isSentByUser = msg.sender.email === userEmail;
+      const messageDate = dayjs(msg.createdAt).format("MMMM D, YYYY");
+
+      const showDateDivider = messageDate !== lastDate;
+      lastDate = messageDate;
+
+      return (
+        <React.Fragment key={index}>
+          {showDateDivider && (
             <Box
               sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                my: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  height: "1px",
+                  backgroundColor: "#e0e0e0",
+                }}
+              />
+              <Typography
+                variant="caption"
+                sx={{
+                  mx: 2,
+                  color: "#888",
+                  backgroundColor: "#fff",
+                  padding: "0 10px",
+                }}
+              >
+                {messageDate}
+              </Typography>
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  height: "1px",
+                  backgroundColor: "#e0e0e0",
+                }}
+              />
+            </Box>
+          )}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: isSentByUser ? "flex-end" : "flex-start",
+              my: 1,
+            }}
+          >
+            {!isSentByUser ? (
+              avatarUrl ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    backgroundColor: "#f0f0f0",
+                    mr: 1,
+                  }}
+                >
+                  <Avatar src={avatarUrl} />
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    color: "white",
+                    mr: 1,
+                    backgroundColor: getColorForLetter(
+                      msg.sender.name.charAt(0).toUpperCase()
+                    ),
+                  }}
+                >
+                  <Typography variant="body1">
+                    {msg.sender.name.charAt(0).toUpperCase()}
+                  </Typography>
+                </Box>
+              )
+            ) : null}
+            <Box
+              sx={{
+                position: "relative",
                 maxWidth: "70%",
+                wordBreak: "break-word",
                 padding: "10px 14px",
                 borderRadius: "16px",
                 bgcolor: isSentByUser ? "#031738" : "#FFFFFF",
@@ -260,37 +382,24 @@ const ChatPage = () => {
                 lineHeight: "1.4",
               }}
             >
-              {item.content}
-              <Typography variant="caption" sx={{ display: "block", textAlign: "right", mt: 1 }}>
-                {dayjs(item.createdAt).format("h:mm A")}
+              {msg.content}
+              <Typography
+                variant="caption"
+                sx={{
+                  display: "block",
+                  textAlign: "right",
+                  color: isSentByUser
+                    ? "rgba(255, 255, 255, 0.7)"
+                    : "rgba(0, 0, 0, 0.7)",
+                  mt: 1,
+                }}
+              >
+                {dayjs(msg.createdAt).format("h:mm A")}
               </Typography>
             </Box>
           </Box>
-        );
-      } else if (item.type === "payment") {
-        return (
-          <Box key={index} sx={{ display: "flex", justifyContent: "center", my: 2 }}>
-            <Box
-              sx={{
-                backgroundColor: item.paymentStatus === "completed" ? "#D4EDDA" : "#F8D7DA",
-                padding: "10px 14px",
-                borderRadius: "16px",
-                maxWidth: "60%",
-                boxShadow: "2px 2px 10px 0px #DFDFDF",
-                textAlign: "center",
-              }}
-            >
-              <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                Payment {item.paymentStatus === "completed" ? "Successful" : "Failed"}
-              </Typography>
-              <Typography variant="body2">Amount: {item.amount} {item.currency.toUpperCase()}</Typography>
-              <Typography variant="body2">Method: {item.paymentMethod}</Typography>
-              <Typography variant="caption">{dayjs(item.createdAt).format("MMMM D, YYYY h:mm A")}</Typography>
-            </Box>
-          </Box>
-        );
-      }
-      return null;
+        </React.Fragment>
+      );
     });
   };
 
@@ -521,7 +630,7 @@ const ChatPage = () => {
           >
             {selectedTaskId ? (
               <>
-                {renderMessagesAndPayments()}
+                {renderMessagesWithTimestamps()}
                 <div ref={messageEndRef} />
               </>
             ) : (
