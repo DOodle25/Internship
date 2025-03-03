@@ -25,7 +25,7 @@ const PaymentPage = () => {
 
         // Extract unique users
         const uniqueUsers = [...new Map(data.payments.map(payment => [payment.userId._id, payment.userId])).values()];
-        setUsers(uniqueUsers);
+        setUsers(uniqueUsers.reverse());
       } catch (error) {
         console.error("Error fetching payments:", error);
       }
