@@ -265,7 +265,10 @@ const ChatPage = () => {
       }
   
       setTaskslist(response.data.tasksAssigned);
-  
+      if (response.data.tasksAssigned.length > 0) {
+        setSelectedTaskId(response.data.tasksAssigned[0]._id);
+        fetchMessagesForTask(response.data.tasksAssigned[0]._id);
+      };
       const task = response.data.tasksAssigned.find(
         (task) =>
           (task.customer?._id === user._id && task.employee?.profileImage) ||
