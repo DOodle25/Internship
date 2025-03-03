@@ -411,7 +411,7 @@
 
 
 
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
 import axiosInstance from "../utils/axios";
 import { Snackbar, Alert } from "@mui/material";
 
@@ -640,6 +640,25 @@ export const GlobalProvider = ({ children }) => {
       showSnackbar("Error deleting users", "error");
     }
   };
+  // const handleDelete = useCallback(async (token) => {
+  //   try {
+  //     await Promise.all(
+  //       selectedUsers.map(async (id) => {
+  //         await axiosInstance.delete(`/admin/${id}`, {
+  //           headers: { Authorization: `Bearer ${token}` },
+  //         });
+  //       })
+  //     );
+  //     setUsers((prevUsers) =>
+  //       prevUsers.filter((user) => !selectedUsers.includes(user._id))
+  //     );
+  //     setSelectedUsers([]);
+  //     showSnackbar("Users deleted successfully");
+  //   } catch (error) {
+  //     showSnackbar("Error deleting users", "error");
+  //   }
+  // }, [selectedUsers]);
+  
 
   const handleVerify = async (token) => {
     try {

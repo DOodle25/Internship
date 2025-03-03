@@ -19,7 +19,9 @@ import { useLocation } from "react-router-dom";
 import PaymentPage from "./PaymentPage";
 import PaymentAdminPage from "../Admin/PaymentAdminPage";
 import CustomerSegmentation from "../Admin/CustomerSegmentation";
-import SegmentIcon from '@mui/icons-material/Segment';
+import SegmentIcon from "@mui/icons-material/Segment";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
+import CreateTask from "./createtask"
 const Footer = () => (
   <Box
     component="footer"
@@ -36,7 +38,7 @@ const Footer = () => (
 );
 
 const UserProfile = () => {
-  const { token, setUserMethod,user, logout } = useGlobalContext();
+  const { token, setUserMethod, user, logout } = useGlobalContext();
   const location = useLocation();
   const isChatPage = location.pathname === "/chat";
   const isLargeScreen = useMediaQuery("(min-width:960px)");
@@ -62,30 +64,44 @@ const UserProfile = () => {
           >
             <Chat />
           </IconButton>
-          {user.role == "customer" ?<IconButton
-            color="inherit"
-            component={Link}
-            to="/payment"
-            title="Payment"
-          >
-            <Payment />
-          </IconButton>
-          : <IconButton
-          color="inherit"
-          component={Link}
-          to="/payment-admin"
-          title="Payment-admin"
-        >
-          <Payment />
-        </IconButton>}
-          <IconButton
-            color="inherit"
-            component={Link}
-            to="/customer-segmentation"
-            title="Customer Segmentation"
-          >
-            <SegmentIcon />
-          </IconButton>
+          {user.role == "customer" ? (
+            <IconButton
+              color="inherit"
+              component={Link}
+              to="/payment"
+              title="Payment"
+            >
+              <Payment />
+            </IconButton>
+          ) : (
+            <IconButton
+              color="inherit"
+              component={Link}
+              to="/payment-admin"
+              title="Payment-admin"
+            >
+              <Payment />
+            </IconButton>
+          )}
+          {user.role !== "customer" ? (
+            <IconButton
+              color="inherit"
+              component={Link}
+              to="/customer-segmentation"
+              title="Customer Segmentation"
+            >
+              <SegmentIcon />
+            </IconButton>
+          ) : (
+            <IconButton
+              color="inherit"
+              component={Link}
+              to="/create-task"
+              title="create task"
+            >
+              <CreateNewFolderIcon />
+            </IconButton>
+          )}
           <IconButton
             color="inherit"
             component={Link}
@@ -132,7 +148,14 @@ const UserProfile = () => {
           />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/payment-admin" element={<PaymentAdminPage />} />
-          <Route path="/customer-segmentation" element={<CustomerSegmentation />} />
+          {user.role !== "customer" ? (
+            <Route
+              path="/customer-segmentation"
+              element={<CustomerSegmentation />}
+            />
+          ) : (
+            <Route path="/create-task" element={<CreateTask />} />
+          )}
           <Route
             path="*"
             element={

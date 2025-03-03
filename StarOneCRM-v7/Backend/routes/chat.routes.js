@@ -17,7 +17,7 @@ const { verifyJWT, isAdmin } = require("../utils/middleware");
 
 router.get("/tasks", verifyJWT, getAllTasks);
 router.get("/task/:taskId", verifyJWT, getTaskById);
-router.post("/task", verifyJWT, isAdmin, createTask);
+router.post("/task", verifyJWT, createTask);
 router.put("/task/:taskId", verifyJWT, isAdmin, updateTask);
 router.delete("/task/:taskId", verifyJWT, isAdmin, deleteTask);
 

@@ -258,16 +258,38 @@ exports.getMessagesByTask = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+// exports.createTask = async (req, res) => {
+//   try {
+//     const { title, description, customerId } = req.body;
+//     const newTask = new Task({ title, description, customer: customerId });
+//     await newTask.save();
+//     res.status(201).json({ success: true, task: newTask });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+// const Task = require("../models/Task");
+// const User = require("../models/User");
+
 exports.createTask = async (req, res) => {
   try {
-    const { title, description, customerId } = req.body;
-    const newTask = new Task({ title, description, customer: customerId });
+    const { title, description, customerId, assignedPeople } = req.body;
+
+    // Create a new task
+    const newTask = new Task({ title, description, customer: customerId, assignedPeople });
     await newTask.save();
+
+    // Update the customer (creator) by adding the task to their tasksCreated array
+    await User.findByIdAndUpdate(customerId, { $push: { tasksCreated: newTask._id } });
+    await User.findByIdAndUpdate(customerId, { $push: { tasksAssigned: newTask._id } });
+    // User.save();
+
     res.status(201).json({ success: true, task: newTask });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 exports.updateTask = async (req, res) => {
   try {
     const { taskId } = req.params;
@@ -286,6 +308,18 @@ exports.deleteTask = async (req, res) => {
     if (!task) {
       return res.status(404).json({ error: "Task not found" });
     }
+      // Remove task from creator's `tasksCreated`
+      await User.findByIdAndUpdate(task.customer, { $pull: { tasksCreated: taskId } });
+
+      // Remove task from assigned user's `tasksAssigned`
+      await User.findByIdAndUpdate(task.employee, { $pull: { tasksAssigned: taskId } });
+      await User.findByIdAndUpdate(task.customer, { $pull: { tasksAssigned: taskId } });
+  
+      // Remove task from `assignedPeople`
+      await User.updateMany(
+        { _id: { $in: task.assignedPeople } },
+        { $pull: { tasksAssigned: taskId } }
+      );
     await Message.deleteMany({ _id: { $in: task.messages } });
     await Task.findByIdAndDelete(taskId);
     res.status(200).json({
@@ -296,6 +330,23 @@ exports.deleteTask = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+// exports.deleteTask = async (req, res) => {
+//   try {
+//     const { taskId } = req.params;
+//     const task = await Task.findById(taskId);
+//     if (!task) {
+//       return res.status(404).json({ error: "Task not found" });
+//     }
+//     await Message.deleteMany({ _id: { $in: task.messages } });
+//     await Task.findByIdAndDelete(taskId);
+//     res.status(200).json({
+//       success: true,
+//       message: "Task and associated messages deleted successfully",
+//     });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 exports.getTaskById = async (req, res) => {
   try {
     const { taskId } = req.params;

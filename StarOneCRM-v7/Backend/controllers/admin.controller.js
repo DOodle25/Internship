@@ -3,7 +3,8 @@ const sendResponse = require("../utils/sendResponse");
 const { User } = require("../models/user.model");
 const { getGfs } = require("../db");
 const mongoose = require("mongoose");
-
+const Task = require("../models/task.model");
+const Message = require("../models/message.model");
 exports.user_index = async (req, res) => {
   try {
     const users = await User.find();
@@ -149,8 +150,10 @@ exports.user_delete = async (req, res) => {
       sendResponse(res, 404, "User not found");
     } else {
       if (deletedUser.role === "customer") {
-        await Task.deleteMany({ userId: deletedUser._id });
-        await Message.deleteMany({ userId: deletedUser._id });
+        await Task.deleteMany({ customer: deletedUser._id });
+        const tasks = await Task.find({ customer: deletedUser._id });
+        const messageIds = tasks.flatMap(task => task.messages);
+        await Message.deleteMany({ _id: { $in: messageIds } });
       }
       sendResponse(res, 200, "User and associated data deleted successfully");
     }

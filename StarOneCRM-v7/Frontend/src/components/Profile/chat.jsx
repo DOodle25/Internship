@@ -215,43 +215,81 @@ const ChatPage = () => {
     }
   };
 
+  // const fetchAssignedTasks = async () => {
+  //   try {
+  //     const response = await axiosInstance.get("/chat/assigned-tasks/", {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+
+  //     setTaskslist(response.data.tasksAssigned);
+
+  //     if (!Array.isArray(response.data.tasksAssigned)) {
+  //       console.error(
+  //         "tasksAssigned is not an array:",
+  //         response.data.tasksAssigned
+  //       );
+  //       return;
+  //     }
+
+  //     const task = response.data.tasksAssigned.find(
+  //       (task) =>
+  //         (task.customer._id == user._id && task.employee.profileImage) ||
+  //         (task.employee._id == user._id && task.customer.profileImage)
+  //     );
+
+  //     if (task) {
+  //       const profileImage =
+  //         task.customer._id == user._id
+  //           ? task.employee.profileImage
+  //           : task.customer.profileImage;
+
+  //       const compressedFile = await compressImage(profileImage);
+  //       setAvatarUrl(compressedFile);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching assigned tasks:", error);
+  //     navigate("/");
+  //   }
+  // };
+
+
   const fetchAssignedTasks = async () => {
     try {
       const response = await axiosInstance.get("/chat/assigned-tasks/", {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      setTaskslist(response.data.tasksAssigned);
-
+  
       if (!Array.isArray(response.data.tasksAssigned)) {
-        console.error(
-          "tasksAssigned is not an array:",
-          response.data.tasksAssigned
-        );
+        console.error("tasksAssigned is not an array:", response.data.tasksAssigned);
         return;
       }
-
+  
+      setTaskslist(response.data.tasksAssigned);
+  
       const task = response.data.tasksAssigned.find(
         (task) =>
-          (task.customer._id == user._id && task.employee.profileImage) ||
-          (task.employee._id == user._id && task.customer.profileImage)
+          (task.customer?._id === user._id && task.employee?.profileImage) ||
+          (task.employee?._id === user._id && task.customer?.profileImage)
       );
-
+  
       if (task) {
         const profileImage =
-          task.customer._id == user._id
-            ? task.employee.profileImage
-            : task.customer.profileImage;
-
-        const compressedFile = await compressImage(profileImage);
-        setAvatarUrl(compressedFile);
+          task.customer?._id === user._id
+            ? task.employee?.profileImage
+            : task.customer?.profileImage;
+  
+        if (profileImage) {
+          const compressedFile = await compressImage(profileImage);
+          setAvatarUrl(compressedFile);
+        } else {
+          console.warn("Profile image not found for the assigned task.");
+        }
       }
     } catch (error) {
       console.error("Error fetching assigned tasks:", error);
-      navigate("/");
     }
   };
-
+  
   const fetchMessagesForTask = async (taskId) => {
     try {
       const response = await axiosInstance.get(

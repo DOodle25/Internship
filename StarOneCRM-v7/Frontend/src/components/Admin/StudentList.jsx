@@ -25,6 +25,7 @@ const UserList = ({}) => {
     selectedUsers,
     setSelectedUsers,
   } = useGlobalContext();
+  
   const [search, setSearch] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
