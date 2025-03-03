@@ -193,7 +193,7 @@ const ChatPage = () => {
   }, [socketRef.current]);
 
   useEffect(() => {
-    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messageEndRef.current?.scrollIntoView({ behavior: "instant" });
   }, [messages]);
 
   const sendMessage = async () => {

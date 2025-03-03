@@ -196,12 +196,6 @@
 
 // export default CustomerSegmentation;
 
-
-
-
-
-
-
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../utils/axios";
 import {
@@ -421,26 +415,29 @@ const CustomerSegmentation = (filteredUsers) => {
                 {group._id} ({group.users.length} customers)
               </Typography> */}
 
-
-<Typography
-  variant="h6"
-  gutterBottom
-  sx={{
-    marginTop: "20px",
-    display: "flex",
-    alignItems: "center",
-    gap: 1, // Adds spacing between icon and text
-    backgroundColor: "hsl(220, 90%, 95%)", // Light blue background
-    color: "hsl(220, 60%, 30%)", // Darker blue text
-    padding: "8px 16px",
-    borderRadius: "8px",
-    fontWeight: "bold",
-    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)", // Subtle shadow
-  }}
->
-  <GroupIcon sx={{ color: "hsl(220, 60%, 40%)" }} /> {/* Adding an icon */}
-  {group._id} ({group.users.length} customers)
-</Typography>
+              <Typography
+                variant="h6"
+                gutterBottom
+                sx={{
+                  marginTop: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1, // Adds spacing between icon and text
+                  // backgroundColor: "hsl(220, 90%, 95%)", // Light blue background
+                  backgroundColor: "white", // Light blue background
+                  // color: "hsl(220, 60%, 30%)", // Darker blue text
+                  color: "black", // Darker blue text
+                  padding: "8px 16px",
+                  borderRadius: "8px",
+                  // fontWeight: "bold",
+                  fontWeight: "",
+                  // boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)", // Subtle shadow
+                }}
+              >
+                {/* <GroupIcon sx={{ color: "hsl(220, 60%, 40%)" }} />{" "} */}
+                <GroupIcon sx={{ color: "black" }} /> {/* Adding an icon */}
+                {group._id} ({group.users.length} customers)
+              </Typography>
 
               <DataGrid
                 rows={group.users.map((user) => ({

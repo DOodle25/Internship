@@ -412,13 +412,6 @@
 //   }
 // };
 
-
-
-
-
-
-
-
 // const moment = require("moment");
 // const Payment = require("../models/payment.model");
 // const User = require("../models/user.model").User;
@@ -580,17 +573,6 @@
 //   }
 // };
 
-
-
-
-
-
-
-
-
-
-
-
 const moment = require("moment");
 const Payment = require("../models/payment.model");
 const User = require("../models/user.model").User;
@@ -650,9 +632,20 @@ const assignRFM = (rfmData) => {
   }));
 
   // Stable sorting to calculate scores
-  const sortedByRecency = [...scoredData].sort((a, b) => a.recency - b.recency || a._id.toString().localeCompare(b._id.toString()));
-  const sortedByFrequency = [...scoredData].sort((a, b) => b.frequency - a.frequency || a._id.toString().localeCompare(b._id.toString()));
-  const sortedByMonetary = [...scoredData].sort((a, b) => b.monetary - a.monetary || a._id.toString().localeCompare(b._id.toString()));
+  const sortedByRecency = [...scoredData].sort(
+    (a, b) =>
+      a.recency - b.recency || a._id.toString().localeCompare(b._id.toString())
+  );
+  const sortedByFrequency = [...scoredData].sort(
+    (a, b) =>
+      b.frequency - a.frequency ||
+      a._id.toString().localeCompare(b._id.toString())
+  );
+  const sortedByMonetary = [...scoredData].sort(
+    (a, b) =>
+      b.monetary - a.monetary ||
+      a._id.toString().localeCompare(b._id.toString())
+  );
 
   // Function to assign scores using percentiles
   const assignScore = (sortedArray, key) => {
@@ -669,8 +662,10 @@ const assignRFM = (rfmData) => {
 
   return withRecencyScore.map((user) => ({
     ...user,
-    frequencyScore: withFrequencyScore.find((u) => u._id.equals(user._id)).frequencyScore,
-    monetaryScore: withMonetaryScore.find((u) => u._id.equals(user._id)).monetaryScore,
+    frequencyScore: withFrequencyScore.find((u) => u._id.equals(user._id))
+      .frequencyScore,
+    monetaryScore: withMonetaryScore.find((u) => u._id.equals(user._id))
+      .monetaryScore,
   }));
 };
 
@@ -744,12 +739,10 @@ exports.processRFM = async (req, res) => {
       await RFM.bulkWrite(bulkOps);
       res.status(200).json({ success: true, message: "RFM scores updated" });
     } else {
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: "No changes detected, RFM scores remain the same",
-        });
+      res.status(200).json({
+        success: true,
+        message: "No changes detected, RFM scores remain the same",
+      });
     }
   } catch (error) {
     console.error("Error processing RFM:", error);
