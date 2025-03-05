@@ -1371,7 +1371,7 @@ const ChatPage = () => {
           </List>
         </Drawer>
       )} */}
-      {isLargeScreen ? (
+      {/* {isLargeScreen ? (
         <Box
           sx={{
             bgcolor: "white",
@@ -1445,10 +1445,192 @@ const ChatPage = () => {
                   >
                     <VideoCallIcon />
                   </IconButton>
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const otherUserId =
+                        user.role === "customer"
+                          ? task.employee._id
+                          : task.customer._id;
+                      handleVideoCall(otherUserId);
+                    }}
+                  >
+                    <VideoCallIcon />
+                  </IconButton>
                 </ListItem>
               ))
             ) : (
               <Typography variant="body2">No tasks assigned</Typography>
+            )}
+          </List>
+        </Drawer>
+      )} */}
+      {isLargeScreen ? (
+        <Box
+          sx={{
+            bgcolor: "white",
+            transition: "width 0.3s ease-in-out, box-shadow 0.2s ease-in-out",
+            width: expanded ? "260px" : "60px",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            paddingTop: 2,
+            minWidth: expanded ? "260px" : "60px",
+            borderRight: "1px solid #e0e0e0",
+            height: "calc(100vh - 80px) !important",
+            overflowY: "scroll",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+            "-ms-overflow-style": "none",
+            "scrollbar-width": "none",
+          }}
+        >
+          <Button
+            onClick={() => setExpanded(!expanded)}
+            sx={{
+              position: "sticky",
+              top: 0,
+              zIndex: 1,
+              alignSelf: expanded ? "flex-end" : "center",
+              marginRight: expanded ? "5px" : "0px",
+              marginBottom: 2,
+              minWidth: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              boxShadow: "0px 2px 5px rgba(0,0,0,0.2)",
+              backgroundColor: "#FFFFFF",
+              color: "#201F2F",
+              "&:hover": {
+                backgroundColor: "#FFFFFF",
+                color: "#201F2F",
+                transition: "all 0.2s ease-in-out",
+              },
+            }}
+          >
+            {expanded ? <ChevronLeftIcon /> : <ChatIcon />}
+          </Button>
+          <List sx={{ width: "100%", padding: 0 }}>
+            {taskslist.length > 0 ? (
+              taskslist.map((task) => (
+                <ListItem
+                  key={task._id}
+                  sx={{
+                    cursor: "pointer",
+                    backgroundColor:
+                      selectedTaskId === task._id ? "#F3F4F6" : "#FFFFFF",
+                    borderRadius:
+                      selectedTaskId === task._id ? "10px" : "#FFFFFF",
+                    color: selectedTaskId === task._id ? "#201F2F" : "#000000",
+                    "&:hover": {
+                      backgroundColor: "#F3F4F6",
+                      color: "#201F2F",
+                      borderRadius: "10px",
+                      transition: "all 0.2s ease-in-out",
+                    },
+                    transition: "padding 0.3s ease-in-out",
+                    justifyContent: expanded ? "flex-start" : "center",
+                    marginTop: "4px",
+                    marginBottom: "4px",
+                  }}
+                  onClick={() => {
+                    fetchMessagesForTask(task._id);
+                  }}
+                >
+                  {expanded ? (
+                    <>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        padding: "5px",
+                        fontSize: "14px",
+                        fontWeight: "300",
+                      }}
+                    >
+                      {task.description}
+                    </Typography>
+                    <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const otherUserId =
+                        user.role === "customer"
+                          ? task.employee._id
+                          : task.customer._id;
+                      handleVideoCall(otherUserId);
+                    }}
+                  >
+                    <VideoCallIcon />
+                  </IconButton>
+                  </>
+                  ) : (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "100%",
+                      }}
+                    >
+                      <Typography
+                        variant="body1"
+                        sx={{ fontSize: "14px", fontWeight: "300" }}
+                      >
+                        {task.description.charAt(0).toUpperCase()}
+                      </Typography>
+                    </Box>
+                  )}
+                </ListItem>
+              ))
+            ) : (
+              <Typography
+                variant="body2"
+                sx={{
+                  textAlign: "center",
+                  padding: "10px",
+                  color: "#888",
+                  fontStyle: "italic",
+                }}
+              >
+                No tasks assigned
+              </Typography>
+            )}
+          </List>
+        </Box>
+      ) : (
+        <Drawer
+          anchor="left"
+          open={open}
+          onClose={handleDrawerToggle}
+          sx={{ "& .MuiDrawer-paper": { width: drawerWidth } }}
+        >
+          <List>
+            {taskslist.length > 0 ? (
+              taskslist.map((task) => (
+                <ListItem key={task._id} disablePadding>
+                  <ListItemButton
+                    onClick={() => fetchMessagesForTask(task._id)}
+                  >
+                    <ListItemText primary={task.description} />
+                  </ListItemButton>
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const otherUserId =
+                        user.role === "customer"
+                          ? task.employee._id
+                          : task.customer._id;
+                      handleVideoCall(otherUserId);
+                    }}
+                  >
+                    <VideoCallIcon />
+                  </IconButton>
+                </ListItem>
+              ))
+            ) : (
+              <Typography variant="body2" sx={{ padding: 2 }}>
+                No tasks assigned
+              </Typography>
             )}
           </List>
         </Drawer>
