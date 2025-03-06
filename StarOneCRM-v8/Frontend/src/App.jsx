@@ -85,32 +85,6 @@
 
 // export default App;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React from "react";
 import {
   HashRouter as Router,
@@ -137,7 +111,7 @@ const AppRoutes = () => {
     handleVideoCall,
     oncloseuser,
   } = useGlobalContext();
-  
+
   if (!token) {
     return (
       <Routes>
@@ -186,13 +160,13 @@ const AppRoutes = () => {
 
 const App = () => {
   return (
-    <GlobalProvider>
-      <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <GlobalProvider>
         <Router>
           <AppRoutes />
         </Router>
-      </ThemeProvider>
-    </GlobalProvider>
+      </GlobalProvider>
+    </ThemeProvider>
   );
 };
 

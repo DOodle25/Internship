@@ -11,6 +11,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Box,
 } from "@mui/material";
 import {
   Close,
@@ -99,7 +100,7 @@ const VideoCall = ({ otherUserId, oncloseuser, videoCallUser }) => {
       remoteVideoRef.current.srcObject = remoteStream;
     });
 
-    setCallRequest({ call });
+    // setCallRequest({ call });
   };
 
   const acceptCall = async (call) => {
@@ -155,67 +156,67 @@ const VideoCall = ({ otherUserId, oncloseuser, videoCallUser }) => {
     }
   };
 
-  // const endCall = () => {
-  //   console.log("Ending call...");
-
-  //   if (localStream) {
-  //     console.log("Stopping local stream...");
-  //     localStream.getTracks().forEach((track) => {
-  //       console.log(`Stopping track: ${track.kind}`);
-  //       track.stop();
-  //     });
-  //     myVideoRef.current.srcObject = null; // Remove video source
-  //   }
-
-  //   if (remoteStream) {
-  //     console.log("Stopping remote stream...");
-  //     remoteStream.getTracks().forEach((track) => {
-  //       console.log(`Stopping track: ${track.kind}`);
-  //       track.stop();
-  //     });
-  //     remoteVideoRef.current.srcObject = null; // Remove video source
-  //   }
-  //   useEffect(() => {
-  //     socket.on("call-ended", () => {
-  //       endCall();
-  //     });
-
-  //     return () => {
-  //       socket.off("call-ended");
-  //     };
-  //   }, []);
-  //   // Reset state
-  //   setLocalStream(null);
-  //   setRemoteStream(null);
-  //   setCallRequest(null);
-
-  //   // Close Peer Connection
-  //   if (peerInstance.current) {
-  //     console.log("Closing peer connection...");
-  //     peerInstance.current.destroy();
-  //   }
-
-  //   // Inform other user
-  //   if (socket && otherUserPeerId) {
-  //     console.log("Emitting end-call event...");
-  //     socket.emit("end-call", { to: otherUserPeerId });
-  //   }
-
-  //   // Close the UI
-  //   // if (typeof oncloseuser === "function") {
-  //   //   console.log("Closing video call component...");
-  //   //   oncloseuser();
-  //   // }
-  // };
-
   const endCall = () => {
-    window.location.reload();
+    console.log("Ending call...");
+
+    if (localStream) {
+      console.log("Stopping local stream...");
+      localStream.getTracks().forEach((track) => {
+        console.log(`Stopping track: ${track.kind}`);
+        track.stop();
+      });
+      myVideoRef.current.srcObject = null; // Remove video source
+    }
+
+    if (remoteStream) {
+      console.log("Stopping remote stream...");
+      remoteStream.getTracks().forEach((track) => {
+        console.log(`Stopping track: ${track.kind}`);
+        track.stop();
+      });
+      remoteVideoRef.current.srcObject = null; // Remove video source
+    }
+    useEffect(() => {
+      socket.on("call-ended", () => {
+        endCall();
+      });
+
+      return () => {
+        socket.off("call-ended");
+      };
+    }, []);
+    // Reset state
+    setLocalStream(null);
+    setRemoteStream(null);
+    setCallRequest(null);
+
+    // Close Peer Connection
+    if (peerInstance.current) {
+      console.log("Closing peer connection...");
+      peerInstance.current.destroy();
+    }
+
+    // Inform other user
+    if (socket && otherUserPeerId) {
+      console.log("Emitting end-call event...");
+      socket.emit("end-call", { to: otherUserPeerId });
+    }
+
+    // Close the UI
+    // if (typeof oncloseuser === "function") {
+    //   console.log("Closing video call component...");
+    //   oncloseuser();
+    // }
   };
-  useEffect(() => {
-    return () => {
-      endCall();
-    };
-  }, []);
+
+  // const endCall = () => {
+  //   window.location.reload();
+  // };
+  // useEffect(() => {
+  //   return () => {
+  //     endCall();
+  //   };
+  // }, []);
 
   // const handleMouseDown = (e) => {
   //   const floatingWindow = floatingWindowRef.current;
@@ -241,125 +242,232 @@ const VideoCall = ({ otherUserId, oncloseuser, videoCallUser }) => {
   // const handleMouseDown = (e) => {
   //   const floatingWindow = floatingWindowRef.current;
   //   if (!floatingWindow) return;
-  
+
   //   // Determine whether it's a touch event or a mouse event
   //   const isTouch = e.type.startsWith("touch");
   //   const event = isTouch ? e.touches[0] : e;
-  
+
   //   const rect = floatingWindow.getBoundingClientRect();
   //   const offsetX = event.clientX - rect.left;
   //   const offsetY = event.clientY - rect.top;
-  
+
   //   const handleMove = (e) => {
   //     const event = isTouch ? e.touches[0] : e;
   //     floatingWindow.style.left = `${event.clientX - offsetX}px`;
   //     floatingWindow.style.top = `${event.clientY - offsetY}px`;
   //   };
-  
+
   //   const handleEnd = () => {
   //     document.removeEventListener("mousemove", handleMove);
   //     document.removeEventListener("mouseup", handleEnd);
   //     document.removeEventListener("touchmove", handleMove);
   //     document.removeEventListener("touchend", handleEnd);
   //   };
-  
+
   //   document.addEventListener("mousemove", handleMove);
   //   document.addEventListener("mouseup", handleEnd);
   //   document.addEventListener("touchmove", handleMove);
   //   document.addEventListener("touchend", handleEnd);
   // };
-  
+
   // // Attach both mouse and touch event listeners
   // floatingWindowRef.current?.addEventListener("mousedown", handleMouseDown);
   // floatingWindowRef.current?.addEventListener("touchstart", handleMouseDown);
 
-
   const handleMouseDown = (e) => {
     const floatingWindow = floatingWindowRef.current;
     if (!floatingWindow) return;
-  
+
     const isTouch = e.type.startsWith("touch");
     const event = isTouch ? e.touches[0] : e;
-  
+
     const rect = floatingWindow.getBoundingClientRect();
     const resizeCornerSize = 20; // Adjust based on UI
     const isResizing =
       event.clientX >= rect.right - resizeCornerSize &&
       event.clientY >= rect.bottom - resizeCornerSize;
-  
+
     if (isResizing) {
       handleResize(e, isTouch);
     } else {
       handleDrag(e, isTouch);
     }
   };
-  
+
   const handleDrag = (e, isTouch) => {
     const floatingWindow = floatingWindowRef.current;
     if (!floatingWindow) return;
-  
+
     const event = isTouch ? e.touches[0] : e;
     const rect = floatingWindow.getBoundingClientRect();
     const offsetX = event.clientX - rect.left;
     const offsetY = event.clientY - rect.top;
-  
+
     const handleMove = (e) => {
       const event = isTouch ? e.touches[0] : e;
       floatingWindow.style.left = `${event.clientX - offsetX}px`;
       floatingWindow.style.top = `${event.clientY - offsetY}px`;
     };
-  
+
     const handleEnd = () => {
       document.removeEventListener("mousemove", handleMove);
       document.removeEventListener("mouseup", handleEnd);
       document.removeEventListener("touchmove", handleMove);
       document.removeEventListener("touchend", handleEnd);
     };
-  
+
     document.addEventListener("mousemove", handleMove);
     document.addEventListener("mouseup", handleEnd);
     document.addEventListener("touchmove", handleMove);
     document.addEventListener("touchend", handleEnd);
   };
-  
+
   const handleResize = (e, isTouch) => {
     const floatingWindow = floatingWindowRef.current;
     if (!floatingWindow) return;
-  
+
     const event = isTouch ? e.touches[0] : e;
     const startX = event.clientX;
     const startY = event.clientY;
     const startWidth = floatingWindow.offsetWidth;
     const startHeight = floatingWindow.offsetHeight;
-  
+
     const handleMove = (e) => {
       const event = isTouch ? e.touches[0] : e;
       const newWidth = startWidth + (event.clientX - startX);
       const newHeight = startHeight + (event.clientY - startY);
-  
+
       floatingWindow.style.width = `${newWidth}px`;
       floatingWindow.style.height = `${newHeight}px`;
     };
-  
+
     const handleEnd = () => {
       document.removeEventListener("mousemove", handleMove);
       document.removeEventListener("mouseup", handleEnd);
       document.removeEventListener("touchmove", handleMove);
       document.removeEventListener("touchend", handleEnd);
     };
-  
+
     document.addEventListener("mousemove", handleMove);
     document.addEventListener("mouseup", handleEnd);
     document.addEventListener("touchmove", handleMove);
     document.addEventListener("touchend", handleEnd);
   };
-  
+
   // Attach both mouse and touch event listeners
   floatingWindowRef.current?.addEventListener("mousedown", handleMouseDown);
   floatingWindowRef.current?.addEventListener("touchstart", handleMouseDown);
-  
-  
+
   return (
+    // <div
+    //   className="floating-window"
+    //   ref={floatingWindowRef}
+    //   style={{
+    //     left: position.x,
+    //     top: position.y,
+    //     display: videoCallUser || callRequest ? "block" : "none",
+    //   }}
+    // >
+    //   <div className="floating-header" onMouseDown={handleMouseDown}>
+    //     <Typography variant="h6">Video Call</Typography>
+    //     <IconButton
+    //       onClick={() => {
+    //         oncloseuser();
+    //         endCall();
+    //       }}
+    //     >
+    //       <Close />
+    //     </IconButton>
+    //   </div>
+    //   <div className="floating-content">
+    //     <video ref={myVideoRef} autoPlay muted className="floating-video" />
+    //     <video ref={remoteVideoRef} autoPlay className="floating-video" />
+    //     <FormControl fullWidth sx={{ marginBottom: 2 }}>
+    //       <InputLabel>Select Camera</InputLabel>
+    //       <Select value={selectedCamera} onChange={handleCameraChange}>
+    //         {cameras.map((camera) => (
+    //           <MenuItem key={camera.deviceId} value={camera.deviceId}>
+    //             {camera.label || `Camera ${cameras.indexOf(camera) + 1}`}
+    //           </MenuItem>
+    //         ))}
+    //       </Select>
+    //     </FormControl>
+    //     <Button
+    //       variant="contained"
+    //       color="primary"
+    //       onClick={startCall}
+    //       sx={{ marginBottom: 2 }}
+    //     >
+    //       Launch
+    //     </Button>
+    //     <div className="floating-controls">
+    //       <IconButton
+    //         color={isVideoOn ? "primary" : "secondary"}
+    //         onClick={toggleVideo}
+    //       >
+    //         {isVideoOn ? <Videocam /> : <VideocamOff />}
+    //       </IconButton>
+    //       <IconButton
+    //         color={isAudioOn ? "primary" : "secondary"}
+    //         onClick={toggleAudio}
+    //       >
+    //         {isAudioOn ? <Mic /> : <MicOff />}
+    //       </IconButton>
+    //       <IconButton
+    //         color={isScreenSharing ? "primary" : "secondary"}
+    //         onClick={toggleScreenShare}
+    //       >
+    //         {isScreenSharing ? <StopScreenShare /> : <ScreenShare />}
+    //       </IconButton>
+    //       <Button
+    //         variant="contained"
+    //         color="secondary"
+    //         onClick={() => {
+    //           oncloseuser();
+    //           endCall();
+    //         }}
+    //       >
+    //         End Call
+    //       </Button>
+    //     </div>
+    //   </div>
+    //   <Dialog
+    //     open={!!callRequest && callRequest.from !== myId}
+    //     onClose={rejectCall}
+    //     maxWidth="sm"
+    //     fullWidth
+    //   >
+    //     <DialogTitle>Incoming Call</DialogTitle>
+    //     <DialogContent>
+    //       <Typography variant="h6">
+    //         Incoming call from {callRequest?.from}
+    //       </Typography>
+    //       <FormControl fullWidth sx={{ marginTop: 2 }}>
+    //         <InputLabel>Select Camera</InputLabel>
+    //         <Select value={selectedCamera} onChange={handleCameraChange}>
+    //           {cameras.map((camera) => (
+    //             <MenuItem key={camera.deviceId} value={camera.deviceId}>
+    //               {camera.label || `Camera ${cameras.indexOf(camera) + 1}`}
+    //             </MenuItem>
+    //           ))}
+    //         </Select>
+    //       </FormControl>
+    //     </DialogContent>
+    //     <DialogActions>
+    //       <Button
+    //         variant="contained"
+    //         color="primary"
+    //         onClick={() => acceptCall(callRequest.call)}
+    //       >
+    //         Join Meeting
+    //       </Button>
+    //       <Button variant="contained" color="secondary" onClick={rejectCall}>
+    //         Reject
+    //       </Button>
+    //     </DialogActions>
+    //   </Dialog>
+    // </div>
+
     <div
       className="floating-window"
       ref={floatingWindowRef}
@@ -367,22 +475,73 @@ const VideoCall = ({ otherUserId, oncloseuser, videoCallUser }) => {
         left: position.x,
         top: position.y,
         display: videoCallUser || callRequest ? "block" : "none",
+        height: "fit-content",
+        paddingBottom: "30px",
       }}
     >
-      <div className="floating-header" onMouseDown={handleMouseDown}>
+      <div
+        className="floating-header"
+        onMouseDown={handleMouseDown}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: "#031738", // Slightly lighter blue
+          color: "#F6F8FA",
+          padding: "10px",
+          borderTopLeftRadius: "12px",
+          borderTopRightRadius: "12px",
+        }}
+      >
         <Typography variant="h6">Video Call</Typography>
         <IconButton
           onClick={() => {
             oncloseuser();
             endCall();
           }}
+          sx={{
+            color: "#F6F8FA",
+          }}
         >
           <Close />
         </IconButton>
       </div>
       <div className="floating-content">
-        <video ref={myVideoRef} autoPlay muted className="floating-video" />
-        <video ref={remoteVideoRef} autoPlay className="floating-video" />
+        {/* <video
+          ref={myVideoRef}
+          autoPlay
+          muted
+          className="floating-video"
+          style={{ maxWidth: "clamp(250px, 40vw, 600px)" }}
+        />
+        <video
+          ref={remoteVideoRef}
+          autoPlay
+          className="floating-video"
+          style={{ maxWidth: "clamp(250px, 40vw, 600px)" }}
+        /> */}
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="center"
+          alignItems="center"
+          flexWrap="wrap"
+          gap={2}
+        >
+          <video
+            ref={myVideoRef}
+            autoPlay
+            muted
+            className="floating-video"
+            style={{ maxWidth: "clamp(250px, 40vw, 300px)" }}
+          />
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            className="floating-video"
+            style={{ maxWidth: "clamp(250px, 40vw, 300px)" }}
+          />
+        </Box>
         <FormControl fullWidth sx={{ marginBottom: 2 }}>
           <InputLabel>Select Camera</InputLabel>
           <Select value={selectedCamera} onChange={handleCameraChange}>
@@ -397,11 +556,14 @@ const VideoCall = ({ otherUserId, oncloseuser, videoCallUser }) => {
           variant="contained"
           color="primary"
           onClick={startCall}
-          sx={{ marginBottom: 2 }}
+          // sx={{ marginBottom: 2 }}
         >
           Launch
         </Button>
-        <div className="floating-controls">
+        <div
+          className="floating-controls"
+          // height="fit-content"
+        >
           <IconButton
             color={isVideoOn ? "primary" : "secondary"}
             onClick={toggleVideo}
