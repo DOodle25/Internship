@@ -238,14 +238,67 @@ const VideoCall = ({ otherUserId, oncloseuser, videoCallUser }) => {
   //   document.addEventListener("mousemove", handleMouseMove);
   //   document.addEventListener("mouseup", handleMouseUp);
   // };
+  // const handleMouseDown = (e) => {
+  //   const floatingWindow = floatingWindowRef.current;
+  //   if (!floatingWindow) return;
+  
+  //   // Determine whether it's a touch event or a mouse event
+  //   const isTouch = e.type.startsWith("touch");
+  //   const event = isTouch ? e.touches[0] : e;
+  
+  //   const rect = floatingWindow.getBoundingClientRect();
+  //   const offsetX = event.clientX - rect.left;
+  //   const offsetY = event.clientY - rect.top;
+  
+  //   const handleMove = (e) => {
+  //     const event = isTouch ? e.touches[0] : e;
+  //     floatingWindow.style.left = `${event.clientX - offsetX}px`;
+  //     floatingWindow.style.top = `${event.clientY - offsetY}px`;
+  //   };
+  
+  //   const handleEnd = () => {
+  //     document.removeEventListener("mousemove", handleMove);
+  //     document.removeEventListener("mouseup", handleEnd);
+  //     document.removeEventListener("touchmove", handleMove);
+  //     document.removeEventListener("touchend", handleEnd);
+  //   };
+  
+  //   document.addEventListener("mousemove", handleMove);
+  //   document.addEventListener("mouseup", handleEnd);
+  //   document.addEventListener("touchmove", handleMove);
+  //   document.addEventListener("touchend", handleEnd);
+  // };
+  
+  // // Attach both mouse and touch event listeners
+  // floatingWindowRef.current?.addEventListener("mousedown", handleMouseDown);
+  // floatingWindowRef.current?.addEventListener("touchstart", handleMouseDown);
+
+
   const handleMouseDown = (e) => {
     const floatingWindow = floatingWindowRef.current;
     if (!floatingWindow) return;
   
-    // Determine whether it's a touch event or a mouse event
     const isTouch = e.type.startsWith("touch");
     const event = isTouch ? e.touches[0] : e;
   
+    const rect = floatingWindow.getBoundingClientRect();
+    const resizeCornerSize = 20; // Adjust based on UI
+    const isResizing =
+      event.clientX >= rect.right - resizeCornerSize &&
+      event.clientY >= rect.bottom - resizeCornerSize;
+  
+    if (isResizing) {
+      handleResize(e, isTouch);
+    } else {
+      handleDrag(e, isTouch);
+    }
+  };
+  
+  const handleDrag = (e, isTouch) => {
+    const floatingWindow = floatingWindowRef.current;
+    if (!floatingWindow) return;
+  
+    const event = isTouch ? e.touches[0] : e;
     const rect = floatingWindow.getBoundingClientRect();
     const offsetX = event.clientX - rect.left;
     const offsetY = event.clientY - rect.top;
@@ -269,9 +322,42 @@ const VideoCall = ({ otherUserId, oncloseuser, videoCallUser }) => {
     document.addEventListener("touchend", handleEnd);
   };
   
+  const handleResize = (e, isTouch) => {
+    const floatingWindow = floatingWindowRef.current;
+    if (!floatingWindow) return;
+  
+    const event = isTouch ? e.touches[0] : e;
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const startWidth = floatingWindow.offsetWidth;
+    const startHeight = floatingWindow.offsetHeight;
+  
+    const handleMove = (e) => {
+      const event = isTouch ? e.touches[0] : e;
+      const newWidth = startWidth + (event.clientX - startX);
+      const newHeight = startHeight + (event.clientY - startY);
+  
+      floatingWindow.style.width = `${newWidth}px`;
+      floatingWindow.style.height = `${newHeight}px`;
+    };
+  
+    const handleEnd = () => {
+      document.removeEventListener("mousemove", handleMove);
+      document.removeEventListener("mouseup", handleEnd);
+      document.removeEventListener("touchmove", handleMove);
+      document.removeEventListener("touchend", handleEnd);
+    };
+  
+    document.addEventListener("mousemove", handleMove);
+    document.addEventListener("mouseup", handleEnd);
+    document.addEventListener("touchmove", handleMove);
+    document.addEventListener("touchend", handleEnd);
+  };
+  
   // Attach both mouse and touch event listeners
   floatingWindowRef.current?.addEventListener("mousedown", handleMouseDown);
   floatingWindowRef.current?.addEventListener("touchstart", handleMouseDown);
+  
   
   return (
     <div
