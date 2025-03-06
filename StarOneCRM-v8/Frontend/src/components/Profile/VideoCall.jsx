@@ -274,200 +274,178 @@ const VideoCall = ({ otherUserId, oncloseuser, videoCallUser }) => {
   // floatingWindowRef.current?.addEventListener("mousedown", handleMouseDown);
   // floatingWindowRef.current?.addEventListener("touchstart", handleMouseDown);
 
+  // const handleMouseDown = (e) => {
+  //   const floatingWindow = floatingWindowRef.current;
+  //   if (!floatingWindow) return;
+
+  //   const isTouch = e.type.startsWith("touch");
+  //   const event = isTouch ? e.touches[0] : e;
+
+  //   const rect = floatingWindow.getBoundingClientRect();
+  //   const resizeCornerSize = 20; // Adjust based on UI
+  //   const isResizing =
+  //     event.clientX >= rect.right - resizeCornerSize &&
+  //     event.clientY >= rect.bottom - resizeCornerSize;
+
+  //   if (isResizing) {
+  //     handleResize(e, isTouch);
+  //   } else {
+  //     handleDrag(e, isTouch);
+  //   }
+  // };
+
+  // const handleDrag = (e, isTouch) => {
+  //   const floatingWindow = floatingWindowRef.current;
+  //   if (!floatingWindow) return;
+
+  //   const event = isTouch ? e.touches[0] : e;
+  //   const rect = floatingWindow.getBoundingClientRect();
+  //   const offsetX = event.clientX - rect.left;
+  //   const offsetY = event.clientY - rect.top;
+
+  //   const handleMove = (e) => {
+  //     const event = isTouch ? e.touches[0] : e;
+  //     floatingWindow.style.left = `${event.clientX - offsetX}px`;
+  //     floatingWindow.style.top = `${event.clientY - offsetY}px`;
+  //   };
+
+  //   const handleEnd = () => {
+  //     document.removeEventListener("mousemove", handleMove);
+  //     document.removeEventListener("mouseup", handleEnd);
+  //     document.removeEventListener("touchmove", handleMove);
+  //     document.removeEventListener("touchend", handleEnd);
+  //   };
+
+  //   document.addEventListener("mousemove", handleMove);
+  //   document.addEventListener("mouseup", handleEnd);
+  //   document.addEventListener("touchmove", handleMove);
+  //   document.addEventListener("touchend", handleEnd);
+  // };
+
+  // const handleResize = (e, isTouch) => {
+  //   const floatingWindow = floatingWindowRef.current;
+  //   if (!floatingWindow) return;
+
+  //   const event = isTouch ? e.touches[0] : e;
+  //   const startX = event.clientX;
+  //   const startY = event.clientY;
+  //   const startWidth = floatingWindow.offsetWidth;
+  //   const startHeight = floatingWindow.offsetHeight;
+
+  //   const handleMove = (e) => {
+  //     const event = isTouch ? e.touches[0] : e;
+  //     const newWidth = startWidth + (event.clientX - startX);
+  //     const newHeight = startHeight + (event.clientY - startY);
+
+  //     floatingWindow.style.width = `${newWidth}px`;
+  //     floatingWindow.style.height = `${newHeight}px`;
+  //   };
+
+  //   const handleEnd = () => {
+  //     document.removeEventListener("mousemove", handleMove);
+  //     document.removeEventListener("mouseup", handleEnd);
+  //     document.removeEventListener("touchmove", handleMove);
+  //     document.removeEventListener("touchend", handleEnd);
+  //   };
+
+  //   document.addEventListener("mousemove", handleMove);
+  //   document.addEventListener("mouseup", handleEnd);
+  //   document.addEventListener("touchmove", handleMove);
+  //   document.addEventListener("touchend", handleEnd);
+  // };
+
+  // // Attach both mouse and touch event listeners
+  // floatingWindowRef.current?.addEventListener("mousedown", handleMouseDown);
+  // floatingWindowRef.current?.addEventListener("touchstart", handleMouseDown);
+
   const handleMouseDown = (e) => {
     const floatingWindow = floatingWindowRef.current;
     if (!floatingWindow) return;
-
+  
+    // Check if the event target is the header or its children
+    const header = floatingWindow.querySelector('.floating-header');
+    if (!header.contains(e.target)) return;
+  
     const isTouch = e.type.startsWith("touch");
     const event = isTouch ? e.touches[0] : e;
-
+  
     const rect = floatingWindow.getBoundingClientRect();
     const resizeCornerSize = 20; // Adjust based on UI
     const isResizing =
       event.clientX >= rect.right - resizeCornerSize &&
       event.clientY >= rect.bottom - resizeCornerSize;
-
+  
     if (isResizing) {
       handleResize(e, isTouch);
     } else {
       handleDrag(e, isTouch);
     }
   };
-
+  
   const handleDrag = (e, isTouch) => {
     const floatingWindow = floatingWindowRef.current;
     if (!floatingWindow) return;
-
+  
     const event = isTouch ? e.touches[0] : e;
     const rect = floatingWindow.getBoundingClientRect();
     const offsetX = event.clientX - rect.left;
     const offsetY = event.clientY - rect.top;
-
+  
     const handleMove = (e) => {
       const event = isTouch ? e.touches[0] : e;
       floatingWindow.style.left = `${event.clientX - offsetX}px`;
       floatingWindow.style.top = `${event.clientY - offsetY}px`;
     };
-
+  
     const handleEnd = () => {
       document.removeEventListener("mousemove", handleMove);
       document.removeEventListener("mouseup", handleEnd);
       document.removeEventListener("touchmove", handleMove);
       document.removeEventListener("touchend", handleEnd);
     };
-
+  
     document.addEventListener("mousemove", handleMove);
     document.addEventListener("mouseup", handleEnd);
     document.addEventListener("touchmove", handleMove);
     document.addEventListener("touchend", handleEnd);
   };
-
+  
   const handleResize = (e, isTouch) => {
     const floatingWindow = floatingWindowRef.current;
     if (!floatingWindow) return;
-
+  
     const event = isTouch ? e.touches[0] : e;
     const startX = event.clientX;
     const startY = event.clientY;
     const startWidth = floatingWindow.offsetWidth;
     const startHeight = floatingWindow.offsetHeight;
-
+  
     const handleMove = (e) => {
       const event = isTouch ? e.touches[0] : e;
       const newWidth = startWidth + (event.clientX - startX);
       const newHeight = startHeight + (event.clientY - startY);
-
+  
       floatingWindow.style.width = `${newWidth}px`;
       floatingWindow.style.height = `${newHeight}px`;
     };
-
+  
     const handleEnd = () => {
       document.removeEventListener("mousemove", handleMove);
       document.removeEventListener("mouseup", handleEnd);
       document.removeEventListener("touchmove", handleMove);
       document.removeEventListener("touchend", handleEnd);
     };
-
+  
     document.addEventListener("mousemove", handleMove);
     document.addEventListener("mouseup", handleEnd);
     document.addEventListener("touchmove", handleMove);
     document.addEventListener("touchend", handleEnd);
   };
-
+  
   // Attach both mouse and touch event listeners
   floatingWindowRef.current?.addEventListener("mousedown", handleMouseDown);
   floatingWindowRef.current?.addEventListener("touchstart", handleMouseDown);
-
   return (
-    // <div
-    //   className="floating-window"
-    //   ref={floatingWindowRef}
-    //   style={{
-    //     left: position.x,
-    //     top: position.y,
-    //     display: videoCallUser || callRequest ? "block" : "none",
-    //   }}
-    // >
-    //   <div className="floating-header" onMouseDown={handleMouseDown}>
-    //     <Typography variant="h6">Video Call</Typography>
-    //     <IconButton
-    //       onClick={() => {
-    //         oncloseuser();
-    //         endCall();
-    //       }}
-    //     >
-    //       <Close />
-    //     </IconButton>
-    //   </div>
-    //   <div className="floating-content">
-    //     <video ref={myVideoRef} autoPlay muted className="floating-video" />
-    //     <video ref={remoteVideoRef} autoPlay className="floating-video" />
-    //     <FormControl fullWidth sx={{ marginBottom: 2 }}>
-    //       <InputLabel>Select Camera</InputLabel>
-    //       <Select value={selectedCamera} onChange={handleCameraChange}>
-    //         {cameras.map((camera) => (
-    //           <MenuItem key={camera.deviceId} value={camera.deviceId}>
-    //             {camera.label || `Camera ${cameras.indexOf(camera) + 1}`}
-    //           </MenuItem>
-    //         ))}
-    //       </Select>
-    //     </FormControl>
-    //     <Button
-    //       variant="contained"
-    //       color="primary"
-    //       onClick={startCall}
-    //       sx={{ marginBottom: 2 }}
-    //     >
-    //       Launch
-    //     </Button>
-    //     <div className="floating-controls">
-    //       <IconButton
-    //         color={isVideoOn ? "primary" : "secondary"}
-    //         onClick={toggleVideo}
-    //       >
-    //         {isVideoOn ? <Videocam /> : <VideocamOff />}
-    //       </IconButton>
-    //       <IconButton
-    //         color={isAudioOn ? "primary" : "secondary"}
-    //         onClick={toggleAudio}
-    //       >
-    //         {isAudioOn ? <Mic /> : <MicOff />}
-    //       </IconButton>
-    //       <IconButton
-    //         color={isScreenSharing ? "primary" : "secondary"}
-    //         onClick={toggleScreenShare}
-    //       >
-    //         {isScreenSharing ? <StopScreenShare /> : <ScreenShare />}
-    //       </IconButton>
-    //       <Button
-    //         variant="contained"
-    //         color="secondary"
-    //         onClick={() => {
-    //           oncloseuser();
-    //           endCall();
-    //         }}
-    //       >
-    //         End Call
-    //       </Button>
-    //     </div>
-    //   </div>
-    //   <Dialog
-    //     open={!!callRequest && callRequest.from !== myId}
-    //     onClose={rejectCall}
-    //     maxWidth="sm"
-    //     fullWidth
-    //   >
-    //     <DialogTitle>Incoming Call</DialogTitle>
-    //     <DialogContent>
-    //       <Typography variant="h6">
-    //         Incoming call from {callRequest?.from}
-    //       </Typography>
-    //       <FormControl fullWidth sx={{ marginTop: 2 }}>
-    //         <InputLabel>Select Camera</InputLabel>
-    //         <Select value={selectedCamera} onChange={handleCameraChange}>
-    //           {cameras.map((camera) => (
-    //             <MenuItem key={camera.deviceId} value={camera.deviceId}>
-    //               {camera.label || `Camera ${cameras.indexOf(camera) + 1}`}
-    //             </MenuItem>
-    //           ))}
-    //         </Select>
-    //       </FormControl>
-    //     </DialogContent>
-    //     <DialogActions>
-    //       <Button
-    //         variant="contained"
-    //         color="primary"
-    //         onClick={() => acceptCall(callRequest.call)}
-    //       >
-    //         Join Meeting
-    //       </Button>
-    //       <Button variant="contained" color="secondary" onClick={rejectCall}>
-    //         Reject
-    //       </Button>
-    //     </DialogActions>
-    //   </Dialog>
-    // </div>
-
     <div
       className="floating-window"
       ref={floatingWindowRef}
