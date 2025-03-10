@@ -113,13 +113,26 @@ io.on("connection", (socket) => {
     delete users[socket.userId];
   });
   socket.on("joinTaskRoom", (taskId, token) => {
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    if (!token) return ;
+    // res.status(401).json({ message: "Unauthorized" });
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) return res.status(403).json({ message: "Token invalid" });
+      if (err) return ;
+      // res.status(403).json({ message: "Token invalid" });
     });
     socket.join(taskId);
     console.log(`User joined task room: ${taskId}`);
+  });
+  socket.on("leaveTaskRoom", (taskId, token) => {
+    if (!token) return ;
+    // res.status(401).json({ message: "Unauthorized" });
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) return ;
+      // res.status(403).json({ message: "Token invalid" });
+    });
+    socket.leave(taskId);
+    console.log(`User left task room: ${taskId}`);
   });
   socket.on("sendMessage", async ({ taskId, content, senderId }) => {
     try {

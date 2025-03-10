@@ -4,29 +4,90 @@ const Task = require("../models/task.model");
 const mongoose = require("mongoose");
 const { getGfs } = require("../db");
 
+// exports.getAssignedTasks = async (req, res) => {
+//   try {
+//     const user = await User.findById(req.user.id)
+//       .populate({
+//         path: "tasksAssigned",
+//         populate: {
+//           path: "customer employee",
+//           select: "name email role profileImage",
+//         },
+//       })
+//       .exec();
+//     if (!user) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+//     let gfs;
+//     try {
+//       gfs = getGfs();
+//     } catch (error) {
+//       return res.status(500).json({ error: "GridFS not initialized" });
+//     }
+//     const tasksWithProfileImages = await Promise.all(
+//       user.tasksAssigned.map(async (task) => {
+//         const updatedTask = { ...task.toObject() };
+//         if (task.customer && task.customer.profileImage) {
+//           updatedTask.customer.profileImage = await fetchProfileImage(
+//             task.customer.profileImage,
+//             gfs
+//           );
+//         }
+//         if (task.employee && task.employee.profileImage) {
+//           updatedTask.employee.profileImage = await fetchProfileImage(
+//             task.employee.profileImage,
+//             gfs
+//           );
+//         }
+
+//         return updatedTask;
+//       })
+//     );
+//     res
+//       .status(200)
+//       .json({ success: true, tasksAssigned: tasksWithProfileImages });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+// const mongoose = require("mongoose");
+// const Message = mongoose.model("Message");
+
 exports.getAssignedTasks = async (req, res) => {
   try {
     const user = await User.findById(req.user.id)
       .populate({
         path: "tasksAssigned",
-        populate: {
-          path: "customer employee",
-          select: "name email role profileImage",
-        },
+        populate: [
+          {
+            path: "customer employee",
+            select: "name email role profileImage",
+          },
+          {
+            path: "messages",
+            options: { sort: { createdAt: -1 } }, // Sort messages by createdAt in descending order
+          },
+        ],
       })
       .exec();
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
+
     let gfs;
     try {
       gfs = getGfs();
     } catch (error) {
       return res.status(500).json({ error: "GridFS not initialized" });
     }
-    const tasksWithProfileImages = await Promise.all(
+
+    const tasksWithProfileImagesAndUnreadCounts = await Promise.all(
       user.tasksAssigned.map(async (task) => {
         const updatedTask = { ...task.toObject() };
+
+        // Fetch profile images
         if (task.customer && task.customer.profileImage) {
           updatedTask.customer.profileImage = await fetchProfileImage(
             task.customer.profileImage,
@@ -40,12 +101,33 @@ exports.getAssignedTasks = async (req, res) => {
           );
         }
 
+        // Calculate unread messages for customer and employee
+        let customerUnread = 0;
+        let employeeUnread = 0;
+
+        for (const message of task.messages) {
+          if (!message.isRead) {
+            if (message.sender.toString() === task.customer._id.toString()) {
+              customerUnread++;
+            } else if (message.sender.toString() === task.employee._id.toString()) {
+              employeeUnread++;
+            }
+          } else {
+            break; // Stop counting when the first read message is encountered
+          }
+        }
+
+        updatedTask.customerUnread = customerUnread;
+        updatedTask.employeeUnread = employeeUnread;
+
         return updatedTask;
       })
     );
-    res
-      .status(200)
-      .json({ success: true, tasksAssigned: tasksWithProfileImages });
+
+    res.status(200).json({
+      success: true,
+      tasksAssigned: tasksWithProfileImagesAndUnreadCounts,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
