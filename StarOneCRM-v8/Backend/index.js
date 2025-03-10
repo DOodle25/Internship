@@ -10,17 +10,14 @@ const chatRoutes = require("./routes/chat.routes");
 const paymentRoutes = require("./routes/payment.routes");
 const bodyParser = require("body-parser");
 const rfmRoutes = require("./routes/rfm.routes");
-
 const jwt = require("jsonwebtoken");
 const Message = require("./models/message.model");
 const User = require("./models/user.model").User;
 const Task = require("./models/task.model");
 const PORT = process.env.PORT || 5000;
-
 const http = require("http");
 const socketIo = require("socket.io");
 const { ExpressPeerServer } = require("peer");
-
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -32,19 +29,13 @@ const io = socketIo(server, {
   },
 });
 global.io = io;
-
-// Set up PeerJS server
 const peerServer = ExpressPeerServer(server, {
   debug: true,
 });
-
 app.use("/peerjs", peerServer);
-
 connection();
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
 app.use(
   cors({
     origin: "*",
@@ -53,19 +44,16 @@ app.use(
     credentials: true,
   })
 );
-
 app.use((req, res, next) => {
   res.locals.path = req.path;
   next();
 });
-
 app.get("/", (req, res) => {
   res.send(
     "Welcome to the API! Use the /api/cruds endpoint to interact with CRUD operations."
   );
 });
 app.use(bodyParser.json());
-
 app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/status", statusRoutes);
@@ -73,12 +61,9 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/rfm", rfmRoutes);
-
 const users = {};
-
 io.on("connection", (socket) => {
   console.log("New client connected");
-
   socket.on("register-user", (data) => {
     const { userId, peerId } = data;
     users[userId] = { socketId: socket.id, peerId };
@@ -87,7 +72,6 @@ io.on("connection", (socket) => {
       `User ${userId} registered with socket ID ${socket.id} and peer ID ${peerId}`
     );
   });
-
   socket.on("check-user-registered", (data) => {
     const { to } = data;
     const toUser = users[to];
@@ -100,7 +84,6 @@ io.on("connection", (socket) => {
       socket.emit("user-registered", { registered: false });
     }
   });
-
   socket.on("call-user", (data) => {
     const { to, offer } = data;
     const from = socket.userId;
@@ -109,7 +92,6 @@ io.on("connection", (socket) => {
       io.to(toUser.socketId).emit("call-request", { from, offer });
     }
   });
-
   socket.on("call-accepted", (data) => {
     const { to, answer } = data;
     const from = socket.userId;
@@ -118,7 +100,6 @@ io.on("connection", (socket) => {
       io.to(toUser.socketId).emit("call-accepted", { from, answer });
     }
   });
-
   socket.on("call-rejected", (data) => {
     const { to } = data;
     const from = socket.userId;
@@ -127,12 +108,10 @@ io.on("connection", (socket) => {
       io.to(toUser.socketId).emit("call-rejected", { from });
     }
   });
-
   socket.on("disconnect", () => {
     console.log("Client disconnected");
     delete users[socket.userId];
   });
-  // });
   socket.on("joinTaskRoom", (taskId, token) => {
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
@@ -186,6 +165,18 @@ io.on("connection", (socket) => {
       io.to(toUser.socketId).emit("call-ended");
     }
   });
+  socket.on("markMessagesAsRead", async ({ taskId, userId }) => {
+    try {
+      const updatedMessages = await Message.updateMany(
+        { task: taskId, isRead: false, sender: { $ne: userId } }, // Mark only received messages as read
+        { $set: { isRead: true } }
+      );
+  
+      io.to(taskId).emit("messagesRead", { taskId, userId }); // Notify other users
+    } catch (error) {
+      console.error("Error marking messages as read:", error);
+    }
+  });
+  
 });
-
 server.listen(PORT, () => console.log(`Listening on port ${PORT}...`));

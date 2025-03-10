@@ -258,19 +258,6 @@ exports.getMessagesByTask = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-// exports.createTask = async (req, res) => {
-//   try {
-//     const { title, description, customerId } = req.body;
-//     const newTask = new Task({ title, description, customer: customerId });
-//     await newTask.save();
-//     res.status(201).json({ success: true, task: newTask });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-// const Task = require("../models/Task");
-// const User = require("../models/User");
-
 exports.createTask = async (req, res) => {
   try {
     const { title, description, customerId, assignedPeople } = req.body;
@@ -289,7 +276,6 @@ exports.createTask = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 exports.updateTask = async (req, res) => {
   try {
     const { taskId } = req.params;
@@ -330,23 +316,6 @@ exports.deleteTask = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-// exports.deleteTask = async (req, res) => {
-//   try {
-//     const { taskId } = req.params;
-//     const task = await Task.findById(taskId);
-//     if (!task) {
-//       return res.status(404).json({ error: "Task not found" });
-//     }
-//     await Message.deleteMany({ _id: { $in: task.messages } });
-//     await Task.findByIdAndDelete(taskId);
-//     res.status(200).json({
-//       success: true,
-//       message: "Task and associated messages deleted successfully",
-//     });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
 exports.getTaskById = async (req, res) => {
   try {
     const { taskId } = req.params;
