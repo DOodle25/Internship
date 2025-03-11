@@ -24,7 +24,9 @@ import {
 } from "@mui/icons-material";
 import { useGlobalContext } from "../../context/GlobalContext";
 import "./VideoCall.css"; // Import the CSS file
-
+import LaunchIcon from '@mui/icons-material/Launch';
+import CallEndIcon from '@mui/icons-material/CallEnd';
+import AddIcCallIcon from '@mui/icons-material/AddIcCall';
 const VideoCall = ({ otherUserId, oncloseuser, videoCallUser }) => {
   const {
     user,
@@ -307,16 +309,18 @@ const VideoCall = ({ otherUserId, oncloseuser, videoCallUser }) => {
         onMouseDown={handleMouseDown}
         style={{
           display: "flex",
-          justifyContent: "space-between",
+          // justifyContent: "space-between",
+          justifyContent: "right",
           alignItems: "center",
           backgroundColor: "#031738", // Slightly lighter blue
           color: "#F6F8FA",
           padding: "10px",
           borderTopLeftRadius: "12px",
           borderTopRightRadius: "12px",
+          height: "12px",
         }}
       >
-        <Typography variant="h6">Video Call</Typography>
+        {/* <Typography variant="h6">Video Call</Typography> */}
         <IconButton
           onClick={() => {
             oncloseuser();
@@ -343,35 +347,36 @@ const VideoCall = ({ otherUserId, oncloseuser, videoCallUser }) => {
             autoPlay
             muted
             className="floating-video"
-            style={{ maxWidth: "clamp(250px, 40vw, 300px)" }}
+            style={{ maxWidth: "clamp(250px, 40vw, 300px)", backgroundColor: "#F6F8FA"}}
           />
           <video
             ref={remoteVideoRef}
             autoPlay
             className="floating-video"
-            style={{ maxWidth: "clamp(250px, 40vw, 300px)" }}
+            style={{ maxWidth: "clamp(250px, 40vw, 300px)", backgroundColor: "#F6F8FA"}}
           />
         </Box>
         <FormControl fullWidth sx={{ marginBottom: 2 }}>
-          <InputLabel>Select Camera</InputLabel>
+          {/* <InputLabel>Select Camera</InputLabel>
           <Select value={selectedCamera} onChange={handleCameraChange}>
             {cameras.map((camera) => (
               <MenuItem key={camera.deviceId} value={camera.deviceId}>
                 {camera.label || `Camera ${cameras.indexOf(camera) + 1}`}
               </MenuItem>
             ))}
-          </Select>
+          </Select> */}
         </FormControl>
-        <Button
+        <div
+          className="floating-controls"
+        >
+          <Button
           variant="contained"
           color="primary"
           onClick={startCall}
         >
-          Launch
+          {/* Launch */}
+          <LaunchIcon />
         </Button>
-        <div
-          className="floating-controls"
-        >
           <IconButton
             color={isVideoOn ? "primary" : "secondary"}
             onClick={toggleVideo}
@@ -398,7 +403,7 @@ const VideoCall = ({ otherUserId, oncloseuser, videoCallUser }) => {
               endCall();
             }}
           >
-            End Call
+            <CallEndIcon />
           </Button>
         </div>
       </div>

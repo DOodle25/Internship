@@ -13,12 +13,14 @@ test id : customer - 210305105302@paruluniversity.ac.in - admin123
 ## Features
 
 - **User Authentication**:
+
   - Google Login
   - Facebook Login
   - Traditional OTP with Nodemailer
   - Three-layer registration process (Login → Fill Required Data → Admin Verification)
 
 - **User Management**:
+
   - Edit Profile
   - Upload Images
   - Create Tasks
@@ -26,16 +28,19 @@ test id : customer - 210305105302@paruluniversity.ac.in - admin123
   - View Payment History
 
 - **Admin Features**:
+
   - Verify User Data
   - Manage Users, Tasks, and Assigned Tasks
   - Beautiful Data Tables for Users and Tasks
   - RFM Model for User Segmentation
 
 - **Payment Processing**:
+
   - Stripe Integration
   - Payment History Visible to Both Employees and Customers
 
 - **Real-time Communication**:
+
   - Socket.io Chat
   - Video Call using Peer.js and Socket.io
 
@@ -57,14 +62,9 @@ test id : customer - 210305105302@paruluniversity.ac.in - admin123
 ![Screenshot 2025-03-06 133831](https://github.com/user-attachments/assets/d03521cf-7b4e-4514-87e6-3d9bac285879)
 ![Screenshot 2025-03-06 133843](https://github.com/user-attachments/assets/204fc0a0-915b-4c76-9644-59f055f0273c)
 
-
 ## Videos
 
-
-
 https://github.com/user-attachments/assets/33a5cfd5-48e1-4d85-a4be-76e5f633ea43
-
-
 
 ## Setup
 
@@ -83,6 +83,7 @@ https://github.com/user-attachments/assets/33a5cfd5-48e1-4d85-a4be-76e5f633ea43
    git clone https://github.com/DOodle25/Internship
    cd StarOneCRM
    ```
+
    make sure to use the proper version of StarOneCRM-vX (PreviousVersion are maintained)
 
 2. **Install Dependencies**
@@ -98,17 +99,17 @@ https://github.com/user-attachments/assets/33a5cfd5-48e1-4d85-a4be-76e5f633ea43
    Create a `.env` file in the root directory and add the following variables:
 
    ```env
-MONGODB_URI =
-PORT = 
-JWT_SECRET = 
-GOOGLE_CLIENT_ID = 
-GOOGLE_CLIENT_SECRET = 
-FACEBOOK_CLIENT_ID = 
-FACEBOOK_CLIENT_SECRET = 
-NODE_ENV = 
-STRIPE_SECRET_KEY = 
-BASE_URL = 
-STRIPE_WEBHOOK_SECRET = 
+   MONGODB_URI =
+   PORT =
+   JWT_SECRET =
+   GOOGLE_CLIENT_ID =
+   GOOGLE_CLIENT_SECRET =
+   FACEBOOK_CLIENT_ID =
+   FACEBOOK_CLIENT_SECRET =
+   NODE_ENV =
+   STRIPE_SECRET_KEY =
+   BASE_URL =
+   STRIPE_WEBHOOK_SECRET =
    ```
 
 4. **Run the Application**
@@ -181,13 +182,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-For any inquiries, please contact [Dipen Patel] at [emailhelper246@gmail.com].
+For any inquiries, please contact [Dipen Patel] at [emailhelper468@gmail.com].
 
 ---
 
 Thank you for checking out StarOneCRM! We hope you find it useful and look forward to your contributions! 🚀
 
-# Internship Log  
+# Internship Log
 
 <details>
 <summary>December 2024</summary>
@@ -754,4 +755,3 @@ Added the ability for an **Admin** to assign a **Customer** to an **Employee** a
 </details>
 
 </details>
-
