@@ -40,7 +40,7 @@ const Footer = () => (
 const UserProfile = () => {
   const { token, setUserMethod, user, logout } = useGlobalContext();
   const location = useLocation();
-  const isChatPage = location.pathname === "/chat";
+  const isChatPage = location.pathname === "/chat" || location.pathname === "/payment" || location.pathname === "/payment-admin";
   const isLargeScreen = useMediaQuery("(min-width:960px)");
   return (
     <Box

@@ -409,7 +409,7 @@ const UserList = ({}) => {
 
       <div
         style={{
-          height: 480,
+          height: 455,
           width: "100%",
           marginBottom: "20px",
         }}
@@ -417,10 +417,11 @@ const UserList = ({}) => {
         <DataGrid
           rows={filteredUsers}
           columns={columns}
-          initialState={{
-            pagination: { paginationModel: { pageSize: 10 } },
-          }}
-          pageSizeOptions={[5, 10, 25]}
+          // initialState={{
+          //   pagination: { paginationModel: { pageSize: 10 } },
+          // }}
+          // pageSizeOptions={[5, 10, 25]}
+          autoPageSize
           checkboxSelection
           paginationMode="client"
           rowCount={filteredUsers?.length ?? 0}
@@ -477,7 +478,7 @@ const UserList = ({}) => {
           Delete
         </MenuItem>
       </Menu>
-      <CustomerSegmentation filteredUsers={filteredUsers} />
+      <CustomerSegmentation />
     </>
   );
 };

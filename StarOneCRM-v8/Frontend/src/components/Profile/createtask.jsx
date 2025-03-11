@@ -44,10 +44,10 @@ const CreateTask = () => {
 
     return (
         <Box sx={{ padding: "20px", maxWidth: 600, margin: "auto" }}>
-            <Paper elevation={3} sx={{ padding: 3, borderRadius: 2 }}>
-                <Typography variant="h5" sx={{ marginBottom: 2, fontWeight: "bold", color: "#031738" }}>
+            <Paper elevation={3} sx={{ padding: 3, borderRadius: 2, border:"none", boxShadow:"none" }}>
+                {/* <Typography variant="h5" sx={{ marginBottom: 2, fontWeight: "bold", color: "#031738" }}>
                     Create a New Task
-                </Typography>
+                </Typography> */}
                 <TextField
                     label="Title"
                     fullWidth

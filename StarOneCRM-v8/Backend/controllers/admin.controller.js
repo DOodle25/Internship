@@ -94,12 +94,43 @@ exports.user_details = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      sendResponse(res, 404, "User not found");
+      return sendResponse(res, 404, "User not found");
+    }
+    let profileData = { ...user.toObject() };
+    if (user.profileImage) {
+      let gfs;
+      try {
+        gfs = getGfs();
+      } catch (error) {
+        return sendResponse(res, 500, "GridFS not initialized");
+      }
+      let chunks = [];
+      const readStream = gfs.openDownloadStream(
+        new mongoose.Types.ObjectId(user.profileImage)
+      );
+      readStream.on("data", (chunk) => {
+        chunks.push(chunk);
+      });
+      readStream.on("end", () => {
+        const imageBuffer = Buffer.concat(chunks);
+        profileData.profileImage = `data:image/png;base64,${imageBuffer.toString(
+          "base64"
+        )}`;
+        return sendResponse(
+          res,
+          200,
+          "User retrieved successfully",
+          profileData
+        );
+      });
+      readStream.on("error", (err) => {
+        return sendResponse(res, 500, "Error retrieving image");
+      });
     } else {
-      sendResponse(res, 200, "User retrieved successfully", user);
+      return sendResponse(res, 200, "User retrieved successfully", profileData);
     }
   } catch (err) {
-    sendResponse(res, 400, "Error retrieving user", null, err.message);
+    return sendResponse(res, 400, "Error retrieving user", null, err.message);
   }
 };
 exports.user_update = async (req, res) => {

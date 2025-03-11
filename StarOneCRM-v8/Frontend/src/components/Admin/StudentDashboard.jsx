@@ -48,7 +48,7 @@ const StudentDashboard = () => {
   const location = useLocation();
   const isChatPage = location.pathname === "/chat";
   const isAdminePanel =
-    location.pathname === "/" || location.pathname === "/assign";
+    location.pathname === "/" || location.pathname === "/assign" || location.pathname === "/payment-admin";
   const isLargeScreen = useMediaQuery("(min-width:960px)");
   return (
     <ThemeProvider theme={theme}>

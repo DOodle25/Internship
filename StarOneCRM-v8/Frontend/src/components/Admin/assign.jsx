@@ -247,13 +247,14 @@ const AssignUserToEmployee = () => {
             updatedAt: t.updatedAt,
           }))}
           columns={columns}
-          pageSize={5}
+          // pageSize={5}
           count={tasks?.length || 0}
           paginationMode="client"
           initialState={{
             pagination: { paginationModel: { pageSize: 10 } },
           }}
-          pageSizeOptions={[5, 10, 25]}
+          // pageSizeOptions={[5, 10, 25]}
+          autoPageSize
           sx={{
             backgroundColor: "#FFFFFF",
             border: "0px solid #DFDFDF",
