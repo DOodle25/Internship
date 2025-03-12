@@ -1,11 +1,8 @@
-
-
 const moment = require("moment");
 const Payment = require("../models/payment.model");
 const User = require("../models/user.model").User;
 const RFM = require("../models/rfm.model");
 
-// Calculate RFM Scores
 const calculateRFM = async () => {
   try {
     const rfmData = await Payment.aggregate([
@@ -22,7 +19,7 @@ const calculateRFM = async () => {
       },
       {
         $lookup: {
-          from: "users", // Ensure correct collection name
+          from: "users",
           localField: "_id",
           foreignField: "_id",
           as: "userDetails",
@@ -48,27 +45,34 @@ const calculateRFM = async () => {
     throw error;
   }
 };
-
-// Assign RFM Scores
 const assignRFM = (rfmData) => {
-  const today = moment().startOf("day"); // Fixes inconsistent recency calculations
+  const today = moment().startOf("day");
 
   const scoredData = rfmData.map((user) => ({
     ...user,
     recency: today.diff(moment(user.recency), "days"),
   }));
 
-  // Stable sorting to calculate scores
-  const sortedByRecency = [...scoredData].sort((a, b) => a.recency - b.recency || a._id.toString().localeCompare(b._id.toString()));
-  const sortedByFrequency = [...scoredData].sort((a, b) => b.frequency - a.frequency || a._id.toString().localeCompare(b._id.toString()));
-  const sortedByMonetary = [...scoredData].sort((a, b) => b.monetary - a.monetary || a._id.toString().localeCompare(b._id.toString()));
+  const sortedByRecency = [...scoredData].sort(
+    (a, b) =>
+      a.recency - b.recency || a._id.toString().localeCompare(b._id.toString())
+  );
+  const sortedByFrequency = [...scoredData].sort(
+    (a, b) =>
+      b.frequency - a.frequency ||
+      a._id.toString().localeCompare(b._id.toString())
+  );
+  const sortedByMonetary = [...scoredData].sort(
+    (a, b) =>
+      b.monetary - a.monetary ||
+      a._id.toString().localeCompare(b._id.toString())
+  );
 
-  // Function to assign scores using percentiles
   const assignScore = (sortedArray, key) => {
     const n = sortedArray.length;
     return sortedArray.map((user, index) => ({
       ...user,
-      [`${key}Score`]: Math.ceil(((index + 1) / n) * 5), // More stable scoring method
+      [`${key}Score`]: Math.ceil(((index + 1) / n) * 5),
     }));
   };
 
@@ -78,12 +82,12 @@ const assignRFM = (rfmData) => {
 
   return withRecencyScore.map((user) => ({
     ...user,
-    frequencyScore: withFrequencyScore.find((u) => u._id.equals(user._id)).frequencyScore,
-    monetaryScore: withMonetaryScore.find((u) => u._id.equals(user._id)).monetaryScore,
+    frequencyScore: withFrequencyScore.find((u) => u._id.equals(user._id))
+      .frequencyScore,
+    monetaryScore: withMonetaryScore.find((u) => u._id.equals(user._id))
+      .monetaryScore,
   }));
 };
-
-// Categorize Users
 const categorizeCustomers = (user) => {
   const { recencyScore, frequencyScore, monetaryScore } = user;
 
@@ -97,8 +101,6 @@ const categorizeCustomers = (user) => {
     return "New Customer";
   }
 };
-
-// Save RFM Data
 exports.processRFM = async (req, res) => {
   try {
     const rawData = await calculateRFM();
@@ -107,7 +109,6 @@ exports.processRFM = async (req, res) => {
     const userIds = finalRFM.map((user) => user._id);
     const existingRFM = await RFM.find({ userId: { $in: userIds } });
 
-    // Create a map of existing RFM data for quick lookup
     const existingRFMMap = new Map(
       existingRFM.map((user) => [user.userId.toString(), user])
     );
@@ -125,7 +126,7 @@ exports.processRFM = async (req, res) => {
           existingUser.frequencyScore === user.frequencyScore &&
           existingUser.monetaryScore === user.monetaryScore
         ) {
-          return null; // Skip update if data hasn't changed
+          return null;
         }
 
         return {
@@ -147,26 +148,22 @@ exports.processRFM = async (req, res) => {
           },
         };
       })
-      .filter(Boolean); // Remove null updates
+      .filter(Boolean);
 
     if (bulkOps.length > 0) {
       await RFM.bulkWrite(bulkOps);
       res.status(200).json({ success: true, message: "RFM scores updated" });
     } else {
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: "No changes detected, RFM scores remain the same",
-        });
+      res.status(200).json({
+        success: true,
+        message: "No changes detected, RFM scores remain the same",
+      });
     }
   } catch (error) {
     console.error("Error processing RFM:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-// Fetch RFM Data Grouped by Segment
 exports.getRFMData = async (req, res) => {
   try {
     const groupedRFM = await RFM.aggregate([

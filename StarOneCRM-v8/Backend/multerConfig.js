@@ -9,7 +9,6 @@ const storage = multer.diskStorage({
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
-
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png/;
   const extname = allowedTypes.test(
@@ -23,7 +22,6 @@ const fileFilter = (req, file, cb) => {
     cb(new Error("Only images (JPEG, PNG) are allowed"));
   }
 };
-
 const upload = multer({
   storage,
   fileFilter,

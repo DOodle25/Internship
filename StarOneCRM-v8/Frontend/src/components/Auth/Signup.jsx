@@ -46,19 +46,16 @@ function Signup() {
     }
     return () => clearInterval(interval);
   }, [timer, otpSent]);
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const isFormValid = () => {
     const { name, email, age, role, password } = formData;
     return name && email && age && role && password;
   };
-
   const handleOtpRequest = async () => {
     if (!isFormValid()) {
-     return;
+      return;
     }
 
     setIsSendingOtp(true);
@@ -74,7 +71,6 @@ function Signup() {
       setIsSendingOtp(false);
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -83,10 +79,8 @@ function Signup() {
         navigate("/login");
       } else {
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
-
   return (
     <Container
       maxWidth="md"
@@ -95,7 +89,6 @@ function Signup() {
         justifyContent: "center",
         alignItems: "center",
         minHeight: "100vh",
-        // backgroundColor: "#FFFFFF",
         background: "linear-gradient(15deg, #0a0f1f, #0f1a30, #16234a)",
         minWidth: "100%",
       }}
@@ -109,12 +102,10 @@ function Signup() {
           minHeight: "90vh",
         }}
       >
-        {/* Left Branding Section */}
         <Box
           sx={{
             display: { xs: "none", sm: "flex" },
             flex: 1,
-            // backgroundColor: "#201F2F",
             color: "white",
             flexDirection: "column",
             alignItems: "center",
@@ -123,10 +114,8 @@ function Signup() {
             borderRight: 1,
             borderRightColor: "divider",
             borderRightStyle: "solid",
-            // background: "linear-gradient(to bottom,rgb(17, 26, 54),rgb(25, 42, 77),rgb(34, 52, 107))",
-            background: "linear-gradient(165deg,rgb(34, 52, 107), rgb(17, 26, 54),rgb(25, 42, 77))",
-            // background: "linear-gradient(155deg,rgb(34, 52, 107), rgb(17, 26, 54),rgb(25, 42, 77))",
-            
+            background:
+              "linear-gradient(165deg,rgb(34, 52, 107), rgb(17, 26, 54),rgb(25, 42, 77))",
           }}
         >
           <Typography
@@ -151,8 +140,6 @@ function Signup() {
             </span>{" "}
             <span
               style={{
-                // background: "#3367D1",
-                // color: "#FFFFFF",
                 background: "#FFFFFF",
                 color: "#031738",
                 borderRadius: "50px",
@@ -178,10 +165,7 @@ function Signup() {
             marginTop={"20px"}
             sx={{
               fontWeight: 200,
-              // opacity: 0.5,
-              // fontWeight: 600,
               fontSize: "1.2rem",
-              // boxShadow: "0px 10px 0px 0px #FFFFFF",
             }}
           >
             <span
@@ -189,7 +173,6 @@ function Signup() {
                 borderRadius: "10px",
                 color: "#FFFFFF",
                 fontStyle: "",
-                // backgroundColor: "#FDB8DC",
                 backgroundColor: "transparent",
                 border: "0.5px solid #FFFFFF",
                 boxShadow: "2px 3px 0px 0px #FFFFFF",
@@ -211,8 +194,6 @@ function Signup() {
             </span>
           </Typography>
         </Box>
-
-        {/* Right Signup Section */}
         <Box
           sx={{
             flex: 1,

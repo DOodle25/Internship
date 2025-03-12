@@ -21,7 +21,7 @@ import PaymentAdminPage from "../Admin/PaymentAdminPage";
 import CustomerSegmentation from "../Admin/CustomerSegmentation";
 import SegmentIcon from "@mui/icons-material/Segment";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
-import CreateTask from "./createtask"
+import CreateTask from "./createtask";
 const Footer = () => (
   <Box
     component="footer"
@@ -36,11 +36,13 @@ const Footer = () => (
     <Typography variant="body2">© {new Date().getFullYear()} CRM.</Typography>
   </Box>
 );
-
 const UserProfile = () => {
   const { token, setUserMethod, user, logout } = useGlobalContext();
   const location = useLocation();
-  const isChatPage = location.pathname === "/chat" || location.pathname === "/payment" || location.pathname === "/payment-admin";
+  const isChatPage =
+    location.pathname === "/chat" ||
+    location.pathname === "/payment" ||
+    location.pathname === "/payment-admin";
   const isLargeScreen = useMediaQuery("(min-width:960px)");
   return (
     <Box
@@ -50,7 +52,6 @@ const UserProfile = () => {
         minHeight: "100vh",
       }}
     >
-      {/* Navbar */}
       <AppBar position="sticky">
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
@@ -112,8 +113,6 @@ const UserProfile = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
-
-      {/* Main Content */}
       <Container
         sx={{
           ...(isLargeScreen && {
@@ -169,8 +168,6 @@ const UserProfile = () => {
           />
         </Routes>
       </Container>
-
-      {/* Footer */}
       {!isChatPage && <Footer />}
     </Box>
   );

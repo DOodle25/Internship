@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axiosInstance from "../../utils/axios";
 import {
   Button,
   MenuItem,
@@ -53,16 +52,13 @@ const AssignUserToEmployee = () => {
 
     return () => clearInterval(interval);
   }, [editTask]);
-
   const handleSnackbarOpen = (message) => {
     setSnackbarMessage(message);
     setSnackbarOpen(true);
   };
-
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
-
   const handleCreate = async () => {
     const result = await handleCreateTask(newTask);
     handleSnackbarOpen(result.message);
@@ -71,7 +67,6 @@ const AssignUserToEmployee = () => {
       setNewTask({ title: "", description: "", customerId: "" });
     }
   };
-
   const handleUpdate = async () => {
     const result = await handleUpdateTask(editTask);
     handleSnackbarOpen(result.message);
@@ -80,12 +75,10 @@ const AssignUserToEmployee = () => {
       setEditTask(null);
     }
   };
-
   const handleDelete = async (taskId) => {
     const result = await handleDeleteTask(taskId);
     handleSnackbarOpen(result.message);
   };
-
   const handleAssign = async () => {
     const result = await handleAssignTask(
       selectedTask,
@@ -94,7 +87,6 @@ const AssignUserToEmployee = () => {
     );
     handleSnackbarOpen(result.message);
   };
-
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -247,13 +239,11 @@ const AssignUserToEmployee = () => {
             updatedAt: t.updatedAt,
           }))}
           columns={columns}
-          // pageSize={5}
           count={tasks?.length || 0}
           paginationMode="client"
           initialState={{
             pagination: { paginationModel: { pageSize: 10 } },
           }}
-          // pageSizeOptions={[5, 10, 25]}
           autoPageSize
           sx={{
             backgroundColor: "#FFFFFF",

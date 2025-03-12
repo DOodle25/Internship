@@ -11,8 +11,6 @@ import {
   ListItemText,
   TextField,
   IconButton,
-  AppBar,
-  Toolbar,
   Drawer,
   useMediaQuery,
 } from "@mui/material";
@@ -41,47 +39,44 @@ const ChatPage = () => {
   const [expanded, setExpanded] = useState(true);
   const socketRef = useRef(null);
   const selectedTaskIdRef = useRef(selectedTaskId);
-
-  const colors = [
-    "#8B0000",
-    "#8B4513",
-    "#2F4F4F",
-    "#556B2F",
-    "#8B008B",
-    "#483D8B",
-    "#2E8B57",
-    "#4B0082",
-    "#191970",
-    "#00008B",
-    "#8B0000",
-    "#8B4513",
-    "#2F4F4F",
-    "#556B2F",
-    "#8B008B",
-    "#483D8B",
-    "#2E8B57",
-    "#4B0082",
-    "#191970",
-    "#00008B",
-    "#8B0000",
-    "#8B4513",
-    "#2F4F4F",
-    "#556B2F",
-    "#8B008B",
-    "#483D8B",
-  ];
-  const getColorForLetter = (letter) => {
-    const index = letter.charCodeAt(0) % colors.length;
-    return colors[index];
-  };
+  // const colors = [
+  //   "#8B0000",
+  //   "#8B4513",
+  //   "#2F4F4F",
+  //   "#556B2F",
+  //   "#8B008B",
+  //   "#483D8B",
+  //   "#2E8B57",
+  //   "#4B0082",
+  //   "#191970",
+  //   "#00008B",
+  //   "#8B0000",
+  //   "#8B4513",
+  //   "#2F4F4F",
+  //   "#556B2F",
+  //   "#8B008B",
+  //   "#483D8B",
+  //   "#2E8B57",
+  //   "#4B0082",
+  //   "#191970",
+  //   "#00008B",
+  //   "#8B0000",
+  //   "#8B4513",
+  //   "#2F4F4F",
+  //   "#556B2F",
+  //   "#8B008B",
+  //   "#483D8B",
+  // ];
+  // const getColorForLetter = (letter) => {
+  //   const index = letter.charCodeAt(0) % colors.length;
+  //   return colors[index];
+  // };
   useEffect(() => {
     selectedTaskIdRef.current = selectedTaskId;
   }, [selectedTaskId]);
-
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
-
   useEffect(() => {
     const connectSocket = () => {
       if (!token || socketRef.current) return;
@@ -132,7 +127,6 @@ const ChatPage = () => {
       }
     };
   }, [token]);
-
   useEffect(() => {
     if (socketRef.current) {
       const handleMessage = ({ message, sender }) => {
@@ -146,11 +140,9 @@ const ChatPage = () => {
       socketRef.current.on("receiveMessage", handleMessage);
     }
   }, [socketRef.current]);
-
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
 
@@ -163,13 +155,11 @@ const ChatPage = () => {
     socketRef.current?.emit("sendMessage", messageData);
     setNewMessage("");
   };
-
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       sendMessage();
     }
   };
-
   const fetchAssignedTasks = async () => {
     try {
       const response = await axiosInstance.get("/chat/assigned-tasks/", {
@@ -180,7 +170,6 @@ const ChatPage = () => {
       navigate("/");
     }
   };
-
   const fetchMessagesForTask = async (taskId) => {
     try {
       const response = await axiosInstance.get(
@@ -197,7 +186,6 @@ const ChatPage = () => {
       }
     } catch (error) {}
   };
-
   const fetchPayments = async () => {
     try {
       const response = await fetch(
@@ -214,12 +202,10 @@ const ChatPage = () => {
       setPayments(userPayments);
     } catch (error) {}
   };
-
   useEffect(() => {
     fetchAssignedTasks();
     fetchPayments();
   }, []);
-
   const renderMessagesAndPayments = () => {
     const allItems = [
       ...messages.map((msg) => ({ ...msg, type: "message" })),
@@ -297,7 +283,6 @@ const ChatPage = () => {
       return null;
     });
   };
-
   return (
     <Box
       sx={{
@@ -308,7 +293,6 @@ const ChatPage = () => {
         width: "100%",
       }}
     >
-      {/* Sidebar Drawer - Persistent for Large Screens */}
       {isLargeScreen ? (
         <Box
           sx={{
@@ -453,8 +437,6 @@ const ChatPage = () => {
           </List>
         </Drawer>
       )}
-
-      {/* Main Content */}
       <Box
         sx={{
           flexGrow: 1,
@@ -463,7 +445,6 @@ const ChatPage = () => {
           height: "100%",
         }}
       >
-        {/* AppBar */}
         {!isLargeScreen ? (
           <Box
             sx={{
@@ -508,7 +489,6 @@ const ChatPage = () => {
             overflow: "hidden",
           }}
         >
-          {/* Chat Messages */}
           <Box
             sx={{
               flexGrow: 1,
@@ -543,8 +523,6 @@ const ChatPage = () => {
               </Box>
             )}
           </Box>
-
-          {/* Input Area */}
           <Box
             sx={{
               display: "flex",

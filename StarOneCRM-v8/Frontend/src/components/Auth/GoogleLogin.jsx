@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Container,
@@ -7,31 +7,19 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import {
-  Google,
-  // GitHub,
-  Facebook,
-  // Twitter,
-  // LinkedIn,
-} from "@mui/icons-material";
-import axiosInstance from "../../utils/axios";
+import { Google, Facebook } from "@mui/icons-material";
 import { useGlobalContext } from "../../context/GlobalContext";
 
 const providers = [
   { id: "google", name: "Google", icon: Google, color: "#DB4437" },
-  // { id: "github", name: "GitHub", icon: GitHub, color: "#333" },
   { id: "facebook", name: "Facebook", icon: Facebook, color: "#3b5998" },
-  // { id: "twitter", name: "Twitter", icon: Twitter, color: "#1DA1F2" },
-  // { id: "linkedin", name: "LinkedIn", icon: LinkedIn, color: "#0077B5" },
 ];
 
-
-
 const GoogleLogin = () => {
-  const { handleOAuthLogin, fetchUserDetails, loginloadingProvider } = useGlobalContext();
+  const { handleOAuthLogin, fetchUserDetails, loginloadingProvider } =
+    useGlobalContext();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down(335));
-
   useEffect(() => {
     fetchUserDetails();
   }, []);

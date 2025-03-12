@@ -183,7 +183,7 @@ exports.user_delete = async (req, res) => {
       if (deletedUser.role === "customer") {
         await Task.deleteMany({ customer: deletedUser._id });
         const tasks = await Task.find({ customer: deletedUser._id });
-        const messageIds = tasks.flatMap(task => task.messages);
+        const messageIds = tasks.flatMap((task) => task.messages);
         await Message.deleteMany({ _id: { $in: messageIds } });
       }
       sendResponse(res, 200, "User and associated data deleted successfully");

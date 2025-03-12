@@ -1,13 +1,3 @@
-// const colors = {
-//     primaryMain: '#201F2F',
-//     primaryContrastText: '#FDB8DC',
-//     secondaryMain: '#201F2F',
-//     secondaryContrastText: '#FFFFFF',
-//     hoverBackgroundColor: '#301F2F',
-//     outlinedBorderColor: '#201F2F',
-//     outlinedHoverBorderColor: '#201F2F',
-//     outlinedHoverBackgroundColor: '#ececec',
-// };
 const colors = {
     primaryMain: '#031738',
     primaryContrastText: '#FFFFFF',
@@ -19,9 +9,7 @@ const colors = {
     outlinedHoverBorderColor: '#FFFFF',
     outlinedHoverBackgroundColor: '#FFFFFF',
 };
-
 import { createTheme } from '@mui/material/styles';
-
 const theme = createTheme({
     palette: {
         primary: {
@@ -43,12 +31,10 @@ const theme = createTheme({
                     },
                 },
                 outlined: {
-                    // boxShadow: "0px 0px 30px 0px #DFDFDF",
                     borderColor: colors.outlinedBorderColor,
                     color: colors.outlinedColor,
                     backgroundColor:'#FFFFFF',
                     '&:hover': {
-                        // boxShadow: "0px 0px 30px 0px #DFDFDF",
                         borderColor: colors.outlinedHoverBorderColor,
                         backgroundColor: colors.outlinedHoverBackgroundColor,
                     },
@@ -57,5 +43,4 @@ const theme = createTheme({
         },
     },
 });
-
 export default theme;

@@ -13,25 +13,18 @@
   --table-backgroud-light: #ffffff;
   --table-backgroud-dark: #f0f7ff;
 }
-/* .css-kbtcj0-MuiDataGrid-root {
-  --DataGrid-containerBackground: #031738 !important;
-} */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* background-color: #F5F6F8; */
-  /* background-color: #FFFFFF; */
-  background-color: #F6F8FA;
+  background-color: #f6f8fa;
 }
 
 .container {
   max-width: 1200px;
-  /* max-width: 100%; */
   margin: 0 auto;
   padding: 20px;
-  /* color : #fdcee6; */
 }
 .container2 {
   max-width: 500px;
@@ -185,38 +178,26 @@ button:hover {
   background: var(--primary-color) !important;
 }
 
-
-
-
-
-
-
-
-
-
-/* For Webkit browsers (Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
-  width: 6px; /* Thin scrollbar */
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F6F8FA; /* Light track */
+  background: #f6f8fa;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #031738; /* Dark thumb */
+  background: #031738;
   border-radius: 10px;
   transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(3, 23, 56, 0.8); /* Slightly lighter on hover */
+  background: rgba(3, 23, 56, 0.8);
 }
 
-/* For Firefox */
 * {
-  /* scrollbar-width: thin; */
-  scrollbar-width:thin;
-  scrollbar-color: #031738 #F6F8FA;
+  scrollbar-width: thin;
+  scrollbar-color: #031738 #f6f8fa;
 }

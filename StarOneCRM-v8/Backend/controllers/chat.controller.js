@@ -4,56 +4,6 @@ const Task = require("../models/task.model");
 const mongoose = require("mongoose");
 const { getGfs } = require("../db");
 
-// exports.getAssignedTasks = async (req, res) => {
-//   try {
-//     const user = await User.findById(req.user.id)
-//       .populate({
-//         path: "tasksAssigned",
-//         populate: {
-//           path: "customer employee",
-//           select: "name email role profileImage",
-//         },
-//       })
-//       .exec();
-//     if (!user) {
-//       return res.status(404).json({ error: "User not found" });
-//     }
-//     let gfs;
-//     try {
-//       gfs = getGfs();
-//     } catch (error) {
-//       return res.status(500).json({ error: "GridFS not initialized" });
-//     }
-//     const tasksWithProfileImages = await Promise.all(
-//       user.tasksAssigned.map(async (task) => {
-//         const updatedTask = { ...task.toObject() };
-//         if (task.customer && task.customer.profileImage) {
-//           updatedTask.customer.profileImage = await fetchProfileImage(
-//             task.customer.profileImage,
-//             gfs
-//           );
-//         }
-//         if (task.employee && task.employee.profileImage) {
-//           updatedTask.employee.profileImage = await fetchProfileImage(
-//             task.employee.profileImage,
-//             gfs
-//           );
-//         }
-
-//         return updatedTask;
-//       })
-//     );
-//     res
-//       .status(200)
-//       .json({ success: true, tasksAssigned: tasksWithProfileImages });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
-// const mongoose = require("mongoose");
-// const Message = mongoose.model("Message");
-
 exports.getAssignedTasks = async (req, res) => {
   try {
     const user = await User.findById(req.user.id)
@@ -344,14 +294,11 @@ exports.createTask = async (req, res) => {
   try {
     const { title, description, customerId, assignedPeople } = req.body;
 
-    // Create a new task
     const newTask = new Task({ title, description, customer: customerId, assignedPeople });
     await newTask.save();
 
-    // Update the customer (creator) by adding the task to their tasksCreated array
     await User.findByIdAndUpdate(customerId, { $push: { tasksCreated: newTask._id } });
     await User.findByIdAndUpdate(customerId, { $push: { tasksAssigned: newTask._id } });
-    // User.save();
 
     res.status(201).json({ success: true, task: newTask });
   } catch (error) {
@@ -376,14 +323,11 @@ exports.deleteTask = async (req, res) => {
     if (!task) {
       return res.status(404).json({ error: "Task not found" });
     }
-      // Remove task from creator's `tasksCreated`
       await User.findByIdAndUpdate(task.customer, { $pull: { tasksCreated: taskId } });
 
-      // Remove task from assigned user's `tasksAssigned`
       await User.findByIdAndUpdate(task.employee, { $pull: { tasksAssigned: taskId } });
       await User.findByIdAndUpdate(task.customer, { $pull: { tasksAssigned: taskId } });
   
-      // Remove task from `assignedPeople`
       await User.updateMany(
         { _id: { $in: task.assignedPeople } },
         { $pull: { tasksAssigned: taskId } }

@@ -38,11 +38,9 @@ const ForgotPassword = () => {
     }
     return () => clearInterval(interval);
   }, [timer, otpSent]);
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const handleOtpRequest = async () => {
     setIsSendingOtp(true);
     try {
@@ -65,7 +63,6 @@ const ForgotPassword = () => {
       setIsSendingOtp(false);
     }
   };
-
   const handleResetPassword = async (e) => {
     e.preventDefault();
     try {
@@ -86,7 +83,6 @@ const ForgotPassword = () => {
       });
     }
   };
-
   return (
     <Container
       maxWidth="sm"

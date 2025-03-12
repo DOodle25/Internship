@@ -6,7 +6,6 @@ import {
   MenuItem,
   TextField,
   Button,
-  Box,
   Tooltip,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -25,7 +24,6 @@ const UserList = ({}) => {
     selectedUsers,
     setSelectedUsers,
   } = useGlobalContext();
-  
   const [search, setSearch] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -38,16 +36,13 @@ const UserList = ({}) => {
     setAnchorEl(event.currentTarget);
     setSelectedUser(user);
   };
-
   const handleMenuClose = () => {
     setAnchorEl(null);
     setSelectedUser(null);
   };
-
   useEffect(() => {
     fetchUsers();
   }, []);
-
   const filteredUsers = users.filter((user) => {
     if (filterVerified === 1 && !user.isFormVerified) return false;
     if (filterVerified === 2 && user.isFormVerified) return false;
@@ -127,8 +122,6 @@ const UserList = ({}) => {
             ) : (
               <div
                 style={{
-                  // width: 40,
-                  // height: 40,
                   minWidth: 40,
                   maxHeight: 40,
                   minHeight: 40,
@@ -270,7 +263,6 @@ const UserList = ({}) => {
       ),
     },
   ];
-
   return (
     <>
       <div style={{ padding: "20px", marginTop: "20px" }}>
@@ -417,10 +409,6 @@ const UserList = ({}) => {
         <DataGrid
           rows={filteredUsers}
           columns={columns}
-          // initialState={{
-          //   pagination: { paginationModel: { pageSize: 10 } },
-          // }}
-          // pageSizeOptions={[5, 10, 25]}
           autoPageSize
           checkboxSelection
           paginationMode="client"

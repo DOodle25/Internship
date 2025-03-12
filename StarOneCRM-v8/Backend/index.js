@@ -113,23 +113,19 @@ io.on("connection", (socket) => {
     delete users[socket.userId];
   });
   socket.on("joinTaskRoom", (taskId, token) => {
-    if (!token) return ;
-    // res.status(401).json({ message: "Unauthorized" });
+    if (!token) return;
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) return ;
-      // res.status(403).json({ message: "Token invalid" });
+      if (err) return;
     });
     socket.join(taskId);
     console.log(`User joined task room: ${taskId}`);
   });
   socket.on("leaveTaskRoom", (taskId, token) => {
-    if (!token) return ;
-    // res.status(401).json({ message: "Unauthorized" });
+    if (!token) return;
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) return ;
-      // res.status(403).json({ message: "Token invalid" });
+      if (err) return;
     });
     socket.leave(taskId);
     console.log(`User left task room: ${taskId}`);
@@ -181,15 +177,14 @@ io.on("connection", (socket) => {
   socket.on("markMessagesAsRead", async ({ taskId, userId }) => {
     try {
       const updatedMessages = await Message.updateMany(
-        { task: taskId, isRead: false, sender: { $ne: userId } }, // Mark only received messages as read
+        { task: taskId, isRead: false, sender: { $ne: userId } },
         { $set: { isRead: true } }
       );
-  
-      io.to(taskId).emit("messagesRead", { taskId, userId }); // Notify other users
+
+      io.to(taskId).emit("messagesRead", { taskId, userId });
     } catch (error) {
       console.error("Error marking messages as read:", error);
     }
   });
-  
 });
 server.listen(PORT, () => console.log(`Listening on port ${PORT}...`));

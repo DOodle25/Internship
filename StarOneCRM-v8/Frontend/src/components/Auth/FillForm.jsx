@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Button, TextField, Paper, Box, Typography } from "@mui/material";
-import axiosInstance from "../../utils/axios";
 import { useGlobalContext } from "../../context/GlobalContext";
 
 function FillForm() {
@@ -13,11 +12,9 @@ function FillForm() {
     password: "",
     confirmPassword: "",
   });
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   return (
     <Paper
       elevation={3}
@@ -100,8 +97,6 @@ function FillForm() {
           Submit
         </Button>
       </form>
-
-      {/* Logout button */}
       <Box mt={2}>
         <Button variant="contained" color="primary" fullWidth onClick={logout}>
           Logout

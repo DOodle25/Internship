@@ -10,7 +10,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ListIcon from "@mui/icons-material/List";
 import PersonIcon from "@mui/icons-material/Person";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
@@ -26,7 +25,6 @@ import theme from "../../utils/theme";
 import Payment from "@mui/icons-material/Payment";
 import PaymentAdminPage from "./PaymentAdminPage";
 import { useLocation } from "react-router-dom";
-// import CustomerSegmentation from "./CustomerSegmentation";
 
 const Footer = () => (
   <Box
@@ -48,7 +46,9 @@ const StudentDashboard = () => {
   const location = useLocation();
   const isChatPage = location.pathname === "/chat";
   const isAdminePanel =
-    location.pathname === "/" || location.pathname === "/assign" || location.pathname === "/payment-admin";
+    location.pathname === "/" ||
+    location.pathname === "/assign" ||
+    location.pathname === "/payment-admin";
   const isLargeScreen = useMediaQuery("(min-width:960px)");
   return (
     <ThemeProvider theme={theme}>
@@ -59,7 +59,6 @@ const StudentDashboard = () => {
           minHeight: "100vh",
         }}
       >
-        {/* Navbar */}
         <AppBar position="sticky">
           <Toolbar>
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
@@ -123,14 +122,6 @@ const StudentDashboard = () => {
             >
               <Payment />
             </IconButton>
-            {/* <IconButton
-              color="inherit"
-              component={Link}
-              to="/add"
-              title="Add User"
-            >
-              <PersonAddIcon />
-            </IconButton> */}
             <IconButton
               color="inherit"
               component={Link}
@@ -141,8 +132,6 @@ const StudentDashboard = () => {
             </IconButton>
           </Toolbar>
         </AppBar>
-
-        {/* Main Content */}
         <Container
           sx={{
             // my: 4,
@@ -152,7 +141,6 @@ const StudentDashboard = () => {
             ...(isLargeScreen && {
               maxWidth: isChatPage || isAdminePanel ? "none !important" : "lg",
               marginTop: isChatPage || isAdminePanel ? "0px !important" : "",
-              // paddingLeft: isChatPage ? "0px !important" : "",
               marginBottom: isChatPage || isAdminePanel ? "0px !important" : "",
               paddingBottom:
                 isChatPage || isAdminePanel ? "0px !important" : "",
@@ -211,7 +199,6 @@ const StudentDashboard = () => {
               }
             />
             <Route path="/payment-admin" element={<PaymentAdminPage />} />
-            {/* <Route path="/customer-segmentation" element={<CustomerSegmentation />} /> */}
             <Route
               path="/assign"
               element={
@@ -235,8 +222,6 @@ const StudentDashboard = () => {
             />
           </Routes>
         </Container>
-
-        {/* Footer */}
         {!isChatPage && <Footer />}
       </Box>
     </ThemeProvider>

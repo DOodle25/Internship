@@ -19,8 +19,6 @@ const NotVerified = () => {
           Please wait for admin verification. If you have any questions, contact
           support.
         </Typography>
-
-        {/* Logout button */}
         <Box>
           <Button
             variant="contained"
