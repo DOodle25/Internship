@@ -22,18 +22,65 @@ import CustomerSegmentation from "../Admin/CustomerSegmentation";
 import SegmentIcon from "@mui/icons-material/Segment";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import CreateTask from "./createtask";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import EmailIcon from "@mui/icons-material/Email";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+
+const email = "emailhelper468@gmail.com";
+
+const handleCopy = async () => {
+  try {
+    await navigator.clipboard.writeText(email);
+    alert("Email copied to clipboard!");
+  } catch (err) {
+    console.error("Failed to copy: ", err);
+  }
+};
 const Footer = () => (
   <Box
     component="footer"
     sx={{
       bgcolor: "primary.main",
       color: "white",
-      p: 2,
+      pr: 2,
+      pl: 2,
+      pt: 1,
+      pb: 1,
       textAlign: "center",
       mt: "auto",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
     }}
   >
-    <Typography variant="body2">© {new Date().getFullYear()} CRM.</Typography>
+    <Typography variant="body2">
+      © {new Date().getFullYear()} StarOne CRM
+    </Typography>
+    <Box sx={{ display: "flex", gap: 1, color: "white", flexWrap: "wrap" }}>
+      <a
+        href="http://github.com/DOodle25/Internship"
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{ color: "white", textDecoration: "none" }}
+      >
+        <IconButton sx={{ color: "white" }}>
+          <GitHubIcon />
+        </IconButton>
+      </a>
+      <IconButton sx={{ color: "white" }} onClick={handleCopy}>
+        <EmailIcon />
+      </IconButton>
+      <a
+        href="https://www.linkedin.com/in/dipen-patel-792296260/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: "white", textDecoration: "none" }}
+      >
+        <IconButton sx={{ color: "white" }}>
+          <LinkedInIcon />
+        </IconButton>
+      </a>
+    </Box>
   </Box>
 );
 const UserProfile = () => {
