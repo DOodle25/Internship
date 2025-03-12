@@ -232,7 +232,7 @@ const CustomerSegmentation = () => {
                   ...user,
                 }))}
                 columns={columns}
-                paginationMode="client"
+                // paginationMode="client"
                 initialState={{
                   pagination: { paginationModel: { pageSize: 5 } },
                 }}

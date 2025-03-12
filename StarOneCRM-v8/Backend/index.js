@@ -63,14 +63,14 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/rfm", rfmRoutes);
 const users = {};
 io.on("connection", (socket) => {
-  console.log("New client connected");
+  // console.log("New client connected");
   socket.on("register-user", (data) => {
     const { userId, peerId } = data;
     users[userId] = { socketId: socket.id, peerId };
     socket.userId = userId;
-    console.log(
-      `User ${userId} registered with socket ID ${socket.id} and peer ID ${peerId}`
-    );
+    // console.log(
+    //   `User ${userId} registered with socket ID ${socket.id} and peer ID ${peerId}`
+    // );
   });
   socket.on("check-user-registered", (data) => {
     const { to } = data;
@@ -109,7 +109,7 @@ io.on("connection", (socket) => {
     }
   });
   socket.on("disconnect", () => {
-    console.log("Client disconnected");
+    // console.log("Client disconnected");
     delete users[socket.userId];
   });
   socket.on("joinTaskRoom", (taskId, token) => {
@@ -119,7 +119,7 @@ io.on("connection", (socket) => {
       if (err) return;
     });
     socket.join(taskId);
-    console.log(`User joined task room: ${taskId}`);
+    // console.log(`User joined task room: ${taskId}`);
   });
   socket.on("leaveTaskRoom", (taskId, token) => {
     if (!token) return;
@@ -128,7 +128,7 @@ io.on("connection", (socket) => {
       if (err) return;
     });
     socket.leave(taskId);
-    console.log(`User left task room: ${taskId}`);
+    // console.log(`User left task room: ${taskId}`);
   });
   socket.on("sendMessage", async ({ taskId, content, senderId }) => {
     try {
@@ -164,7 +164,7 @@ io.on("connection", (socket) => {
 
       io.to(taskId).emit("receiveMessage", { message, sender });
     } catch (error) {
-      console.error("Error sending message:", error);
+      // console.error("Error sending message:", error);
     }
   });
   socket.on("end-call", (data) => {

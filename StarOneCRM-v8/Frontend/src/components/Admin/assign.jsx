@@ -240,7 +240,7 @@ const AssignUserToEmployee = () => {
           }))}
           columns={columns}
           count={tasks?.length || 0}
-          paginationMode="client"
+          // paginationMode="client"
           initialState={{
             pagination: { paginationModel: { pageSize: 10 } },
           }}

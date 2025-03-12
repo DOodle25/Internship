@@ -143,7 +143,6 @@ const UserList = ({}) => {
         );
       },
     },
-
     { field: "age", headerName: "Age", width: 90, sortable: true },
     { field: "email", headerName: "Email", width: 250, sortable: true },
     { field: "role", headerName: "Role", width: 140, sortable: true },
@@ -411,8 +410,8 @@ const UserList = ({}) => {
           columns={columns}
           autoPageSize
           checkboxSelection
-          paginationMode="client"
-          rowCount={filteredUsers?.length ?? 0}
+          // paginationMode="client"
+          // rowCount={filteredUsers?.length ?? 0}
           onRowSelectionModelChange={(newSelection) => {
             setSelectedUsers(newSelection);
           }}

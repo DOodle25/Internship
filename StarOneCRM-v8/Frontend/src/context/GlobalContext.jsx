@@ -15,6 +15,7 @@ import { use } from "react";
 const GlobalContext = createContext();
 const socket = io(
   "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net"
+  // "http://localhost:5000"
 );
 const BASE_URL =
   process.env.NODE_ENV === "production"
@@ -59,20 +60,20 @@ export const GlobalProvider = ({ children }) => {
     }
   };
   useEffect(() => {
-    console.log("remoteVideoREF");
-    console.log(remoteVideoRef);
+    // console.log("remoteVideoREF");
+    // console.log(remoteVideoRef);
   }, [remoteVideoRef]);
   useEffect(() => {
     const peer = new Peer();
 
     peer.on("open", (id) => {
-      console.log("PeerJS ID:", id);
+      // console.log("PeerJS ID:", id);
       setMyId(id);
       socket.emit("register-user", { userId: user._id, peerId: id });
     });
 
     peer.on("call", (call) => {
-      console.log("Incoming call detected:", call);
+      // console.log("Incoming call detected:", call);
       listCameras().then(() => {
         setCallRequest((prev) => ({ ...prev, call }));
       });
@@ -91,7 +92,7 @@ export const GlobalProvider = ({ children }) => {
         setRemoteStream(remoteStream);
         remoteVideoRef.current.srcObject = remoteStream;
       });
-      console.log(`Call accepted by ${data.from}, sending to ${data.to}`);
+      // console.log(`Call accepted by ${data.from}, sending to ${data.to}`);
     });
 
     socket.on("call-rejected", () => {
@@ -109,7 +110,7 @@ export const GlobalProvider = ({ children }) => {
 
     return () => {
       if (peerInstance.current) {
-        console.log("Destroying PeerJS instance...");
+        // console.log("Destroying PeerJS instance...");
         peerInstance.current.destroy();
       }
     };
@@ -438,10 +439,10 @@ export const GlobalProvider = ({ children }) => {
   const [videoCallUser, setVideoCallUser] = useState(null);
   const handleVideoCall = (otherUserId) => {
     setVideoCallUser(otherUserId);
-    console.log("Video call initiated with user ID:", otherUserId);
+    // console.log("Video call initiated with user ID:", otherUserId);
   };
   const oncloseuser = () => {
-    console.log("Video call ended");
+    // console.log("Video call ended");
     setVideoCallUser(null);
   };
   return (
