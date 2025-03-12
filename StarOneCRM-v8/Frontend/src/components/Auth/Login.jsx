@@ -14,6 +14,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
 import GoogleLogin from "./GoogleLogin";
 import { useGlobalContext } from "../../context/GlobalContext";
+import LaunchIcon from '@mui/icons-material/Launch';
 
 function Login() {
   const { handleLogin } = useGlobalContext();
@@ -116,6 +117,45 @@ function Login() {
             sx={{
               fontWeight: 200,
               fontSize: "1.2rem",
+              pinter: "cursor",
+            }}
+            onClick={() => navigate("/landing-page")}
+          >
+            <span
+              style={{
+                // borderRadius: "10px",
+                // color: "#FFFFFF",
+                // backgroundColor: "transparent",
+                // border: "0.5px solid #FFFFFF",
+                // boxShadow: "2px 3px 0px 0px #FFFFFF",
+                // paddingRight: "10px",
+                // padding: "10px",
+                // marginTop: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              Know more{" "}<LaunchIcon/>
+              {/* <span
+                          style={{
+                            color: "#FFFFFF",
+                            fontStyle: "italic",
+                            textDecoration: "underline",
+                          }}
+                        >
+                          today!
+                        </span> */}
+            </span>
+            
+          </Typography>
+          <Typography
+            variant="h6"
+            textAlign="center"
+            marginTop={"20px"}
+            sx={{
+              fontWeight: 200,
+              fontSize: "1.2rem",
             }}
           >
             <span
@@ -140,6 +180,7 @@ function Login() {
               >
                 today!
               </span>
+
             </span>
           </Typography>
         </Box>

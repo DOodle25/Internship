@@ -43,7 +43,7 @@
 // const MotionButton = motion(Button);
 // const MotionCard = motion(Card);
 
-// const PaymentAdminPage = () => {
+// const LandingPage = () => {
 //   return (
 //     <div>
 //       {/* Navbar */}
@@ -204,7 +204,7 @@
 //   );
 // };
 
-// export default PaymentAdminPage;
+// export default LandingPage;
 
 // import React, { useState } from "react";
 // import { AppBar, Toolbar, Typography, Button, Container, Box, Tab, Tabs, Paper, Grid, IconButton } from "@mui/material";
@@ -315,7 +315,7 @@
 //   },
 // ];
 
-// const PaymentAdminPage = () => {
+// const LandingPage = () => {
 //   const [tabIndex, setTabIndex] = useState(0);
 
 //   const handleTabChange = (event, newValue) => {
@@ -389,7 +389,7 @@
 //   );
 // };
 
-// export default PaymentAdminPage;
+// export default LandingPage;
 
 // import React from 'react';
 // import { Box, Typography, Button, Container, Grid, IconButton } from '@mui/material';
@@ -489,7 +489,7 @@
 //   visible: { transition: { staggerChildren: 0.2 } },
 // };
 
-// const PaymentAdminPage = () => {
+// const LandingPage = () => {
 //   const [activeTab, setActiveTab] = React.useState('chat');
 
 //   const features = [
@@ -646,7 +646,7 @@
 //   );
 // };
 
-// export default PaymentAdminPage;
+// export default LandingPage;
 
 // import React from 'react';
 // import { Box, Typography, Button, Container, Grid, IconButton, Avatar, TextField } from '@mui/material';
@@ -801,7 +801,7 @@
 //   </Box>
 // );
 
-// const PaymentAdminPage = () => {
+// const LandingPage = () => {
 //   const [activeTab, setActiveTab] = React.useState('chat');
 
 //   const features = [
@@ -958,7 +958,7 @@
 //   );
 // };
 
-// export default PaymentAdminPage;
+// export default LandingPage;
 
 // import React from 'react';
 // import { Box, Typography, Button, Container, Grid, IconButton, Avatar, TextField } from '@mui/material';
@@ -1199,7 +1199,7 @@
 //   </Box>
 // );
 
-// const PaymentAdminPage = () => {
+// const LandingPage = () => {
 //   const [activeTab, setActiveTab] = React.useState('chat');
 
 //   const features = [
@@ -1416,7 +1416,7 @@
 //   );
 // };
 
-// export default PaymentAdminPage;
+// export default LandingPage;
 
 // import React from 'react';
 // import { Box, Typography, Button, Container, Grid, IconButton, Avatar } from '@mui/material';
@@ -1654,3 +1654,606 @@
 // };
 
 // export default LandingPage;
+
+import React from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  Avatar,
+  TextField,
+} from "@mui/material";
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import { GitHub, LinkedIn, Email } from "@mui/icons-material";
+// import LogoImage from '../../images/logo.png';
+// Recreated Logo (Simple Text-Based Logo)
+import LogoImage from "../../images/image3.png";
+import ChatImage from "../../images/chatimage.png";
+import ManagementImage from "../../images/managementimage.png";
+import VideoImage from "../../images/video.png";
+const Logo = styled(Typography)`
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+  &:hover {
+    color: #f6f8fa;
+  }
+`;
+
+// Navbar Styling
+const Navbar = styled(Box)`
+  background-color: #031738;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+`;
+
+// Chrome Window Styling
+const ChromeWindow = styled(motion.div)`
+  background-color: #f6f8fa;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+`;
+
+const ChromeTabs = styled(Box)`
+  display: flex;
+  gap: 0.5rem;
+  background-color: #f6f8fa;
+  border-radius: 8px 8px 0 0;
+`;
+
+const ChromeTab = styled(Box)`
+  background-color: ${({ active }) => (active ? "#f6f8fa" : "#d1d3d4")};
+  padding: 0.5rem 1rem;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: ${({ active }) => (active ? "#031738" : "#6c757d")};
+  &:hover {
+    background-color: #f6f8fa;
+  }
+`;
+
+const ChromeContent = styled(Box)`
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 0 0 8px 8px;
+  min-height: 300px;
+`;
+
+// Feature Section Styling
+const FeatureSection = styled(Box)`
+  padding: 4rem 0;
+  background-color: #f6f8fa;
+`;
+
+const FeatureContainer = styled(Container)`
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+`;
+
+const FeatureItem = styled(Grid)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+`;
+
+const FeatureText = styled(Box)`
+  max-width: 50%;
+`;
+
+const FeatureImage = styled(Box)`
+  max-width: 50%;
+  img {
+    border-radius: 12px;
+    width: 100%;
+  }
+`;
+
+// Contribution Section Styling
+const ContributionSection = styled(Box)`
+  padding: 4rem 0;
+  background-color: white;
+  text-align: center;
+`;
+
+// Footer Styling
+const Footer = styled(Box)`
+  background-color: #031738;
+  padding: 2rem;
+  color: white;
+  text-align: center;
+`;
+
+// Framer Motion Variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+const staggerChildren = {
+  visible: { transition: { staggerChildren: 0.2 } },
+};
+
+// Custom UI Components for Features
+const VideoCallUI = () => (
+  //   <Box
+  //     sx={{
+  //       display: "flex",
+  //       gap: 2,
+  //       alignItems: "center",
+  //       justifyContent: "center",
+  //     }}
+  //   >
+  //     <Box
+  //       sx={{
+  //         width: "70%",
+  //         height: "200px",
+  //         backgroundColor: "#031738",
+  //         borderRadius: "8px",
+  //         position: "relative",
+  //       }}
+  //     >
+  //       <Avatar sx={{ position: "absolute", top: "10px", left: "10px" }}>
+  //         DP
+  //       </Avatar>
+  //       <Typography
+  //         variant="body2"
+  //         sx={{
+  //           position: "absolute",
+  //           bottom: "10px",
+  //           left: "10px",
+  //           color: "white",
+  //         }}
+  //       >
+  //         Dipen Patel
+  //       </Typography>
+  //     </Box>
+  //     <Box
+  //       sx={{
+  //         width: "25%",
+  //         height: "150px",
+  //         backgroundColor: "#031738",
+  //         borderRadius: "8px",
+  //         position: "relative",
+  //       }}
+  //     >
+  //       <Avatar sx={{ position: "absolute", top: "10px", left: "10px" }}>
+  //         YP
+  //       </Avatar>
+  //       <Typography
+  //         variant="body2"
+  //         sx={{
+  //           position: "absolute",
+  //           bottom: "10px",
+  //           left: "10px",
+  //           color: "white",
+  //         }}
+  //       >
+  //         You
+  //       </Typography>
+  //     </Box>
+  //   </Box>
+  <img src={VideoImage} alt="StarOne CRM" style={{ width: "100%" }} />
+);
+
+const ChatUI = () => (
+  //   <Box
+  //     sx={{
+  //       display: "flex",
+  //       flexDirection: "column",
+  //       gap: 2,
+  //       height: "200px",
+  //       overflowY: "auto",
+  //     }}
+  //   >
+  //     <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
+  //       <Box
+  //         sx={{
+  //           backgroundColor: "#e4e6e8",
+  //           p: 1.5,
+  //           borderRadius: "8px",
+  //           maxWidth: "70%",
+  //         }}
+  //       >
+  //         <Typography variant="body2">Hi, how can I help you today?</Typography>
+  //       </Box>
+  //     </Box>
+  //     <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+  //       <Box
+  //         sx={{
+  //           backgroundColor: "#031738",
+  //           p: 1.5,
+  //           borderRadius: "8px",
+  //           maxWidth: "70%",
+  //         }}
+  //       >
+  //         <Typography variant="body2" sx={{ color: "white" }}>
+  //           I need help with my account.
+  //         </Typography>
+  //       </Box>
+  //     </Box>
+  //     <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
+  //       <Box
+  //         sx={{
+  //           backgroundColor: "#e4e6e8",
+  //           p: 1.5,
+  //           borderRadius: "8px",
+  //           maxWidth: "70%",
+  //         }}
+  //       >
+  //         <Typography variant="body2">
+  //           Sure, let me check that for you.
+  //         </Typography>
+  //       </Box>
+  //     </Box>
+  //   </Box>
+  // );
+  <img src={ChatImage} alt="StarOne CRM" style={{ width: "100%" }} />
+);
+
+const TaskManagementUI = () => (
+  //   <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+  //     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+  //       <Box
+  //         sx={{
+  //           width: "20px",
+  //           height: "20px",
+  //           border: "2px solid #031738",
+  //           borderRadius: "4px",
+  //         }}
+  //       />
+  //       <Typography variant="body2">Complete the landing page design</Typography>
+  //     </Box>
+  //     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+  //       <Box
+  //         sx={{
+  //           width: "20px",
+  //           height: "20px",
+  //           border: "2px solid #031738",
+  //           borderRadius: "4px",
+  //         }}
+  //       />
+  //       <Typography variant="body2">Integrate payment gateway</Typography>
+  //     </Box>
+  //     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+  //       <Box
+  //         sx={{
+  //           width: "20px",
+  //           height: "20px",
+  //           border: "2px solid #031738",
+  //           borderRadius: "4px",
+  //         }}
+  //       />
+  //       <Typography variant="body2">Test the chat feature</Typography>
+  //     </Box>
+  //   </Box>
+  <img src={ManagementImage} alt="StarOne CRM" style={{ width: "100%" }} />
+);
+
+const LandingPage = () => {
+  const [activeTab, setActiveTab] = React.useState("chat");
+
+  const features = [
+    {
+      id: "chat",
+      title: "Chat",
+      description:
+        "Communicate with your team in real-time using our advanced chat feature. Stay connected and collaborate seamlessly.",
+      image: "https://via.placeholder.com/400x300",
+      content: <ChatUI />,
+    },
+    {
+      id: "tasks",
+      title: "Manage",
+      description:
+        "Efficiently create, assign, and track tasks. Our task management system ensures productivity and organization.",
+      image: "https://via.placeholder.com/400x300",
+      content: <TaskManagementUI />,
+    },
+    {
+      id: "video",
+      title: "Call",
+      description:
+        "Conduct high-quality video calls with your team. Our video call feature ensures smooth and uninterrupted communication.",
+      image: "https://via.placeholder.com/400x300",
+      content: <VideoCallUI />,
+    },
+  ];
+
+  return (
+    <Box>
+      {/* Navbar */}
+      <Navbar sx={{ p: 2 }}>
+        <Logo>StarOne CRM</Logo>
+        <Box>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#f6f8fa",
+              color: "#031738",
+              pt: 0.5,
+              pb: 0.5,
+              ":hover": {
+                backgroundColor: "#f6f8fa",
+              },
+            }}
+            onClick={() => {
+                window.location.href = "/#/login";
+              }}
+          >
+            Login
+          </Button>
+          {/* <Button variant="contained" sx={{ backgroundColor: '#f6f8fa', color: '#031738', pt:0.5, pb:0.5 }}>
+            Sign Up
+          </Button> */}
+        </Box>
+      </Navbar>
+
+      {/* Hero Section */}
+      <Box sx={{ backgroundColor: "#f6f8fa", py: 8 }}>
+        <Container>
+          <Grid container spacing={4} alignItems="center">
+            <Grid item xs={12} md={6}>
+              <motion.div
+                variants={fadeInUp}
+                initial="hidden"
+                animate="visible"
+              >
+                <Typography
+                  variant="h2"
+                  sx={{ fontWeight: 700, color: "#031738" }}
+                >
+                  Streamline Your Business with StarOne CRM
+                </Typography>
+                <Typography variant="h6" sx={{ mt: 2, color: "#6c757d" }}>
+                  A comprehensive CRM solution built on the MERN stack.
+                </Typography>
+                <Box mt={4}>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "#031738", color: "#f6f8fa", mr: 2 }}
+                    onClick={() => {
+                      window.location.href = "/#/login";
+                    }}
+                  >
+                    Get Started
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    sx={{ borderColor: "#031738", color: "#031738" }}
+                    onClick={() => {
+                      document
+                        .getElementById("target-section")
+                        ?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                  >
+                    Learn More
+                  </Button>
+                </Box>
+              </motion.div>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <motion.div
+                variants={fadeInUp}
+                initial="hidden"
+                animate="visible"
+              >
+                {/* <img
+                  src="https://via.placeholder.com/600x400"
+                  alt="CRM Dashboard"
+                  style={{ borderRadius: '12px', width: '100%' }}
+                /> */}
+                <img
+                  src={LogoImage}
+                  alt="StarOne CRM"
+                  style={{ width: "100%" }}
+                />
+              </motion.div>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Feature Section */}
+      <FeatureSection>
+        <Container>
+          <Typography
+            variant="h4"
+            sx={{
+              textAlign: "center",
+              fontWeight: 700,
+              color: "#031738",
+              mb: 4,
+            }}
+            id="target-section"
+          >
+            Features
+          </Typography>
+          <ChromeWindow>
+            <ChromeTabs>
+              {features.map((feature) => (
+                <ChromeTab
+                  key={feature.id}
+                  active={activeTab === feature.id}
+                  onClick={() => setActiveTab(feature.id)}
+                >
+                  {feature.title}
+                </ChromeTab>
+              ))}
+              {/* Header with buttons */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  backgroundColor: "#F6F8FA",
+                  padding: "8px",
+                  position: "absolute",
+                  right: "15px",
+                  //   borderBottom: '1px solid #ccc',
+                }}
+              >
+                {/* Minimize Button */}
+                <Box
+                  sx={{
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    backgroundColor: "#ffbd2e",
+                    marginRight: "8px",
+                    cursor: "pointer",
+                    "&:hover": {
+                      backgroundColor: "#ffa700",
+                    },
+                  }}
+                  onClick={() => console.log("Minimize clicked")}
+                />
+                {/* Maximize Button */}
+                <Box
+                  sx={{
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    backgroundColor: "#28c940",
+                    marginRight: "8px",
+                    cursor: "pointer",
+                    "&:hover": {
+                      backgroundColor: "#1f9c2f",
+                    },
+                  }}
+                  onClick={() => console.log("Maximize clicked")}
+                />
+                {/* Close Button */}
+                <Box
+                  sx={{
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    backgroundColor: "#ff5f56",
+                    cursor: "pointer",
+                    "&:hover": {
+                      backgroundColor: "#ff3b30",
+                    },
+                  }}
+                  onClick={() => console.log("Close clicked")}
+                />
+              </Box>
+            </ChromeTabs>
+
+            <ChromeContent>
+              {features.find((feature) => feature.id === activeTab)?.content}
+            </ChromeContent>
+          </ChromeWindow>
+        </Container>
+      </FeatureSection>
+
+      {/* Zigzag Feature Section
+      <FeatureSection>
+        <FeatureContainer>
+          {features.map((feature, index) => (
+            <FeatureItem
+              key={feature.id}
+              container
+              direction={index % 2 === 0 ? "row" : "row-reverse"}
+            >
+              <Grid item xs={12} md={6}>
+                <FeatureText>
+                  <Typography
+                    variant="h5"
+                    sx={{ fontWeight: 700, color: "#031738", mb: 2 }}
+                  >
+                    {feature.title}
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: "#6c757d" }}>
+                    {feature.description}
+                  </Typography>
+                </FeatureText>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FeatureImage>
+                  <motion.div
+                    variants={fadeInUp}
+                    initial="hidden"
+                    animate="visible"
+                  >
+                    <img src={feature.image} alt={feature.title} />
+                  </motion.div>
+                </FeatureImage>
+              </Grid>
+            </FeatureItem>
+          ))}
+        </FeatureContainer>
+      </FeatureSection> */}
+
+      {/* Contribution Section */}
+      <ContributionSection>
+        <Container>
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: 700, color: "#031738", mb: 4 }}
+          >
+            How to Contribute
+          </Typography>
+          <Typography variant="h6" sx={{ color: "#6c757d", mb: 4 }}>
+            StarOneCRM is an open-source project. Join us on GitHub to
+            contribute and improve the platform.
+          </Typography>
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: "#031738", color: "#f6f8fa" }}
+            startIcon={<GitHub />}
+            href="https://github.com/DOodle25/Internship"
+            target="_blank"
+          >
+            Contribute on GitHub
+          </Button>
+        </Container>
+      </ContributionSection>
+
+      {/* Footer */}
+      <Footer>
+        <Typography variant="h6">Developed by Dipen Patel</Typography>
+        <Box mt={2}>
+          <IconButton
+            href="https://github.com/DOodle25"
+            target="_blank"
+            sx={{ color: "#f6f8fa" }}
+          >
+            <GitHub />
+          </IconButton>
+          <IconButton
+            href="https://linkedin.com/in/dipen-patel"
+            target="_blank"
+            sx={{ color: "#f6f8fa" }}
+          >
+            <LinkedIn />
+          </IconButton>
+          <IconButton
+            href="mailto:cocply135@gmail.com"
+            sx={{ color: "#f6f8fa" }}
+          >
+            <Email />
+          </IconButton>
+        </Box>
+      </Footer>
+    </Box>
+  );
+};
+
+export default LandingPage;

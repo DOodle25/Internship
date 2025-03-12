@@ -15,11 +15,13 @@ import UserProfile from "./components/Profile/UserProfile";
 import theme from "./utils/theme";
 import { ThemeProvider } from "@mui/material/styles";
 import ForgotPassword from "./components/Auth/ForgotPassword";
+import LandingPage from "./components/Auth/LandingPage"
 const AppRoutes = () => {
   const { token, user } = useGlobalContext();
   if (!token) {
     return (
       <Routes>
+        <Route path="/landing-page" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
