@@ -30,13 +30,74 @@ exports.updateProfile = async (req, res) => {
     sendResponse(res, 500, "Error updating profile", null, err.message);
   }
 };
+// exports.getProfile = async (req, res) => {
+//   try {
+//     const user = await User.findById(req.user.id);
+//     if (!user) {
+//       return sendResponse(res, 404, "User not found");
+//     }
+//     let profileData = { ...user.toObject() };
+//     if (user.profileImage) {
+//       let gfs;
+//       try {
+//         gfs = getGfs();
+//       } catch (error) {
+//         return sendResponse(res, 500, "GridFS not initialized");
+//       }
+//       let chunks = [];
+//       const readStream = gfs.openDownloadStream(
+//         new mongoose.Types.ObjectId(user.profileImage)
+//       );
+//       readStream.on("data", (chunk) => {
+//         chunks.push(chunk);
+//       });
+//       readStream.on("end", () => {
+//         const imageBuffer = Buffer.concat(chunks);
+//         profileData.profileImage = `data:image/png;base64,${imageBuffer.toString(
+//           "base64"
+//         )}`;
+//         return sendResponse(
+//           res,
+//           200,
+//           "Profile retrieved successfully",
+//           profileData
+//         );
+//       });
+//       readStream.on("error", (err) => {
+//         return sendResponse(res, 500, "Error retrieving image");
+//       });
+//     } else {
+//       return sendResponse(
+//         res,
+//         200,
+//         "Profile retrieved successfully",
+//         profileData
+//       );
+//     }
+//   } catch (error) {
+//     return sendResponse(
+//       res,
+//       500,
+//       "Error retrieving profile",
+//       null,
+//       error.message
+//     );
+//   }
+// };
 exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    // Fetch the user and populate task titles for tasksCreated and tasksAssigned
+    const user = await User.findById(req.user.id)
+      .populate('tasksCreated', 'title')  // Populate task titles for tasksCreated
+      .populate('tasksAssigned', 'title');  // Populate task titles for tasksAssigned
+
     if (!user) {
       return sendResponse(res, 404, "User not found");
     }
+
     let profileData = { ...user.toObject() };
+
+    // If the user has a profile image, fetch it
     if (user.profileImage) {
       let gfs;
       try {
@@ -44,46 +105,31 @@ exports.getProfile = async (req, res) => {
       } catch (error) {
         return sendResponse(res, 500, "GridFS not initialized");
       }
+
       let chunks = [];
-      const readStream = gfs.openDownloadStream(
-        new mongoose.Types.ObjectId(user.profileImage)
-      );
+      const readStream = gfs.openDownloadStream(new mongoose.Types.ObjectId(user.profileImage));
       readStream.on("data", (chunk) => {
         chunks.push(chunk);
       });
+
       readStream.on("end", () => {
         const imageBuffer = Buffer.concat(chunks);
-        profileData.profileImage = `data:image/png;base64,${imageBuffer.toString(
-          "base64"
-        )}`;
-        return sendResponse(
-          res,
-          200,
-          "Profile retrieved successfully",
-          profileData
-        );
+        profileData.profileImage = `data:image/png;base64,${imageBuffer.toString("base64")}`;
+        return sendResponse(res, 200, "Profile retrieved successfully", profileData);
       });
+
       readStream.on("error", (err) => {
         return sendResponse(res, 500, "Error retrieving image");
       });
     } else {
-      return sendResponse(
-        res,
-        200,
-        "Profile retrieved successfully",
-        profileData
-      );
+      // If no profile image, return the profile with task titles
+      return sendResponse(res, 200, "Profile retrieved successfully", profileData);
     }
   } catch (error) {
-    return sendResponse(
-      res,
-      500,
-      "Error retrieving profile",
-      null,
-      error.message
-    );
+    return sendResponse(res, 500, "Error retrieving profile", null, error.message);
   }
 };
+
 exports.deleteProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);

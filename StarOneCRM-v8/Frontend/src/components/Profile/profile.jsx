@@ -243,8 +243,8 @@ const Profile = () => {
           {profile.tasksAssigned.length > 0 ? (
             profile.tasksAssigned.map((task) => (
               <Chip
-                key={task}
-                label={task}
+                key={task.title}
+                label={task.title}
                 sx={{
                   mr: 1,
                   mb: 1,
