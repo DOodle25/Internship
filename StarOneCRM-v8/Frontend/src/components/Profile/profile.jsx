@@ -585,7 +585,7 @@ const Profile = () => {
               xs={12}
               md={4}
               sx={{
-                borderRight: "2px solid #E7E9EB",
+                borderRight: {md:"2px solid #E7E9EB"},
               }}
             >
               <Box
