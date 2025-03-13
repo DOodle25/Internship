@@ -349,7 +349,8 @@ const ChatPage = () => {
                 sx={{
                   mx: 2,
                   color: "#888",
-                  backgroundColor: "#fff",
+                  // backgroundColor: "#fff",
+                  // borderRadius: "50px",
                   padding: "0 10px",
                 }}
               >
