@@ -143,7 +143,8 @@ const AssignUserToEmployee = () => {
           <Tooltip title="Delete">
             <IconButton
               color="secondary"
-              onClick={() => handleDelete(params.row.id)}
+              // onClick={() => handleDelete(params.row.id)}
+              disabled
             >
               <Delete />
             </IconButton>

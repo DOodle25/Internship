@@ -150,6 +150,7 @@ function FillForm() {
 
       <form onSubmit={(e) => handleFillFormSubmit(e, formData, setFormData)}>
         <Box mb={2}>
+        {loginMethod !== "traditional" && (
           <TextField
             select
             fullWidth
@@ -163,6 +164,7 @@ function FillForm() {
             <MenuItem value="customer">customer</MenuItem>
             <MenuItem value="employee">employee</MenuItem>
           </TextField>
+          )}
         </Box>
         {formData.role !== "employee" && (
           <Box mb={2}>
