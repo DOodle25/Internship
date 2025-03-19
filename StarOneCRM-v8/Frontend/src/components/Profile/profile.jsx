@@ -827,6 +827,7 @@ const Profile = () => {
                       variant="contained"
                       component="label"
                       startIcon={<DeleteIcon />}
+                      disabled
                     >
                       Delete Profile
                     </Button>

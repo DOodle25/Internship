@@ -27,6 +27,54 @@ exports.checkForm = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+// exports.fillForm = async (req, res) => {
+//   const { Taskassigned } = req.body;
+//   title = "Welcome Task";
+//   try {
+//     const user = await User.findById(req.user.id);
+//     if (!user) return res.status(404).json({ message: "User not found" });
+//     if (user.loginMethod !== "traditional") {
+//       user.age = req.body.age;
+//       user.role = req.body.role;
+//       const hashedPassword = await bcryptjs.hash(req.body.password, 10);
+//       user.password = hashedPassword;
+//       await user.save();
+//       const task = new Task({
+//         title,
+//         description: req.body.Taskassigned,
+//         customer: user.id,
+//       });
+//       await task.save();
+//       user.tasksAssigned.push(task._id);
+//       user.isFormFilled = true;
+//       await user.save();
+//       res.json({ message: "Form successfully filled and task assigned", user });
+//     } else {
+//       const task = new Task({
+//         title,
+//         description: Taskassigned,
+//         customer: req.user.id,
+//       });
+//       await task.save();
+//       user.tasksAssigned.push(task._id);
+//       user.isFormFilled = true;
+//       await user.save();
+//       res.json({ message: "Form successfully filled and task assigned", user });
+//     }
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
+exports.checkStatus = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const status = { user: user };
+    res.json({ status });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 exports.fillForm = async (req, res) => {
   const { Taskassigned } = req.body;
   title = "Welcome Task";
@@ -39,38 +87,32 @@ exports.fillForm = async (req, res) => {
       const hashedPassword = await bcryptjs.hash(req.body.password, 10);
       user.password = hashedPassword;
       await user.save();
-      const task = new Task({
-        title,
-        description: req.body.Taskassigned,
-        customer: user.id,
-      });
-      await task.save();
-      user.tasksAssigned.push(task._id);
+      if (user.role !== "employee") {
+        const task = new Task({
+          title,
+          description: req.body.Taskassigned,
+          customer: user.id,
+        });
+        await task.save();
+        user.tasksAssigned.push(task._id);
+      }
       user.isFormFilled = true;
       await user.save();
       res.json({ message: "Form successfully filled and task assigned", user });
     } else {
-      const task = new Task({
-        title,
-        description: Taskassigned,
-        customer: req.user.id,
-      });
-      await task.save();
-      user.tasksAssigned.push(task._id);
+      if (user.role !== "employee") {
+        const task = new Task({
+          title,
+          description: Taskassigned,
+          customer: req.user.id,
+        });
+        await task.save();
+        user.tasksAssigned.push(task._id);
+      }
       user.isFormFilled = true;
       await user.save();
       res.json({ message: "Form successfully filled and task assigned", user });
     }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-exports.checkStatus = async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
-    const status = { user: user };
-    res.json({ status });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

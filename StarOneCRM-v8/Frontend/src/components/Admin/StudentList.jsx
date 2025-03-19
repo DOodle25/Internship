@@ -375,11 +375,12 @@ const UserList = ({}) => {
           variant="contained"
           color="secondary"
           onClick={handleDelete}
-          disabled={selectedUsers.length === 0}
+          // disabled={selectedUsers.length === 0}
           sx={{
             marginRight: "10px",
             "&:disabled": { bgcolor: "#FFFFFF", color: "grey.400" },
           }}
+          disabled
         >
           Delete Selected
         </Button>
@@ -458,7 +459,7 @@ const UserList = ({}) => {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            handleDelete(selectedUser._id);
+            // handleDelete(selectedUser._id);
             handleMenuClose();
           }}
         >
