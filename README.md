@@ -3,8 +3,11 @@
 StarOneCRM is a comprehensive Customer Relationship Management (CRM) system built using the MERN stack (MongoDB, Express.js, React, Node.js). This project was developed as part of my internship, and it includes a wide range of features designed to streamline user management, task assignment, payment processing, and communication.
 
 Hosted on Azure live url:
+
 Frontend --> https://polite-field-09918cc00.4.azurestaticapps.net
+
 Backend --> http://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net
+
 my Website --> Alynor.wiki
 
 test id : admin - cocply135@gmail.com - admin123(as placeholder on live site)
