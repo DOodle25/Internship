@@ -1,8 +1,10 @@
+![image2](https://github.com/user-attachments/assets/5631bed5-83e4-40fc-bf30-3d33fe112b2b)
+
 # StarOneCRM
 
 StarOneCRM is a comprehensive Customer Relationship Management (CRM) system built using the MERN stack (MongoDB, Express.js, React, Node.js). This project was developed as part of my internship, and it includes a wide range of features designed to streamline user management, task assignment, payment processing, and communication.
 
-Hosted on Azure live url:
+# Hosted on Azure live url:
 
 # [Frontend](https://polite-field-09918cc00.4.azurestaticapps.net)
 
@@ -12,11 +14,30 @@ Hosted on Azure live url:
 
 # Test Logins
 
-admin: cocply135@gmail.com - admin123
+**admin: cocply135@gmail.com - admin123**
 
-employee: pdipen135@gmail.com - admin123
+**employee: pdipen135@gmail.com - admin123**
 
-customer: 210305105302@paruluniversity.ac.in - admin123
+**customer: 210305105302@paruluniversity.ac.in - admin123**
+
+## Screenshots
+
+![Screenshot 2025-03-06 133438](https://github.com/user-attachments/assets/078ff6ed-db76-4f5c-b28a-13cbde2039fe)
+![Screenshot 2025-03-06 133456](https://github.com/user-attachments/assets/df268ecd-c82f-4bd1-bb7d-fa6498e0ea82)
+![Screenshot 2025-03-06 133518](https://github.com/user-attachments/assets/a13dcbe9-1ad3-40fd-85e1-238b74adcb72)
+![Screenshot 2025-03-06 133535](https://github.com/user-attachments/assets/2c7a2a32-d74b-493e-965a-676d1fd8e8e0)
+![Screenshot 2025-03-06 133545](https://github.com/user-attachments/assets/55153310-9553-4338-990a-3c0d9a839a2a)
+![Screenshot 2025-03-06 133625](https://github.com/user-attachments/assets/7c5913a2-b679-436d-952e-7ad9798918d5)
+![Screenshot 2025-03-06 133639](https://github.com/user-attachments/assets/24472238-d49c-4236-ae16-06c823da5eda)
+![Screenshot 2025-03-06 133659](https://github.com/user-attachments/assets/87c23bad-7d74-43f3-abcb-a281e0abd714)
+![Screenshot 2025-03-06 133730](https://github.com/user-attachments/assets/6e605162-998b-4083-a641-372a8022df22)
+![Screenshot 2025-03-06 133759](https://github.com/user-attachments/assets/a1cb6be5-cbb2-409f-9b1e-4032b0a1890b)
+![Screenshot 2025-03-06 133831](https://github.com/user-attachments/assets/d03521cf-7b4e-4514-87e6-3d9bac285879)
+![Screenshot 2025-03-06 133843](https://github.com/user-attachments/assets/204fc0a0-915b-4c76-9644-59f055f0273c)
+
+## Videos
+
+https://github.com/user-attachments/assets/33a5cfd5-48e1-4d85-a4be-76e5f633ea43
 
 ## Features
 
@@ -55,24 +76,6 @@ customer: 210305105302@paruluniversity.ac.in - admin123
 - **File Management**:
   - Photo Uploads using Multer and GridFS
 
-## Screenshots
-
-![Screenshot 2025-03-06 133438](https://github.com/user-attachments/assets/078ff6ed-db76-4f5c-b28a-13cbde2039fe)
-![Screenshot 2025-03-06 133456](https://github.com/user-attachments/assets/df268ecd-c82f-4bd1-bb7d-fa6498e0ea82)
-![Screenshot 2025-03-06 133518](https://github.com/user-attachments/assets/a13dcbe9-1ad3-40fd-85e1-238b74adcb72)
-![Screenshot 2025-03-06 133535](https://github.com/user-attachments/assets/2c7a2a32-d74b-493e-965a-676d1fd8e8e0)
-![Screenshot 2025-03-06 133545](https://github.com/user-attachments/assets/55153310-9553-4338-990a-3c0d9a839a2a)
-![Screenshot 2025-03-06 133625](https://github.com/user-attachments/assets/7c5913a2-b679-436d-952e-7ad9798918d5)
-![Screenshot 2025-03-06 133639](https://github.com/user-attachments/assets/24472238-d49c-4236-ae16-06c823da5eda)
-![Screenshot 2025-03-06 133659](https://github.com/user-attachments/assets/87c23bad-7d74-43f3-abcb-a281e0abd714)
-![Screenshot 2025-03-06 133730](https://github.com/user-attachments/assets/6e605162-998b-4083-a641-372a8022df22)
-![Screenshot 2025-03-06 133759](https://github.com/user-attachments/assets/a1cb6be5-cbb2-409f-9b1e-4032b0a1890b)
-![Screenshot 2025-03-06 133831](https://github.com/user-attachments/assets/d03521cf-7b4e-4514-87e6-3d9bac285879)
-![Screenshot 2025-03-06 133843](https://github.com/user-attachments/assets/204fc0a0-915b-4c76-9644-59f055f0273c)
-
-## Videos
-
-https://github.com/user-attachments/assets/33a5cfd5-48e1-4d85-a4be-76e5f633ea43
 
 ## Setup
 
