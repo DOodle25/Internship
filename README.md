@@ -1,4 +1,4 @@
-![image2](https://github.com/user-attachments/assets/5631bed5-83e4-40fc-bf30-3d33fe112b2b)
+![image2 - Copy](https://github.com/user-attachments/assets/3fc3f7f3-8e67-4d25-8d81-eaca668061fd)
 
 # StarOneCRM
 
@@ -6,13 +6,13 @@ StarOneCRM is a comprehensive Customer Relationship Management (CRM) system buil
 
 # Hosted on Azure live url:
 
-# [Frontend](https://polite-field-09918cc00.4.azurestaticapps.net)
+## [Frontend](https://polite-field-09918cc00.4.azurestaticapps.net)
 
-# [Backend](http://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net)
+## [Backend](http://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net)
 
-# [Alynor.wiki](https://www.alynor.wiki/)
+## [Alynor.wiki](https://www.alynor.wiki/)
 
-# Test Logins
+## Test Logins
 
 **admin: cocply135@gmail.com - admin123**
 
@@ -20,24 +20,27 @@ StarOneCRM is a comprehensive Customer Relationship Management (CRM) system buil
 
 **customer: 210305105302@paruluniversity.ac.in - admin123**
 
-## Screenshots
-
-![Screenshot 2025-03-06 133438](https://github.com/user-attachments/assets/078ff6ed-db76-4f5c-b28a-13cbde2039fe)
-![Screenshot 2025-03-06 133456](https://github.com/user-attachments/assets/df268ecd-c82f-4bd1-bb7d-fa6498e0ea82)
-![Screenshot 2025-03-06 133518](https://github.com/user-attachments/assets/a13dcbe9-1ad3-40fd-85e1-238b74adcb72)
-![Screenshot 2025-03-06 133535](https://github.com/user-attachments/assets/2c7a2a32-d74b-493e-965a-676d1fd8e8e0)
-![Screenshot 2025-03-06 133545](https://github.com/user-attachments/assets/55153310-9553-4338-990a-3c0d9a839a2a)
-![Screenshot 2025-03-06 133625](https://github.com/user-attachments/assets/7c5913a2-b679-436d-952e-7ad9798918d5)
-![Screenshot 2025-03-06 133639](https://github.com/user-attachments/assets/24472238-d49c-4236-ae16-06c823da5eda)
-![Screenshot 2025-03-06 133659](https://github.com/user-attachments/assets/87c23bad-7d74-43f3-abcb-a281e0abd714)
-![Screenshot 2025-03-06 133730](https://github.com/user-attachments/assets/6e605162-998b-4083-a641-372a8022df22)
-![Screenshot 2025-03-06 133759](https://github.com/user-attachments/assets/a1cb6be5-cbb2-409f-9b1e-4032b0a1890b)
-![Screenshot 2025-03-06 133831](https://github.com/user-attachments/assets/d03521cf-7b4e-4514-87e6-3d9bac285879)
-![Screenshot 2025-03-06 133843](https://github.com/user-attachments/assets/204fc0a0-915b-4c76-9644-59f055f0273c)
-
 ## Videos
 
-https://github.com/user-attachments/assets/33a5cfd5-48e1-4d85-a4be-76e5f633ea43
+## UI
+
+![Screenshot 2025-03-17 114447](https://github.com/user-attachments/assets/0a88870f-b98f-4abb-a1c1-fb2938bd092a)
+![Screenshot 2025-03-17 114721](https://github.com/user-attachments/assets/0eecd003-e233-4a1b-b502-3ad455d03d65)
+![Screenshot 2025-03-17 114939](https://github.com/user-attachments/assets/a370f876-f21c-4cc1-92bf-4173ab495698)
+![Screenshot 2025-03-17 115001](https://github.com/user-attachments/assets/469c3050-49e6-4312-8231-d165e971f091)
+![Screenshot 2025-03-17 115022](https://github.com/user-attachments/assets/1f97f084-5b5c-40e8-a446-f324c24e13fe)
+![Screenshot 2025-03-17 115056](https://github.com/user-attachments/assets/4dc65780-4bcf-4b6d-a9cc-e069d08905b6)
+![Screenshot 2025-03-17 115150](https://github.com/user-attachments/assets/5a11be41-45cd-47dc-b878-e92bfabe25e3)
+![Screenshot 2025-03-17 115115](https://github.com/user-attachments/assets/b43f69d6-e149-4715-bfe2-c005e878ab9e)
+![Screenshot 2025-03-21 145455](https://github.com/user-attachments/assets/78acccf1-7b1b-4a78-a46b-15bef1f6990d)
+![Screenshot 2025-03-21 145425](https://github.com/user-attachments/assets/56ace337-4ec2-4a2f-8ae4-0cfc4d285f75)
+![Screenshot 2025-03-21 145657](https://github.com/user-attachments/assets/5dca48a9-794d-4098-99a7-096d977f1b56)
+![Screenshot 2025-03-21 145556](https://github.com/user-attachments/assets/bf226e43-91cb-4de6-9ee1-d19b2183c668)
+![Screenshot 2025-03-21 145534](https://github.com/user-attachments/assets/08ac33cb-76a6-45df-bf9a-358508e00df8)
+![Screenshot 2025-03-21 150030](https://github.com/user-attachments/assets/54c06904-ce18-477e-b8c3-d0081cb90112)
+![Screenshot 2025-03-21 145902](https://github.com/user-attachments/assets/0ad3ffe2-cb56-4110-9e7a-bae50dda561b)
+![Screenshot 2025-03-21 150255](https://github.com/user-attachments/assets/558f9b37-decc-433e-a6f8-6e5e1b623f13)
+
 
 ## Features
 
