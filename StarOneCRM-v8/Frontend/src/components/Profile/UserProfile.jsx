@@ -21,7 +21,7 @@ import PaymentAdminPage from "../Admin/PaymentAdminPage";
 import CustomerSegmentation from "../Admin/CustomerSegmentation";
 import SegmentIcon from "@mui/icons-material/Segment";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
-import CreateTask from "./CreateTask";
+import CreateTask from "./createTask";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import EmailIcon from "@mui/icons-material/Email";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
