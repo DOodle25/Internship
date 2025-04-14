@@ -17,7 +17,7 @@ import StudentList from "./UserList";
 import Chat from "@mui/icons-material/Chat";
 import AddStudent from "./AddUser";
 import UpdateStudent from "./UpdateStudent";
-import Profile from "../Profile/Profile";
+import Profile from "../Profile/profile";
 import AssignUserToEmployee from "./UserAssign";
 import ChatPage from "../Profile/UserChat";
 import { useGlobalContext } from "../../context/GlobalContext";
