@@ -12,7 +12,7 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 import Chat from "@mui/icons-material/Chat";
 import Payment from "@mui/icons-material/Payment";
-import Profile from "./Profile";
+import Profile from "./profile";
 import ChatPage from "./UserChat";
 import { useGlobalContext } from "../../context/GlobalContext";
 import { useLocation } from "react-router-dom";
