@@ -25,7 +25,7 @@ const GoogleLogin = () => {
   }, []);
 
   return (
-    <Container maxWidth="sm" style={{ textAlign: "center", marginTop: "0px" }}>
+    <Container fullWidth style={{ textAlign: "center", margin: "0px", padding: "0px" }}>
       <div
         style={{
           display: "flex",
@@ -50,7 +50,7 @@ const GoogleLogin = () => {
               },
             }}
             onClick={() => handleOAuthLogin(provider.id)}
-            style={{ margin: "2px" }}
+            style={{ marginBottom: "2px", marginTop: "2px" }}
             disabled={loginloadingProvider === provider.id}
             startIcon={
               loginloadingProvider === provider.id ? (
