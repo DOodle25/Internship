@@ -686,9 +686,13 @@ function Signup() {
               variant="outlined"
               sx={{
                 borderRadius: "10px",
+                backgroundColor: "transparent",
+                color: "white",
                 "&:hover": {
                   opacity: 0.9,
                   transform: "scale(1.05)",
+                  backgroundColor: "transparent",
+                  color: "white",
                 },
                 opacity: 0.8,
                 px: 3,
@@ -704,6 +708,8 @@ function Signup() {
             <Button
               variant="outlined"
               sx={{
+                backgroundColor: "transparent",
+                color: "white",
                 borderRadius: "10px",
                 // backgroundColor: "",
                 "&:hover": {
@@ -711,6 +717,8 @@ function Signup() {
                   // color: "black",
                   opacity: 0.8,
                   transform: "scale(1.05)",
+                  backgroundColor: "transparent",
+                  color: "white",
                 },
                 opacity: 0.7,
                 transition: "transform 0.3s ease",

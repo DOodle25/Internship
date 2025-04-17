@@ -1438,11 +1438,15 @@ function Login() {
                   // backgroundColor: "rgba(255,255,255,0.1)",
                   // opacity: 0.9,
                   transform: "scale(1.05)",
+                  backgroundColor: "transparent",
+                  color: "white"
                 },
                 px: 3,
                 py: 1,
                 opacity: 0.8,
                 transition: "transform 0.3s ease",
+                backgroundColor: "transparent",
+                color: "white",
               }}
               onClick={() => navigate("/landing-page")}
               endIcon={<LaunchIcon fontSize="small" />}
@@ -1455,11 +1459,15 @@ function Login() {
               sx={{
                 borderRadius: "10px",
                 // backgroundColor: "",
+                backgroundColor: "transparent",
+                color: "white",
                 "&:hover": {
                   // backgroundColor: "#FFFFFF",
                   // color: "black",
                   opacity: 0.8,
                   transform: "scale(1.05)",
+                  backgroundColor: "transparent",
+                  color: "white",
                 },
                 transition: "transform 0.3s ease",
                 px: 3,

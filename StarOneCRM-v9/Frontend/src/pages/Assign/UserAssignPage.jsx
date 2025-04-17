@@ -4251,9 +4251,9 @@ const AssignUserToEmployee = () => {
 
             {/* Action Buttons */}
             <Box
-              sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}
+              sx={{ display: "flex", justifyContent: "space-between", mb: 3, flexWrap: "wrap", }}
             >
-              <Box sx={{ display: "flex", gap: 2 }}>
+              <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
                 <Zoom in={true} style={{ transitionDelay: "100ms" }}>
                   <Button
                     variant="contained"
@@ -4292,7 +4292,7 @@ const AssignUserToEmployee = () => {
                       <CheckCircle />
                     )
                   }
-                  sx={{ borderRadius: 2 }}
+                  sx={{ borderRadius: 2, mt: { xs: 2, md: 0 } }}
                 >
                   {loading ? "Saving..." : "Save"}
                 </Button>
@@ -4365,7 +4365,7 @@ const AssignUserToEmployee = () => {
                                         )}
                                       </Typography>
                                     </Box>
-                                    <Box sx={{ display: "flex", gap: 1 }}>
+                                    <Box sx={{ display: "flex", gap: 1, flexDirection: {xs:"column", md:"row"} }}>
                                       <Tooltip title="View Details" arrow>
                                         <IconButton
                                           size="small"
@@ -4516,7 +4516,7 @@ const AssignUserToEmployee = () => {
                                             )}
                                           </Box>
                                         </Box>
-                                        <Box sx={{ display: "flex", gap: 1 }}>
+                                        <Box sx={{ display: "flex", gap: 1, flexDirection: {xs:"column", md:"row"} }}>
                                           <Tooltip title="View Details" arrow>
                                             <IconButton
                                               size="small"
