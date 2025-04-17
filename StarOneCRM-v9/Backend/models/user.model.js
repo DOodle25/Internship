@@ -61,12 +61,12 @@ const userSchema = new mongoose.Schema(
         ref: "Task",
       },
     ],
-    assignedPeople: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    // assignedPeople: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "User",
+    //   },
+    // ],
     loginMethod: {
       type: String,
       required: true,

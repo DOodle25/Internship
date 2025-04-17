@@ -101,57 +101,57 @@ const fetchProfileImage = async (imageId, gfs) => {
     return null;
   }
 };
-// exports.getAssignedPeople = async (req, res) => {
-//   try {
-//     const user = await User.findById(req.user.id)
-//       .populate({
-//         path: "tasksAssigned",
-//         populate: {
-//           path: "customer employee",
-//           select: "name email role",
-//         },
-//       })
-//       .exec();
-//     if (!user) {
-//       return res.status(404).json({ error: "User not found" });
-//     }
-//     res.status(200).json({ success: true, tasksAssigned: user.tasksAssigned });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-// exports.unassignCustomerFromEmployee = async (req, res) => {
-//   try {
-//     const { customerId, employeeId } = req.body;
-//     if (!customerId || !employeeId) {
-//       return res
-//         .status(400)
-//         .json({ error: "Customer ID and Employee ID are required" });
-//     }
-//     const customer = await User.findById(customerId);
-//     const employee = await User.findById(employeeId);
-//     if (!customer || customer.role !== "customer") {
-//       return res.status(404).json({ error: "Customer not found or invalid" });
-//     }
-//     if (!employee || employee.role !== "employee") {
-//       return res.status(404).json({ error: "Employee not found or invalid" });
-//     }
-//     customer.assignedTo = customer.assignedTo.filter(
-//       (id) => id.toString() !== employeeId
-//     );
-//     employee.assignedPeople = employee.assignedPeople.filter(
-//       (id) => id.toString() !== customerId
-//     );
-//     await customer.save();
-//     await employee.save();
-//     res.status(200).json({
-//       success: true,
-//       message: `Customer ${customer.name} unassigned from Employee ${employee.name}`,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
+exports.getAssignedPeople = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id)
+      .populate({
+        path: "tasksAssigned",
+        populate: {
+          path: "customer employee",
+          select: "name email role",
+        },
+      })
+      .exec();
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json({ success: true, tasksAssigned: user.tasksAssigned });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+exports.unassignCustomerFromEmployee = async (req, res) => {
+  try {
+    const { customerId, employeeId } = req.body;
+    if (!customerId || !employeeId) {
+      return res
+        .status(400)
+        .json({ error: "Customer ID and Employee ID are required" });
+    }
+    const customer = await User.findById(customerId);
+    const employee = await User.findById(employeeId);
+    if (!customer || customer.role !== "customer") {
+      return res.status(404).json({ error: "Customer not found or invalid" });
+    }
+    if (!employee || employee.role !== "employee") {
+      return res.status(404).json({ error: "Employee not found or invalid" });
+    }
+    customer.assignedTo = customer.assignedTo.filter(
+      (id) => id.toString() !== employeeId
+    );
+    employee.assignedPeople = employee.assignedPeople.filter(
+      (id) => id.toString() !== customerId
+    );
+    await customer.save();
+    await employee.save();
+    res.status(200).json({
+      success: true,
+      message: `Customer ${customer.name} unassigned from Employee ${employee.name}`,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 // exports.assignCustomerToEmployee = async (req, res) => {
 //   try {
 //     const { customerId, employeeId, taskId } = req.body;
@@ -343,7 +343,7 @@ exports.assignCustomerToEmployee = async (req, res) => {
 
     // Initialize all arrays to empty arrays if they don't exist
     customer.assignedTo = Array.isArray(customer.assignedTo) ? customer.assignedTo : [];
-    // employee.assignedPeople = Array.isArray(employee.assignedPeople) ? employee.assignedPeople : [];
+    employee.assignedPeople = Array.isArray(employee.assignedPeople) ? employee.assignedPeople : [];
     customer.tasks = Array.isArray(customer.tasks) ? customer.tasks : [];
     employee.tasks = Array.isArray(employee.tasks) ? employee.tasks : [];
     employee.tasksAssigned = Array.isArray(employee.tasksAssigned) ? employee.tasksAssigned : [];
@@ -355,7 +355,7 @@ exports.assignCustomerToEmployee = async (req, res) => {
         // Initialize old employee's arrays if they don't exist
         oldEmployee.tasks = Array.isArray(oldEmployee.tasks) ? oldEmployee.tasks : [];
         oldEmployee.tasksAssigned = Array.isArray(oldEmployee.tasksAssigned) ? oldEmployee.tasksAssigned : [];
-        // oldEmployee.assignedPeople = Array.isArray(oldEmployee.assignedPeople) ? oldEmployee.assignedPeople : [];
+        oldEmployee.assignedPeople = Array.isArray(oldEmployee.assignedPeople) ? oldEmployee.assignedPeople : [];
 
         // Remove task from old employee's lists
         oldEmployee.tasks = oldEmployee.tasks.filter(
@@ -370,11 +370,11 @@ exports.assignCustomerToEmployee = async (req, res) => {
           (t) => t && t.toString() !== taskId.toString() && 
                  t.customer && t.customer.toString() === customerId.toString()
         );
-        // if (!hasOtherTasks) {
-        //   oldEmployee.assignedPeople = oldEmployee.assignedPeople.filter(
-        //     (p) => p && p.toString() !== customerId.toString()
-        //   );
-        // }
+        if (!hasOtherTasks) {
+          oldEmployee.assignedPeople = oldEmployee.assignedPeople.filter(
+            (p) => p && p.toString() !== customerId.toString()
+          );
+        }
         
         await oldEmployee.save();
 
@@ -389,9 +389,9 @@ exports.assignCustomerToEmployee = async (req, res) => {
       customer.assignedTo.push(employeeId);
     }
 
-    // if (!employee.assignedPeople.some(id => id && id.toString() === customerId.toString())) {
-    //   employee.assignedPeople.push(customerId);
-    // }
+    if (!employee.assignedPeople.some(id => id && id.toString() === customerId.toString())) {
+      employee.assignedPeople.push(customerId);
+    }
 
     // Update task assignment
     if (!employee.tasksAssigned.some(id => id && id.toString() === taskId.toString())) {
@@ -500,13 +500,9 @@ exports.getMessagesByTask = async (req, res) => {
 };
 exports.createTask = async (req, res) => {
   try {
-    const { title, description, customerId
-      // , assignedPeople 
-    } = req.body;
+    const { title, description, customerId, assignedPeople } = req.body;
 
-    const newTask = new Task({ title, description, customer: customerId
-      // , assignedPeople 
-    });
+    const newTask = new Task({ title, description, customer: customerId, assignedPeople });
     await newTask.save();
 
     await User.findByIdAndUpdate(customerId, { $push: { tasksCreated: newTask._id } });
@@ -517,70 +513,17 @@ exports.createTask = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-// exports.updateTask = async (req, res) => {
-//   try {
-//     const { taskId } = req.params;
-//     const updatedTask = await Task.findByIdAndUpdate(taskId, req.body, {
-//       new: true,
-//     });
-//     res.status(200).json({ success: true, task: updatedTask });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
-
-
-// exports.updateTask = async (req, res) => {
-//   try {
-//     // Try to get ID from params first, then from body if not found
-//     const taskId = req.params.taskId || req.body._id;
-    
-//     if (!taskId) {
-//       return res.status(400).json({ error: "Task ID is required" });
-//     }
-
-//     const updatedTask = await Task.findByIdAndUpdate(
-//       taskId,
-//       req.body,
-//       { new: true }
-//     );
-
-//     if (!updatedTask) {
-//       return res.status(404).json({ error: "Task not found" });
-//     }
-
-//     res.status(200).json({ success: true, task: updatedTask });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
 exports.updateTask = async (req, res) => {
   try {
-    // Try to get ID from multiple possible locations
-    const taskId = req.params.taskId || req.params.id || req.body._id || req.body.id;
-    
-    if (!taskId) {
-      return res.status(400).json({ error: "Task ID is required" });
-    }
-
-    const updatedTask = await Task.findByIdAndUpdate(
-      taskId,
-      req.body,
-      { new: true }
-    );
-
-    if (!updatedTask) {
-      return res.status(404).json({ error: "Task not found" });
-    }
-
+    const { taskId } = req.params;
+    const updatedTask = await Task.findByIdAndUpdate(taskId, req.body, {
+      new: true,
+    });
     res.status(200).json({ success: true, task: updatedTask });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 exports.deleteTask = async (req, res) => {
   try {
     const { taskId } = req.params;
@@ -593,10 +536,10 @@ exports.deleteTask = async (req, res) => {
       await User.findByIdAndUpdate(task.employee, { $pull: { tasksAssigned: taskId } });
       await User.findByIdAndUpdate(task.customer, { $pull: { tasksAssigned: taskId } });
   
-      // await User.updateMany(
-      //   // { _id: { $in: task.assignedPeople } },
-      //   { $pull: { tasksAssigned: taskId } }
-      // );
+      await User.updateMany(
+        { _id: { $in: task.assignedPeople } },
+        { $pull: { tasksAssigned: taskId } }
+      );
     await Message.deleteMany({ _id: { $in: task.messages } });
     await Task.findByIdAndDelete(taskId);
     res.status(200).json({
