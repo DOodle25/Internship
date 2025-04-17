@@ -196,9 +196,9 @@ const CustomerSegmentation = () => {
               width: "35px !important",
               backgroundColor: "white",
               color: "black",
-              // boxShadow: "none",
+              boxShadow: "none",
               borderRadius: 16,
-              boxShadow: 1,
+              // boxShadow: 1,
               "&:hover": {
                 backgroundColor: "#f5f5f5",
                 color: "black",
@@ -229,7 +229,7 @@ const CustomerSegmentation = () => {
                   // borderRadius: "8px",
                   borderRadius: 16,
                   fontWeight: "",
-                  boxShadow: 1,
+                  // boxShadow: 1,
                 }}
               >
                 <GroupIcon sx={{ color: "black" }} />

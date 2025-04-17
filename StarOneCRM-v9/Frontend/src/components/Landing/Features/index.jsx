@@ -1,5 +1,5 @@
 // src/features/index.js
-import ChatUI from './Chat/ChatUI';
+import ChatUI from './chat/ChatUI';
 import TaskManagementUI from './TaskManagement/TaskManagementUI';
 import VideoCallUI from './VideoCall/VideoCallUI';
 

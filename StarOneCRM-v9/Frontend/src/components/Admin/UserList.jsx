@@ -1259,7 +1259,8 @@ const UserList = ({}) => {
               borderRadius: 4,
               // bgcolor: "#F6F8FA",
               bgcolor: 'background.paper',
-              boxShadow: 1,
+              // boxShadow: 1,
+              boxShadow: 0,
             }}
           >
             <Box

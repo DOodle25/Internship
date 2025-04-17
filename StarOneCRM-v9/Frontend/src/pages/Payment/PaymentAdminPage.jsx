@@ -759,7 +759,7 @@ const FilterCard = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   borderRadius: 16,
   marginBottom: theme.spacing(3),
-  boxShadow: theme.shadows[1],
+  boxShadow: theme.shadows[0],
   backgroundColor: theme.palette.background.paper,
   transition: "all 0.3s ease",
   [theme.breakpoints.down('sm')]: {
@@ -771,11 +771,11 @@ const SummaryCard = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   borderRadius: 16,
   // marginBottom: theme.spacing(3),
-  boxShadow: theme.shadows[1],
+  boxShadow: theme.shadows[0],
   backgroundColor: theme.palette.white,
   transition: "all 0.3s ease",
   "&:hover": {
-    boxShadow: theme.shadows[1],
+    boxShadow: theme.shadows[0],
   },
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(2),
@@ -787,7 +787,7 @@ const ExportButton = styled(Button)(({ theme }) => ({
   color: 'white',
   '&:hover': {
     backgroundColor: '#388e3c',
-    boxShadow: theme.shadows[1],
+    boxShadow: theme.shadows[0],
   },
   transition: 'all 0.3s ease',
   borderRadius: '8px',
@@ -801,7 +801,7 @@ const ClearButton = styled(Button)(({ theme }) => ({
   color: 'white',
   '&:hover': {
     backgroundColor: '#d32f2f',
-    boxShadow: theme.shadows[1],
+    boxShadow: theme.shadows[0],
   },
   transition: 'all 0.3s ease',
   borderRadius: '8px',
@@ -1138,7 +1138,7 @@ const PaymentAdminPage = () => {
 
             {/* Filter Card */}
             <Zoom in={true} style={{ transitionDelay: "200ms" }}>
-              <FilterCard elevation={3}>
+              <FilterCard elevation={0}>
                 <Box
                   sx={{
                     display: "flex",
@@ -1272,7 +1272,7 @@ const PaymentAdminPage = () => {
                   width: "100%",
                   borderRadius: 3,
                   overflow: "hidden",
-                  boxShadow: 2,
+                  boxShadow: 0,
                 }}
               >
                 <Box

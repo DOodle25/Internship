@@ -29,7 +29,7 @@ const AddUser = () => {
 
   return (
     <Paper
-      elevation={3}
+      elevation={0}
       style={{
         padding: "30px",
         margin: "20px auto",

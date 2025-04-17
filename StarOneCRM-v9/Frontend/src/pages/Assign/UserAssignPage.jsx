@@ -3882,7 +3882,7 @@ const Container = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   borderRadius: 16,
   backgroundColor: theme.palette.background.paper,
-  boxShadow: theme.shadows[1],
+  boxShadow: theme.shadows[0],
   transition: "all 0.3s ease",
   // "&:hover": {
   //   boxShadow: theme.shadows[6],

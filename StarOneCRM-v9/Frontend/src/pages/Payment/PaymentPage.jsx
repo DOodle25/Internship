@@ -234,10 +234,10 @@ const AnimatedContainer = styled(Container)(({ theme }) => ({
 const PaymentCard = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
   borderRadius: 16,
-  boxShadow: theme.shadows[1],
+  boxShadow: theme.shadows[0],
   transition: "all 0.3s ease",
   "&:hover": {
-    boxShadow: theme.shadows[1],
+    boxShadow: theme.shadows[0],
     transform: "translateY(-2px)",
   },
   maxWidth: 500,
@@ -249,7 +249,7 @@ const HistoryCard = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   borderRadius: 16,
   marginTop: theme.spacing(4),
-  boxShadow: theme.shadows[1],
+  boxShadow: theme.shadows[0],
   transition: "all 0.3s ease",
   backgroundColor: theme.palette.background.paper,
 }));
@@ -441,7 +441,7 @@ const PaymentPage = () => {
           <Box>
             {/* Payment Section */}
             <Zoom in={true} style={{ transitionDelay: "100ms" }}>
-              <PaymentCard elevation={3}>
+              <PaymentCard elevation={0}>
                 <Box textAlign="center" mb={3}>
                   <Avatar
                     sx={{
@@ -516,7 +516,7 @@ const PaymentPage = () => {
 
             {/* Payment History Section */}
             <Zoom in={true} style={{ transitionDelay: "200ms" }}>
-              <HistoryCard elevation={2}>
+              <HistoryCard elevation={0}>
                 <Box
                   sx={{
                     display: "flex",

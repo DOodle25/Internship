@@ -456,7 +456,7 @@ const ColorAvatar = styled(Avatar)(({ theme, lettercolor }) => ({
 
 const ProfileCard = styled(Card)(({ theme }) => ({
   borderRadius: 16,
-  boxShadow: theme.shadows[1],
+  boxShadow: theme.shadows[0],
   overflow: "hidden",
   transition: "all 0.3s ease",
   "&:hover": {

@@ -32,7 +32,7 @@ const CreateTask = () => {
   return (
     <Box sx={{ padding: "20px", maxWidth: 600, margin: "auto" }}>
       <Paper
-        elevation={1}
+        elevation={0}
         sx={{ padding: 3, borderRadius: 2, border: "none" }}
       >
         <TextField
