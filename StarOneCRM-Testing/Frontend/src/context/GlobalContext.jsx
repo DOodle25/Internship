@@ -10,8 +10,7 @@ import axiosInstance from "../utils/axios";
 import { Snackbar, Alert } from "@mui/material";
 import Peer from "peerjs";
 import io from "socket.io-client";
-import VideoCall from "../components/Profile/VideoCall";
-import { use } from "react";
+import VideoCall from "../pages/VideoCall/VideoCallPage";
 const GlobalContext = createContext();
 const socket = io(
   "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net"
@@ -272,7 +271,7 @@ export const GlobalProvider = ({ children }) => {
       showSnackbar("Form submission failed", "error");
     }
   };
-  const handleAddStudentSubmit = async (formData, callback) => {
+  const handleAddUserSubmit = async (formData, callback) => {
     try {
       const response = await axiosInstance.post(`/admin/`, {
         ...formData,
@@ -369,27 +368,66 @@ export const GlobalProvider = ({ children }) => {
       return { success: false, message: "Failed to create task" };
     }
   };
+  // const handleUpdateTask = async (editTask) => {
+  //   try {
+  //     const response = await axiosInstance.put(
+  //       `/chat/task/${editTask.id}`,
+  //       editTask,
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+  //     setTasks(
+  //       tasks.map((task) =>
+  //         task._id === editTask.id ? response.data.task : task
+  //       )
+  //     );
+  //     showSnackbar("Task updated successfully!");
+  //     return { success: true, message: "Task updated successfully!" };
+  //   } catch (error) {
+  //     showSnackbar("Failed to update task", "error");
+  //     return { success: false, message: "Failed to update task" };
+  //   }
+  // };
+
+
   const handleUpdateTask = async (editTask) => {
     try {
+      if (!editTask._id) {
+        throw new Error("Task ID is missing");
+      }
+  
       const response = await axiosInstance.put(
-        `/chat/task/${editTask.id}`,
+        `/chat/task/${editTask._id}`,  // Use _id consistently
         editTask,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      
       setTasks(
         tasks.map((task) =>
-          task._id === editTask.id ? response.data.task : task
+          task._id === editTask._id ? response.data.task : task
         )
       );
-      showSnackbar("Task updated successfully!");
-      return { success: true, message: "Task updated successfully!" };
+      
+      return { 
+        success: true, 
+        message: "Task updated successfully!",
+        task: response.data.task
+      };
+      
     } catch (error) {
-      showSnackbar("Failed to update task", "error");
-      return { success: false, message: "Failed to update task" };
+      console.error("Update task error:", error);
+      const message = error.response?.data?.error || 
+                     error.message || 
+                     "Failed to update task";
+      return { success: false, message };
     }
   };
+
+
+
   const handleDeleteTask = async (taskId) => {
     try {
       await axiosInstance.delete(`/chat/task/${taskId}`, {
@@ -464,7 +502,7 @@ export const GlobalProvider = ({ children }) => {
         loginloadingProvider,
         setloginLoadingProvider,
         handleFillFormSubmit,
-        handleAddStudentSubmit,
+        handleAddUserSubmit,
         fetchUsers,
         handleDelete,
         handleVerify,

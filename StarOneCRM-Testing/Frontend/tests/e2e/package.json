@@ -1,0 +1,25 @@
+{
+    "name": "e2e-tests",
+    "version": "1.0.0",
+    "description": "End-to-end tests for the application",
+    "scripts": {
+      "test": "npx mocha tests/**/*.test.js --timeout 30000",
+      "test:login": "npx mocha tests/login.test.js --timeout 30000",
+      "test:ci": "npx mocha tests/**/*.test.js --reporter mochawesome --timeout 30000",
+      "lint": "eslint ."
+    },
+    "dependencies": {
+      "chai": "^4.3.7",
+      "chromedriver": "^135.0.2",
+      "dotenv": "^16.3.1",
+      "mocha": "^10.2.0",
+      "mochawesome": "^7.1.3",
+      "selenium-webdriver": "^4.16.0",
+      "winston": "^3.11.0"
+    },
+    "devDependencies": {
+      "eslint": "^8.56.0",
+      "eslint-config-airbnb-base": "^15.0.0",
+      "eslint-plugin-import": "^2.29.0"
+    }
+  }

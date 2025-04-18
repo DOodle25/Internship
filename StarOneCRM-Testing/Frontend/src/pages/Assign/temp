@@ -1,0 +1,814 @@
+
+// import React, { useEffect, useState, useCallback } from "react";
+// import {
+//   Button,
+//   TextField,
+//   Dialog,
+//   DialogActions,
+//   DialogContent,
+//   DialogTitle,
+//   Tooltip,
+//   IconButton,
+//   Snackbar,
+//   Paper,
+//   Box,
+//   Typography,
+//   Avatar,
+//   Chip,
+//   Fade,
+//   Grow,
+//   Zoom,
+//   CircularProgress,
+//   Grid,
+//   FormControl,
+//   InputLabel,
+//   Select,
+//   MenuItem,
+//   Collapse,
+//   CardActions,
+//   CardContent,
+//   Card,
+// } from "@mui/material";
+// import { Edit, Delete, Add, Assignment, Person, CheckCircle, Cancel, Search, Clear, ExpandMore, ExpandLess } from "@mui/icons-material";
+// import { useGlobalContext } from "../../context/GlobalContext";
+// import { styled } from "@mui/material/styles";
+// import moment from "moment";
+// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
+// const Container = styled(Paper)(({ theme }) => ({
+//   padding: theme.spacing(3),
+//   borderRadius: 16,
+//   backgroundColor: theme.palette.background.paper,
+//   boxShadow: theme.shadows[3],
+//   transition: 'all 0.3s ease',
+//   '&:hover': {
+//     boxShadow: theme.shadows[6],
+//   },
+// }));
+
+// const TaskList = styled(Box)(({ theme }) => ({
+//   padding: theme.spacing(2),
+//   borderRadius: 12,
+//   backgroundColor: theme.palette.grey[100],
+//   minHeight: 400,
+//   transition: 'all 0.3s ease',
+// }));
+
+// const EmployeeList = styled(Box)(({ theme }) => ({
+//   padding: theme.spacing(2),
+//   borderRadius: 12,
+//   backgroundColor: theme.palette.grey[100],
+//   minHeight: 400,
+//   transition: 'all 0.3s ease',
+// }));
+
+// const TaskItem = styled(Paper)(({ theme, isdragging }) => ({
+//   padding: theme.spacing(2),
+//   marginBottom: theme.spacing(1),
+//   borderRadius: 8,
+//   backgroundColor: isdragging === 'true' ? theme.palette.primary.light : theme.palette.common.white,
+//   boxShadow: theme.shadows[1],
+//   cursor: 'grab',
+//   transition: 'all 0.2s ease',
+//   '&:hover': {
+//     backgroundColor: theme.palette.action.hover,
+//     transform: 'translateY(-2px)',
+//     boxShadow: theme.shadows[2],
+//   },
+// }));
+
+// const EmployeeItem = styled(Paper)(({ theme, isdragging }) => ({
+//   padding: theme.spacing(2),
+//   marginBottom: theme.spacing(1),
+//   borderRadius: 8,
+//   backgroundColor: isdragging === 'true' ? theme.palette.secondary.light : theme.palette.common.white,
+//   boxShadow: theme.shadows[1],
+//   cursor: 'grab',
+//   transition: 'all 0.2s ease',
+//   '&:hover': {
+//     backgroundColor: theme.palette.action.hover,
+//     transform: 'translateY(-2px)',
+//     boxShadow: theme.shadows[2],
+//   },
+// }));
+
+// const AssignUserToEmployee = () => {
+//   const {
+//     tasks,
+//     users,
+//     handleCreateTask,
+//     handleUpdateTask,
+//     handleDeleteTask,
+//     handleAssignTask,
+//     fetchTasks,
+//     fetchUsers,
+//   } = useGlobalContext();
+  
+//   const [newTask, setNewTask] = useState({
+//     title: "",
+//     description: "",
+//     customerId: "",
+//   });
+//   const [editTask, setEditTask] = useState(null);
+//   const [openDialog, setOpenDialog] = useState(false);
+//   const [openEditDialog, setOpenEditDialog] = useState(false);
+//   const [snackbarOpen, setSnackbarOpen] = useState(false);
+//   const [snackbarMessage, setSnackbarMessage] = useState("");
+//   const [taskSearch, setTaskSearch] = useState("");
+//   const [employeeSearch, setEmployeeSearch] = useState("");
+//   const [assignments, setAssignments] = useState({});
+//   const [loading, setLoading] = useState(false);
+//   const [isDragging, setIsDragging] = useState(false);
+//   const [expandedEmployees, setExpandedEmployees] = useState({});
+//   const [initialAssignments, setInitialAssignments] = useState({});
+//   const [hasChanges, setHasChanges] = useState(false);
+
+//   useEffect(() => {
+//     fetchUsers();
+//     fetchTasks();
+//   }, []);
+
+//   // Initialize assignments and track initial state
+//   useEffect(() => {
+//     const initialAssignments = {};
+//     tasks.forEach(task => {
+//       if (task.employee?._id) {
+//         initialAssignments[task._id] = task.employee._id;
+//       }
+//     });
+//     setAssignments(initialAssignments);
+//     setInitialAssignments(initialAssignments);
+//   }, [tasks]);
+
+//   // Check for changes between current and initial assignments
+//   useEffect(() => {
+//     const changed = JSON.stringify(assignments) !== JSON.stringify(initialAssignments);
+//     setHasChanges(changed);
+//   }, [assignments, initialAssignments]);
+
+//   const handleSnackbarOpen = (message) => {
+//     setSnackbarMessage(message);
+//     setSnackbarOpen(true);
+//   };
+
+//   const handleSnackbarClose = () => {
+//     setSnackbarOpen(false);
+//   };
+
+//   const handleCreate = async () => {
+//     try {
+//       const result = await handleCreateTask(newTask);
+//       handleSnackbarOpen(result.message);
+//       if (result.success) {
+//         setOpenDialog(false);
+//         setNewTask({ title: "", description: "", customerId: "" });
+//         fetchTasks(); // Refresh the task list
+//       }
+//     } catch (error) {
+//       handleSnackbarOpen(error.message || "Failed to create task");
+//     }
+//   };
+
+//   const handleUpdate = async () => {
+//     try {
+//       if (!editTask || !editTask._id) {
+//         handleSnackbarOpen("Invalid task data");
+//         return;
+//       }
+      
+//       // Prepare the task data for update
+//       const taskToUpdate = {
+//         _id: editTask._id,
+//         title: editTask.title,
+//         description: editTask.description,
+//         customerId: editTask.customer?._id || editTask.customerId
+//       };
+
+//       const result = await handleUpdateTask(taskToUpdate);
+//       handleSnackbarOpen(result.message);
+//       if (result.success) {
+//         setOpenEditDialog(false);
+//         setEditTask(null);
+//         fetchTasks(); // Refresh the task list
+//       }
+//     } catch (error) {
+//       handleSnackbarOpen(error.message || "Failed to update task");
+//     }
+//   };
+
+//   const handleDelete = async (taskId) => {
+//     try {
+//       const result = await handleDeleteTask(taskId);
+//       handleSnackbarOpen(result.message);
+//       fetchTasks(); // Refresh the task list
+//     } catch (error) {
+//       handleSnackbarOpen(error.message || "Failed to delete task");
+//     }
+//   };
+
+//   const filteredTasks = tasks.filter(task => {
+//     const matchesSearch = task.title.toLowerCase().includes(taskSearch.toLowerCase()) || 
+//                          task.description.toLowerCase().includes(taskSearch.toLowerCase());
+//     const isUnassigned = !task.isEmployeeAssigned;
+//     return matchesSearch && isUnassigned;
+//   });
+
+//   const filteredEmployees = users.filter(user => {
+//     return user.role === "employee" && 
+//            user.name.toLowerCase().includes(employeeSearch.toLowerCase());
+//   });
+
+//   const toggleEmployeeExpand = (employeeId) => {
+//     setExpandedEmployees(prev => ({
+//       ...prev,
+//       [employeeId]: !prev[employeeId]
+//     }));
+//   };
+
+//   const onDragStart = () => {
+//     setIsDragging(true);
+//   };
+
+//   const onDragEnd = useCallback(async (result) => {
+//     setIsDragging(false);
+//     const { source, destination, draggableId } = result;
+
+//     // Dropped outside the list
+//     if (!destination) {
+//       return;
+//     }
+
+//     // If dropped in the same place
+//     if (
+//       destination.droppableId === source.droppableId &&
+//       destination.index === source.index
+//     ) {
+//       return;
+//     }
+
+//     // If task is dropped on an employee
+//     if (source.droppableId === 'tasks' && destination.droppableId.startsWith('employee-')) {
+//       const employeeId = destination.droppableId.replace('employee-', '');
+      
+//       // Check if this task is already assigned to someone else
+//       const currentAssignment = assignments[draggableId];
+//       if (currentAssignment && currentAssignment !== employeeId) {
+//         handleSnackbarOpen(`Task is already assigned to another employee. Reassigning...`);
+//       }
+      
+//       setAssignments(prev => ({
+//         ...prev,
+//         [draggableId]: employeeId
+//       }));
+//     }
+    
+//     // If assignment is removed (dropped back to tasks)
+//     if (source.droppableId.startsWith('employee-') && destination.droppableId === 'tasks') {
+//       const employeeId = source.droppableId.replace('employee-', '');
+      
+//       // Only proceed if the task was assigned to this employee
+//       if (assignments[draggableId] === employeeId) {
+//         setAssignments(prev => {
+//           const newAssignments = { ...prev };
+//           delete newAssignments[draggableId];
+//           return newAssignments;
+//         });
+//       }
+//     }
+//   }, [assignments]);
+
+//   const saveAssignments = async () => {
+//     setLoading(true);
+//     try {
+//       // Get all assignments that are different from initial state
+//       const assignmentsToSave = {};
+//       const assignmentsToRemove = [];
+      
+//       // Check for new assignments
+//       Object.entries(assignments).forEach(([taskId, employeeId]) => {
+//         if (initialAssignments[taskId] !== employeeId) {
+//           assignmentsToSave[taskId] = employeeId;
+//         }
+//       });
+      
+//       // Check for removed assignments
+//       Object.keys(initialAssignments).forEach(taskId => {
+//         if (!assignments[taskId]) {
+//           assignmentsToRemove.push(taskId);
+//         }
+//       });
+      
+//       // Process new assignments
+//       const assignmentResults = [];
+//       for (const [taskId, employeeId] of Object.entries(assignmentsToSave)) {
+//         try {
+//           const result = await handleAssignTask(taskId, null, employeeId);
+//           assignmentResults.push({ taskId, success: true, message: result.message });
+//         } catch (error) {
+//           assignmentResults.push({ 
+//             taskId, 
+//             success: false, 
+//             message: error.message || `Failed to assign task ${taskId}`
+//           });
+//         }
+//       }
+      
+//       // Process removed assignments
+//       const unassignmentResults = [];
+//       for (const taskId of assignmentsToRemove) {
+//         try {
+//           const result = await handleAssignTask(taskId, null, null);
+//           unassignmentResults.push({ taskId, success: true, message: result.message });
+//         } catch (error) {
+//           unassignmentResults.push({ 
+//             taskId, 
+//             success: false, 
+//             message: error.message || `Failed to unassign task ${taskId}`
+//           });
+//         }
+//       }
+      
+//       // Check results
+//       const successCount = [...assignmentResults, ...unassignmentResults].filter(r => r.success).length;
+//       const totalOperations = assignmentResults.length + unassignmentResults.length;
+      
+//       if (successCount === totalOperations) {
+//         handleSnackbarOpen(`All ${successCount} operations completed successfully`);
+//         setInitialAssignments(assignments); // Update initial state
+//       } else {
+//         handleSnackbarOpen(
+//           `${successCount} of ${totalOperations} operations completed. ` +
+//           `${totalOperations - successCount} failed.`
+//         );
+//       }
+      
+//       fetchTasks(); // Refresh tasks
+//     } catch (error) {
+//       console.error("Error in assignment process:", error);
+//       handleSnackbarOpen(error.message || "Error during assignment process");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const discardChanges = () => {
+//     setAssignments({...initialAssignments});
+//     handleSnackbarOpen("Changes discarded");
+//   };
+
+//   const getAssignedTasksForEmployee = (employeeId) => {
+//     const assignedTasks = tasks.filter(task => 
+//       task.employee?._id === employeeId || assignments[task._id] === employeeId
+//     );
+    
+//     // Show only first 4 tasks if not expanded
+//     if (!expandedEmployees[employeeId] && assignedTasks.length > 4) {
+//       return assignedTasks.slice(0, 4);
+//     }
+//     return assignedTasks;
+//   };
+
+//   const renderTaskEditDialog = () => {
+//     if (!editTask) return null;
+    
+//     return (
+//       <Dialog 
+//         open={openEditDialog} 
+//         onClose={() => setOpenEditDialog(false)}
+//         PaperProps={{
+//           sx: {
+//             borderRadius: 4,
+//             minWidth: 500
+//           }
+//         }}
+//       >
+//         <DialogTitle sx={{ fontWeight: 600 }}>Edit Task</DialogTitle>
+//         <DialogContent>
+//           <TextField
+//             label="Title"
+//             fullWidth
+//             margin="normal"
+//             value={editTask.title || ''}
+//             onChange={(e) =>
+//               setEditTask({ ...editTask, title: e.target.value })
+//             }
+//             sx={{ mb: 2 }}
+//           />
+//           <TextField
+//             label="Description"
+//             fullWidth
+//             margin="normal"
+//             multiline
+//             rows={3}
+//             value={editTask.description || ''}
+//             onChange={(e) =>
+//               setEditTask({ ...editTask, description: e.target.value })
+//             }
+//             sx={{ mb: 2 }}
+//           />
+//           <FormControl fullWidth margin="normal">
+//             <InputLabel>Customer</InputLabel>
+//             <Select
+//               value={editTask.customer?._id || editTask.customerId || ''}
+//               onChange={(e) =>
+//                 setEditTask({ 
+//                   ...editTask, 
+//                   customer: { _id: e.target.value },
+//                   customerId: e.target.value
+//                 })
+//               }
+//               label="Customer"
+//             >
+//               {users
+//                 .filter((user) => user.role === "customer")
+//                 .map((user) => (
+//                   <MenuItem key={user._id} value={user._id}>
+//                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
+//                       <Person sx={{ mr: 1 }} />
+//                       <Typography>{user.name}</Typography>
+//                     </Box>
+//                   </MenuItem>
+//                 ))}
+//             </Select>
+//           </FormControl>
+//         </DialogContent>
+//         <DialogActions sx={{ p: 3 }}>
+//           <Button 
+//             onClick={() => setOpenEditDialog(false)}
+//             variant="outlined"
+//             sx={{ borderRadius: 2, px: 3 }}
+//           >
+//             Cancel
+//           </Button>
+//           <Button 
+//             onClick={handleUpdate} 
+//             variant="contained"
+//             disabled={!editTask.title || !editTask.description || !(editTask.customer?._id || editTask.customerId)}
+//             sx={{ borderRadius: 2, px: 3 }}
+//           >
+//             Update Task
+//           </Button>
+//         </DialogActions>
+//       </Dialog>
+//     );
+//   };
+
+//   return (
+//     <Fade in={true} timeout={500}>
+//       <Box sx={{ p: 3 }}>
+//         <Grow in={true} timeout={600}>
+//           <Container elevation={3}>
+//             <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+//               Task Assignment Board
+//             </Typography>
+            
+//             {/* Search and Filter Section */}
+//             <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+//               <TextField
+//                 label="Search Tasks"
+//                 variant="outlined"
+//                 fullWidth
+//                 value={taskSearch}
+//                 onChange={(e) => setTaskSearch(e.target.value)}
+//                 InputProps={{
+//                   startAdornment: <Search sx={{ color: 'action.active', mr: 1 }} />,
+//                   endAdornment: taskSearch && (
+//                     <IconButton onClick={() => setTaskSearch("")}>
+//                       <Clear fontSize="small" />
+//                     </IconButton>
+//                   ),
+//                 }}
+//               />
+//               <TextField
+//                 label="Search Employees"
+//                 variant="outlined"
+//                 fullWidth
+//                 value={employeeSearch}
+//                 onChange={(e) => setEmployeeSearch(e.target.value)}
+//                 InputProps={{
+//                   startAdornment: <Search sx={{ color: 'action.active', mr: 1 }} />,
+//                   endAdornment: employeeSearch && (
+//                     <IconButton onClick={() => setEmployeeSearch("")}>
+//                       <Clear fontSize="small" />
+//                     </IconButton>
+//                   ),
+//                 }}
+//               />
+//             </Box>
+
+//             {/* Action Buttons */}
+//             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+//               <Box sx={{ display: 'flex', gap: 2 }}>
+//                 <Zoom in={true} style={{ transitionDelay: '100ms' }}>
+//                   <Button
+//                     variant="contained"
+//                     color="primary"
+//                     startIcon={<Add />}
+//                     onClick={() => setOpenDialog(true)}
+//                     sx={{ borderRadius: 2 }}
+//                   >
+//                     Create Task
+//                   </Button>
+//                 </Zoom>
+//                 <Zoom in={true} style={{ transitionDelay: '150ms' }}>
+//                   <Button
+//                     variant="outlined"
+//                     color="primary"
+//                     onClick={discardChanges}
+//                     disabled={!hasChanges}
+//                     sx={{ borderRadius: 2 }}
+//                   >
+//                     Discard Changes
+//                   </Button>
+//                 </Zoom>
+//               </Box>
+//               <Zoom in={true} style={{ transitionDelay: '200ms' }}>
+//                 <Button
+//                   variant="contained"
+//                   color="success"
+//                   onClick={saveAssignments}
+//                   disabled={loading || !hasChanges}
+//                   startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <CheckCircle />}
+//                   sx={{ borderRadius: 2 }}
+//                 >
+//                   {loading ? 'Saving...' : 'Save Assignments'}
+//                 </Button>
+//               </Zoom>
+//             </Box>
+
+//             {/* Drag and Drop Board */}
+//             <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+//               <Grid container spacing={3}>
+//                 {/* Tasks Column */}
+//                 <Grid item xs={12} md={4}>
+//                   <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+//                     Available Tasks ({filteredTasks.length})
+//                   </Typography>
+//                   <Droppable droppableId="tasks">
+//                     {(provided) => (
+//                       <TaskList ref={provided.innerRef} {...provided.droppableProps}>
+//                         {filteredTasks.length === 0 ? (
+//                           <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', mt: 2 }}>
+//                             No tasks available
+//                           </Typography>
+//                         ) : (
+//                           filteredTasks.map((task, index) => (
+//                             <Draggable key={task._id} draggableId={task._id} index={index}>
+//                               {(provided, snapshot) => (
+//                                 <TaskItem
+//                                   ref={provided.innerRef}
+//                                   {...provided.draggableProps}
+//                                   {...provided.dragHandleProps}
+//                                   isdragging={snapshot.isDragging.toString()}
+//                                   elevation={snapshot.isDragging ? 3 : 1}
+//                                 >
+//                                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+//                                     <Box>
+//                                       <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+//                                         {task.title}
+//                                       </Typography>
+//                                       <Typography variant="body2" color="text.secondary">
+//                                         {task.description.substring(0, 60)}...
+//                                       </Typography>
+//                                       <Typography variant="caption" display="block">
+//                                         Created: {moment(task.createdAt).format("MMM D, YYYY")}
+//                                       </Typography>
+//                                       {task.customer && (
+//                                         <Typography variant="caption" display="block">
+//                                           Customer: {task.customer.name}
+//                                         </Typography>
+//                                       )}
+//                                     </Box>
+//                                     <Box sx={{ display: 'flex', gap: 1 }}>
+//                                       <Tooltip title="Edit" arrow>
+//                                         <IconButton
+//                                           size="small"
+//                                           onClick={(e) => {
+//                                             e.stopPropagation();
+//                                             setEditTask({
+//                                               ...task,
+//                                               customerId: task.customer?._id
+//                                             });
+//                                             setOpenEditDialog(true);
+//                                           }}
+//                                         >
+//                                           <Edit fontSize="small" />
+//                                         </IconButton>
+//                                       </Tooltip>
+//                                       <Tooltip title="Delete" arrow>
+//                                         <IconButton 
+//                                           size="small" 
+//                                           onClick={(e) => {
+//                                             e.stopPropagation();
+//                                             handleDelete(task._id);
+//                                           }}
+//                                         >
+//                                           <Delete fontSize="small" />
+//                                         </IconButton>
+//                                       </Tooltip>
+//                                     </Box>
+//                                   </Box>
+//                                 </TaskItem>
+//                               )}
+//                             </Draggable>
+//                           ))
+//                         )}
+//                         {provided.placeholder}
+//                       </TaskList>
+//                     )}
+//                   </Droppable>
+//                 </Grid>
+
+//                 {/* Employees Columns */}
+//                 {filteredEmployees.map((employee) => {
+//                   const assignedTasks = getAssignedTasksForEmployee(employee._id);
+//                   const hasMoreTasks = tasks.filter(task => 
+//                     task.employee?._id === employee._id || assignments[task._id] === employee._id
+//                   ).length > 4;
+                  
+//                   return (
+//                     <Grid item xs={12} md={4} key={employee._id}>
+//                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+//                         <Avatar 
+//                           sx={{ 
+//                             width: 32, 
+//                             height: 32, 
+//                             mr: 2,
+//                             bgcolor: 'primary.main',
+//                           }}
+//                           src={employee.profileImage}
+//                         >
+//                           {employee.name.charAt(0)}
+//                         </Avatar>
+//                         <Typography variant="h6" sx={{ fontWeight: 600 }}>
+//                           {employee.name}
+//                         </Typography>
+//                         <Box sx={{ flexGrow: 1 }} />
+//                         {hasMoreTasks && (
+//                           <Button
+//                             size="small"
+//                             onClick={() => toggleEmployeeExpand(employee._id)}
+//                             endIcon={expandedEmployees[employee._id] ? <ExpandLess /> : <ExpandMore />}
+//                           >
+//                             {expandedEmployees[employee._id] ? 'Show Less' : `Show All (${assignedTasks.length})`}
+//                           </Button>
+//                         )}
+//                       </Box>
+//                       <Droppable droppableId={`employee-${employee._id}`}>
+//                         {(provided) => (
+//                           <EmployeeList ref={provided.innerRef} {...provided.droppableProps}>
+//                             {assignedTasks.map((task, index) => (
+//                               <Draggable key={task._id} draggableId={task._id} index={index}>
+//                                 {(provided, snapshot) => (
+//                                   <EmployeeItem
+//                                     ref={provided.innerRef}
+//                                     {...provided.draggableProps}
+//                                     {...provided.dragHandleProps}
+//                                     isdragging={snapshot.isDragging.toString()}
+//                                     elevation={snapshot.isDragging ? 3 : 1}
+//                                   >
+//                                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+//                                       <Box>
+//                                         <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+//                                           {task.title}
+//                                         </Typography>
+//                                         <Typography variant="body2" color="text.secondary">
+//                                           {task.description.substring(0, 60)}...
+//                                         </Typography>
+//                                         {task.customer && (
+//                                           <Typography variant="caption" display="block">
+//                                             Customer: {task.customer.name}
+//                                           </Typography>
+//                                         )}
+//                                       </Box>
+//                                       <Box sx={{ display: 'flex', gap: 1 }}>
+//                                         <Tooltip title="Edit" arrow>
+//                                           <IconButton
+//                                             size="small"
+//                                             onClick={(e) => {
+//                                               e.stopPropagation();
+//                                               setEditTask({
+//                                                 ...task,
+//                                                 customerId: task.customer?._id
+//                                               });
+//                                               setOpenEditDialog(true);
+//                                             }}
+//                                           >
+//                                             <Edit fontSize="small" />
+//                                           </IconButton>
+//                                         </Tooltip>
+//                                       </Box>
+//                                     </Box>
+//                                     <Chip
+//                                       label="Assigned"
+//                                       size="small"
+//                                       color="success"
+//                                       variant="outlined"
+//                                       sx={{ mt: 1 }}
+//                                     />
+//                                   </EmployeeItem>
+//                                 )}
+//                               </Draggable>
+//                             ))}
+//                             {provided.placeholder}
+//                           </EmployeeList>
+//                         )}
+//                       </Droppable>
+//                     </Grid>
+//                   );
+//                 })}
+//               </Grid>
+//             </DragDropContext>
+//           </Container>
+//         </Grow>
+
+//         {/* Create Task Dialog */}
+//         <Dialog 
+//           open={openDialog} 
+//           onClose={() => setOpenDialog(false)}
+//           PaperProps={{
+//             sx: {
+//               borderRadius: 4,
+//               minWidth: 500
+//             }
+//           }}
+//         >
+//           <DialogTitle sx={{ fontWeight: 600 }}>Create New Task</DialogTitle>
+//           <DialogContent>
+//             <TextField
+//               label="Title"
+//               fullWidth
+//               margin="normal"
+//               value={newTask.title}
+//               onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+//               sx={{ mb: 2 }}
+//             />
+//             <TextField
+//               label="Description"
+//               fullWidth
+//               margin="normal"
+//               multiline
+//               rows={3}
+//               value={newTask.description}
+//               onChange={(e) =>
+//                 setNewTask({ ...newTask, description: e.target.value })
+//               }
+//               sx={{ mb: 2 }}
+//             />
+//             <FormControl fullWidth margin="normal">
+//               <InputLabel>Customer</InputLabel>
+//               <Select
+//                 value={newTask.customerId}
+//                 onChange={(e) =>
+//                   setNewTask({ ...newTask, customerId: e.target.value })
+//                 }
+//                 label="Customer"
+//               >
+//                 {users
+//                   .filter((user) => user.role === "customer")
+//                   .map((user) => (
+//                     <MenuItem key={user._id} value={user._id}>
+//                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
+//                         <Person sx={{ mr: 1 }} />
+//                         <Typography>{user.name}</Typography>
+//                       </Box>
+//                     </MenuItem>
+//                   ))}
+//               </Select>
+//             </FormControl>
+//           </DialogContent>
+//           <DialogActions sx={{ p: 3 }}>
+//             <Button 
+//               onClick={() => setOpenDialog(false)}
+//               variant="outlined"
+//               sx={{ borderRadius: 2, px: 3 }}
+//             >
+//               Cancel
+//             </Button>
+//             <Button 
+//               onClick={handleCreate} 
+//               variant="contained"
+//               disabled={!newTask.title || !newTask.description || !newTask.customerId}
+//               sx={{ borderRadius: 2, px: 3 }}
+//             >
+//               Create Task
+//             </Button>
+//           </DialogActions>
+//         </Dialog>
+
+//         {/* Edit Task Dialog */}
+//         {renderTaskEditDialog()}
+
+//         <Snackbar
+//           open={snackbarOpen}
+//           autoHideDuration={6000}
+//           onClose={handleSnackbarClose}
+//           message={snackbarMessage}
+//           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+//         />
+//       </Box>
+//     </Fade>
+//   );
+// };
+
+// export default AssignUserToEmployee;

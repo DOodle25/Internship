@@ -188,16 +188,16 @@ button:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #031738;
+  background: #D8DADC;
   border-radius: 10px;
   transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(3, 23, 56, 0.8);
+  background: #D8DADC;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #031738 #f6f8fa;
+  scrollbar-color: #D8DADC #f6f8fa;
 }

@@ -187,8 +187,4 @@ io.on("connection", (socket) => {
     }
   });
 });
-if (process.env.NODE_ENV !== "test") {
-  server.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
-}
-
-module.exports = app;
+server.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
