@@ -58,6 +58,12 @@ export const GlobalProvider = ({ children }) => {
       setSelectedCamera(videoDevices[0].deviceId);
     }
   };
+
+  // useEffect(() => {
+  //   console.log(token);
+  // }, [token]);
+
+
   useEffect(() => {
     // console.log("remoteVideoREF");
     // console.log(remoteVideoRef);
@@ -124,11 +130,15 @@ export const GlobalProvider = ({ children }) => {
     };
   }, []);
   const setTokenMethod = (newToken) => {
+    // console.log("Setting token:", newToken);
     setToken(newToken);
+    // console.log(token)
     localStorage.setItem("token", newToken);
   };
   const setUserMethod = (newUser) => {
+    // console.log("Setting user:", newUser);
     setUser(newUser);
+    // console.log(user)
     localStorage.setItem("user", JSON.stringify(newUser));
   };
   const showSnackbar = (message, severity = "success") => {
@@ -221,7 +231,7 @@ export const GlobalProvider = ({ children }) => {
         setTokenMethod(token);
         fetchUserDetails();
         newWindow?.close();
-        window.location.reload();
+        // window.location.reload();
       }
     };
     window.addEventListener("message", handleMessage);
@@ -235,15 +245,18 @@ export const GlobalProvider = ({ children }) => {
   };
   const fetchUserDetails = async () => {
     try {
+      console.log("Fetching user details...");
+      const token = localStorage.getItem("token");
+      console.log("Token:", token);
       if (!token) return;
-
+      console.log("Token is valid, fetching user details...");
       const response = await axiosInstance.get("/status/check-status", {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      if (response.data.success) {
-        setTokenMethod(response.data.token);
-        setUser(response.data.user);
+      if (response.data.status.user) {
+        // setTokenMethod(response.data.status.token);
+        console.log("User details fetched:", response.data.status.user);
+        setUserMethod(response.data.status.user);
       }
     } catch (error) {
       showSnackbar("Error fetching user details", "error");

@@ -68,8 +68,10 @@ exports.checkForm = async (req, res) => {
 exports.checkStatus = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
+    // console.log(user);
     if (!user) return res.status(404).json({ message: "User not found" });
     const status = { user: user };
+    // console.log(status);
     res.json({ status });
   } catch (error) {
     res.status(400).json({ message: error.message });
