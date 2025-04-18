@@ -231,7 +231,7 @@ export const GlobalProvider = ({ children }) => {
         setTokenMethod(token);
         fetchUserDetails();
         newWindow?.close();
-        // window.location.reload();
+        window.location.reload();
       }
     };
     window.addEventListener("message", handleMessage);
