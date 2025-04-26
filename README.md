@@ -23,12 +23,10 @@ StarOneCRM is a comprehensive Customer Relationship Management (CRM) system buil
 ## Videos
 
 
-https://github.com/user-attachments/assets/583cf7bf-b1cc-400f-ab9c-41045cde364e
+
+https://github.com/user-attachments/assets/3134d68e-4cd8-48a6-a0bb-26fd14550e87
 
 
-https://github.com/user-attachments/assets/66975bbb-fefc-44d0-b6b7-abdacad60603
-
-https://github.com/user-attachments/assets/2e76e1b5-e38c-40c1-a708-0db12c07f23a
 
 ## UI
 
