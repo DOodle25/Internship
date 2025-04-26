@@ -22,28 +22,39 @@ StarOneCRM is a comprehensive Customer Relationship Management (CRM) system buil
 
 ## Videos
 
+
+https://github.com/user-attachments/assets/583cf7bf-b1cc-400f-ab9c-41045cde364e
+
+
 https://github.com/user-attachments/assets/66975bbb-fefc-44d0-b6b7-abdacad60603
 
 https://github.com/user-attachments/assets/2e76e1b5-e38c-40c1-a708-0db12c07f23a
 
 ## UI
 
-![Screenshot 2025-03-17 114447](https://github.com/user-attachments/assets/0a88870f-b98f-4abb-a1c1-fb2938bd092a)
-![Screenshot 2025-03-17 114721](https://github.com/user-attachments/assets/0eecd003-e233-4a1b-b502-3ad455d03d65)
+![Screenshot 2025-04-26 104615](https://github.com/user-attachments/assets/f080484a-c7ea-41ef-b7c4-ab27da9479ca)
+![Screenshot 2025-04-26 104605](https://github.com/user-attachments/assets/d4e6bef5-7040-46c2-949f-c259f19af2e4)
+
 ![Screenshot 2025-03-17 114939](https://github.com/user-attachments/assets/a370f876-f21c-4cc1-92bf-4173ab495698)
-![Screenshot 2025-03-17 115001](https://github.com/user-attachments/assets/469c3050-49e6-4312-8231-d165e971f091)
-![Screenshot 2025-03-17 115022](https://github.com/user-attachments/assets/1f97f084-5b5c-40e8-a446-f324c24e13fe)
-![Screenshot 2025-03-17 115056](https://github.com/user-attachments/assets/4dc65780-4bcf-4b6d-a9cc-e069d08905b6)
-![Screenshot 2025-03-17 115150](https://github.com/user-attachments/assets/5a11be41-45cd-47dc-b878-e92bfabe25e3)
-![Screenshot 2025-03-17 115115](https://github.com/user-attachments/assets/b43f69d6-e149-4715-bfe2-c005e878ab9e)
+![Screenshot 2025-04-26 104809](https://github.com/user-attachments/assets/62634ea1-c00e-4836-8973-cb7e59f51658)
+![Screenshot 2025-04-26 104742](https://github.com/user-attachments/assets/483e1906-ea9e-4254-b7bf-18826dddb34f)
+![Screenshot 2025-04-26 104703](https://github.com/user-attachments/assets/b7480147-cad7-492e-a5b1-bf7ccb2c7adb)
+![Screenshot 2025-04-26 104653](https://github.com/user-attachments/assets/cc3405ff-c092-49cf-9507-0cc92355b709)
+![Screenshot 2025-04-26 104644](https://github.com/user-attachments/assets/a46b800d-9808-4084-b45b-3a56edf8eca9)
+![Screenshot 2025-04-26 104631](https://github.com/user-attachments/assets/799fa905-221b-4100-98c1-85166428d1ac)
+![Screenshot 2025-04-26 105044](https://github.com/user-attachments/assets/894b4e12-114c-415a-a138-aece5faf961a)
+![Screenshot 2025-04-26 104950](https://github.com/user-attachments/assets/b5c2789c-6ff1-4462-b40c-9c0bcb4ad950)
+![Screenshot 2025-04-26 104942](https://github.com/user-attachments/assets/fba82cf7-19e4-46d6-8b49-4e472fb466d6)
+![Screenshot 2025-04-26 104932](https://github.com/user-attachments/assets/7e9dafd2-0b72-40f2-8a43-f0bc395a4d8d)
+![Screenshot 2025-04-26 104926](https://github.com/user-attachments/assets/7282b810-f2ab-4109-98df-3f56d37206b3)
+![Screenshot 2025-04-26 104857](https://github.com/user-attachments/assets/8982a7ba-0924-4a7d-91b2-2d3393e32560)
+![Screenshot 2025-04-26 104849](https://github.com/user-attachments/assets/650edd61-9b4c-4ae3-b8da-3218777bd68e)
+![Screenshot 2025-04-26 104825](https://github.com/user-attachments/assets/a0436629-dd16-4b1b-a491-6378ba1287aa)
+![Screenshot 2025-04-26 104817](https://github.com/user-attachments/assets/92f825cc-79a7-4c1e-809e-49e87369f612)
+
 ![Screenshot 2025-03-21 145455](https://github.com/user-attachments/assets/78acccf1-7b1b-4a78-a46b-15bef1f6990d)
 ![Screenshot 2025-03-21 145425](https://github.com/user-attachments/assets/56ace337-4ec2-4a2f-8ae4-0cfc4d285f75)
-![Screenshot 2025-03-21 145657](https://github.com/user-attachments/assets/5dca48a9-794d-4098-99a7-096d977f1b56)
-![Screenshot 2025-03-21 145556](https://github.com/user-attachments/assets/bf226e43-91cb-4de6-9ee1-d19b2183c668)
-![Screenshot 2025-03-21 145534](https://github.com/user-attachments/assets/08ac33cb-76a6-45df-bf9a-358508e00df8)
-![Screenshot 2025-03-21 150030](https://github.com/user-attachments/assets/54c06904-ce18-477e-b8c3-d0081cb90112)
-![Screenshot 2025-03-21 145902](https://github.com/user-attachments/assets/0ad3ffe2-cb56-4110-9e7a-bae50dda561b)
-![Screenshot 2025-03-21 150255](https://github.com/user-attachments/assets/558f9b37-decc-433e-a6f8-6e5e1b623f13)
+
 
 
 ## Features
