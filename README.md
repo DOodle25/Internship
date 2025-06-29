@@ -1,5 +1,6 @@
 ![image2 - Copy](https://github.com/user-attachments/assets/3fc3f7f3-8e67-4d25-8d81-eaca668061fd)
 
+
 # StarOneCRM
 
 StarOneCRM is a comprehensive Customer Relationship Management (CRM) system built using the MERN stack (MongoDB, Express.js, React, Node.js). This project was developed as part of my internship, and it includes a wide range of features designed to streamline user management, task assignment, payment processing, and communication.
