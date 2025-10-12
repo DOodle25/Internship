@@ -22,7 +22,7 @@ const app = express();
 const server = http.createServer(app);
 
 const socketorigin = process.env.NODE_ENV === "production"
-    ? "https://https://polite-field-09918cc00.4.azurestaticapps.net/"
+    ? "https://polite-field-09918cc00.4.azurestaticapps.net"
     : "http://localhost:5173";
 console.log("Socket Origin:", socketorigin);
 const io = socketIo(server, {
