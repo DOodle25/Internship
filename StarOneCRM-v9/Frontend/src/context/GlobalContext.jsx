@@ -12,14 +12,18 @@ import Peer from "peerjs";
 import io from "socket.io-client";
 import VideoCall from "../pages/VideoCall/VideoCallPage";
 const GlobalContext = createContext();
-const socket = io(
-  "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net"
-  // "http://localhost:5000"
-);
+
+const socketurl = process.env.NODE_ENV === "production"
+    ? "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net"
+    : "http://localhost:5000";
+const socket = io(socketurl);
+
+// node env defined on build azure environement variables
 const BASE_URL =
   process.env.NODE_ENV === "production"
     ? "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net"
     : "http://localhost:5000";
+// console.log("BASE_URL:", BASE_URL);
 export const GlobalProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [user, setUser] = useState(

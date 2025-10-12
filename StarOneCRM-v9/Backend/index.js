@@ -20,10 +20,15 @@ const socketIo = require("socket.io");
 const { ExpressPeerServer } = require("peer");
 const app = express();
 const server = http.createServer(app);
+
+const socketorigin = process.env.NODE_ENV === "production"
+    ? "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net"
+    : "http://localhost:5173";
+console.log("Socket Origin:", socketorigin);
 const io = socketIo(server, {
   cors: {
     // origin: "http://localhost:5173",
-    origin: "https://polite-field-09918cc00.4.azurestaticapps.net",
+    origin: socketorigin,
     methods: ["GET", "POST"],
     credentials: true,
   },

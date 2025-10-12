@@ -230,8 +230,9 @@ const ChatPage = () => {
     const connectSocket = () => {
       if (!token || socketRef.current) return;
       const newSocket = io(
-        "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net",
-        // "http://localhost:5000",
+        process.env.NODE_ENV === "production"
+          ? "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net"
+          : "http://localhost:5000",
         {
           query: { token },
         }

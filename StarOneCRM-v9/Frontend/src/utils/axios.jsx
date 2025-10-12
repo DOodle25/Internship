@@ -3,7 +3,9 @@ import axios from "axios";
 const axiosInstance = axios.create({
   // baseURL: 'http://localhost:5000/api',
   baseURL:
-    "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net/api",
+    process.env.NODE_ENV === "production"
+      ? "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net/api"
+      : "http://localhost:5000/api",
   // withCredentials: true,
   // timeout: 5000,
 });
