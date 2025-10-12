@@ -21,7 +21,7 @@ const { ExpressPeerServer } = require("peer");
 const app = express();
 const server = http.createServer(app);
 
-const socketorigin = process.env.NODE_ENV === "production"
+const socketorigin = process.env.NODE_ENV == "production"
     ? "https://internship-fta5hkg7e8eaecf7.westindia-01.azurewebsites.net"
     : "http://localhost:5173";
 console.log("Socket Origin:", socketorigin);
